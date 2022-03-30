@@ -3,21 +3,33 @@ import {useRef, useState, useCallback, useEffect} from 'react';
 import {Stack, Box, Button, FormControl, Flex, Switch, FormLabel, Text} from '@chakra-ui/react';
 import SegmetedSlider from './SegmetedSlider';
 import LinearGradientPicker from './LinearGradientPicker';
-import {Palette} from '../typings';
-import {hexToRgb, isHex, paletteFromGradientStops, gradientAngleFromTransform} from '../lib/colors';
+import {GradientStops, Preferences} from '../typings';
+import {
+    hexToRgb,
+    isHex,
+    paletteFromGradientStops,
+    gradientAngleFromTransform,
+    colorStringToRGBAObject,
+    hexToRGBAObject,
+} from '../lib/colors';
 import GradientPreview from './GradientPreview';
+import GradientSwatch from './GradientSwatch';
+import {defaults} from 'lodash';
 
-const defaultPalette = [
-    {offset: '0.00', color: 'rgba(238, 241, 11,1)'},
-    {offset: '0.5', color: 'rgba(215, 128, 37,1)'},
-    {offset: '1.00', color: 'rgba(126, 32, 207,1)'},
+const defaultGradientStops = [
+    {position: 0.0, color: {r: 238 / 255, g: 241 / 255, b: 11 / 255, a: 1}},
+    {position: 0.5, color: {r: 215 / 255, g: 128 / 255, b: 37 / 255, a: 1}},
+    {position: 1.0, color: {r: 126 / 255, g: 32 / 255, b: 207 / 255, a: 1}},
 ];
+const defaultAngle = 180;
 
 const View = ({}) => {
     const [selection, setSelection] = useState<any>();
-    const [gradientAngle, setGradientAngle] = useState(180);
-    const [gradientFills, setGradientFills] = useState<Palette>();
-    const [liveEditMode, setLiveEditMode] = useState(true);
+    const [gradientAngle, setGradientAngle] = useState(defaultAngle);
+    const [gradientStops, setGradientStops] = useState<GradientStops>(defaultGradientStops);
+    const [paintStyles, setPaintStyles] = useState<PaintStyle[]>();
+    const [liveEditMode, setLiveEditMode] = useState(false);
+    const [preferences, setPreferences] = useState<Preferences>();
 
     const isSelected = React.useMemo(() => selection && selection.length, [selection]);
 
@@ -27,62 +39,97 @@ const View = ({}) => {
 
     const applyGradient = useCallback(() => {
         parent.postMessage(
-            {pluginMessage: {type: 'apply-gradient', angle: gradientAngle, palette: gradientFills}},
+            {pluginMessage: {type: 'apply-gradient', angle: gradientAngle, gradientStops: gradientStops}},
             '*'
         );
-    }, [gradientAngle, gradientFills]);
+    }, [gradientAngle, gradientStops]);
 
     const onChangeAngle = useCallback(
         (angle) => {
-            setGradientAngle(angle);
+            if (angle != gradientAngle) {
+                setGradientAngle(angle);
+            }
         },
         [gradientAngle]
     );
 
-    const onChangePalette = useCallback(
-        (palette) => {
-            const updatedPalette = palette.map((value, index) => {
+    const onChangeGradient = useCallback(
+        (_gradientStops: GradientStops) => {
+            const updatedGradientStops: GradientStops = _gradientStops.map((value, index) => {
                 return {
-                    color: isHex(value.color) ? hexToRgb(value.color) : value.color,
-                    offset: value.offset,
+                    color: value.color,
+                    position: value.position,
                 };
             });
-            setGradientFills(updatedPalette);
+            if (gradientStops != updatedGradientStops) {
+                setGradientStops(updatedGradientStops);
+            }
         },
-        [gradientFills]
+        [gradientStops]
+    );
+
+    const onChangeLiveEditMode = useCallback(
+        (event) => {
+            setLiveEditMode(event.target.checked);
+            parent.postMessage(
+                {
+                    pluginMessage: {
+                        type: 'preferences-update',
+                        preferences: {...preferences, liveEditMode: event.target.checked},
+                    },
+                },
+                '*'
+            );
+        },
+        [liveEditMode]
     );
 
     useEffect(() => {
         liveEditMode && applyGradient();
-    }, [gradientAngle, gradientFills]);
+    }, [gradientStops, gradientAngle]);
+
+    useEffect(() => {
+        if (preferences) {
+            setLiveEditMode(preferences.liveEditMode);
+        }
+    }, [preferences]);
 
     useEffect(() => {
         // This is how we read messages sent from the plugin controller
         window.onmessage = (event) => {
             const {type, message} = event.data.pluginMessage;
-            const {selection: _selection, fills} = message;
+
             if (type === 'figma:selectionchange') {
-                setSelection(_selection);
+                const fills = message.fills;
+                setSelection(message.selection);
                 if (fills) {
-                    setGradientFills(paletteFromGradientStops(fills[0].gradientStops));
-                    setGradientAngle(gradientAngleFromTransform(fills[0].gradientTransform) || gradientAngle);
+                    setGradientStops(fills[0].gradientStops);
+                    fills[0].gradientTransform &&
+                        setGradientAngle(gradientAngleFromTransform(fills[0].gradientTransform));
                 }
+            } else if (type === 'figma:styles:gradientschange') {
+                const _paintStyles: PaintStyle[] = message.paintStyles;
+                setPaintStyles(_paintStyles);
+            } else if (type === 'figma:preferencesupdate') {
+                setPreferences(message.preferences);
             }
         };
     }, []);
 
     return (
         <Flex direction="column" h="100%">
-            {JSON.stringify(gradientFills)}
-            {gradientAngle}
+            <Stack direction="row">
+                {paintStyles &&
+                    paintStyles.map((paintStyle, index) => {
+                        return <GradientSwatch paintStyle={paintStyle} key={index} />;
+                    })}
+            </Stack>
             <Stack p={4} h="100%">
-                {/* <img src={require('../assets/logo.svg')} />
-                <Text mb={4}>Gradient Creator</Text> */}
-                <GradientPreview palette={gradientFills} angle={gradientAngle} />
+                <GradientPreview gradientStops={gradientStops} angle={gradientAngle} />
                 <LinearGradientPicker
-                    onChangePalette={onChangePalette}
-                    value={gradientFills}
-                    defaultValue={defaultPalette}
+                    onChange={onChangeGradient}
+                    value={gradientStops}
+                    defaultValue={defaultGradientStops}
                 />
                 <SegmetedSlider
                     onChange={onChangeAngle}
@@ -102,11 +149,12 @@ const View = ({}) => {
                         Live:
                     </FormLabel>
                     <Switch
-                        defaultChecked={liveEditMode}
+                        defaultChecked={false}
+                        isChecked={liveEditMode}
                         size="sm"
                         colorScheme="green"
                         id="live-mode"
-                        onChange={(event) => setLiveEditMode(event.target.checked)}
+                        onChange={onChangeLiveEditMode}
                     />
                 </FormControl>
             </Stack>

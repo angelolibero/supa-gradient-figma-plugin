@@ -1,29 +1,47 @@
 import * as React from 'react';
 import {useMemo} from 'react';
-import {Box} from '@chakra-ui/react';
-import {Palette} from '../typings';
+import {Flex, Button} from '@chakra-ui/react';
+import {GradientStops} from '../typings';
+import {useClipboard} from '@chakra-ui/react';
+import {MdCopyAll} from 'react-icons/md';
+import {bgGradientColorsFromStops, bgGradientFromColors} from '../lib/colors';
 
 type Props = {
-    palette: Palette;
+    gradientStops: GradientStops;
     angle: number;
 };
 
-const GradientPreview: React.FC<Props> = ({palette, angle}) => {
-    const gradientColors = useMemo(() => {
-        if (palette && palette.length) {
-            const g = palette.map((value, index) => {
-                return value.color + ' ' + parseFloat(new Number(value.offset).toFixed(2)) * 100 + '%';
-            });
-            return g;
-        }
-        return [];
-    }, [palette]);
+const GradientPreview: React.FC<Props> = ({gradientStops, angle}) => {
+    const [value, setValue] = React.useState('');
+    const {hasCopied, onCopy} = useClipboard(value);
+
+    const bgGradientColors = useMemo(() => {
+        return bgGradientColorsFromStops(gradientStops);
+    }, [gradientStops, angle]);
 
     const bgGradient = useMemo(() => {
-        return `linear(${angle}deg, ${gradientColors})`;
-    }, [angle, palette, gradientColors]);
+        return bgGradientFromColors(bgGradientColors, angle);
+    }, [angle, gradientStops]);
 
-    return <Box w="100%" h="80px" borderRadius="md" bgGradient={bgGradient} />;
+    React.useEffect(() => {
+        bgGradient && setValue(`background-image: ${bgGradient};`);
+    }, [bgGradient]);
+
+    return (
+        <Flex
+            w="100%"
+            h="80px"
+            borderRadius="md"
+            bgGradient={bgGradient}
+            alignItems="flex-start"
+            justifyContent="flex-end"
+            p={2}
+        >
+            <Button size="xs" h={4} w={4} p={0} onClick={onCopy} colorScheme={hasCopied ? 'primary' : 'gray'}>
+                <MdCopyAll />
+            </Button>
+        </Flex>
+    );
 };
 
 export default GradientPreview;

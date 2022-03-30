@@ -4,23 +4,27 @@ import {Box, useControllableState} from '@chakra-ui/react';
 import {Panel as ColorPicker} from 'rc-color-picker';
 import {GradientPicker} from 'react-linear-gradient-picker';
 import 'react-linear-gradient-picker/dist/index.css';
-import {Palette} from '../typings';
+import {GradientStops, Palette} from '../typings';
+import {paletteFromGradientStops, paletteToGradientStops} from '../lib/colors';
 
 type Props = {
-    onChangePalette: (palette: Palette) => void;
-    defaultValue?: Palette;
-    value?: Palette;
+    onChange: (palette: GradientStops) => void;
+    defaultValue?: GradientStops;
+    value?: GradientStops;
 };
 
-const LinearGradientPicker: React.FC<Props> = ({onChangePalette, value, defaultValue}) => {
-    const [palette, setPalette] = useControllableState({value, defaultValue});
+const LinearGradientPicker: React.FC<Props> = ({onChange, value, defaultValue}) => {
+    const [palette, setPalette] = useControllableState<Palette>({
+        value: paletteFromGradientStops(value),
+        defaultValue: paletteFromGradientStops(defaultValue),
+    });
 
     const didChangePalette = React.useCallback(
         (palette) => {
             setPalette(palette);
-            onChangePalette && onChangePalette(palette);
+            onChange && onChange(paletteToGradientStops(palette));
         },
-        [palette]
+        [palette, defaultValue, value]
     );
 
     return (

@@ -1,4 +1,10 @@
+export type GradientStops = ReadonlyArray<ColorStop>;
+
 export type Palette = {
-    offset: string;
+    offset: number;
     color: string;
 }[];
+
+export type Preferences = {
+    liveEditMode: boolean;
+};
