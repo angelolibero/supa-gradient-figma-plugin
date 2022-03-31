@@ -1,4 +1,3 @@
-import {getColor, mode} from '@chakra-ui/theme-tools';
 import accordion from './accordion';
 import badge from './badge';
 import button from './button';
@@ -15,6 +14,7 @@ import select from './select';
 import _switch from './switch';
 import tabs from './tabs';
 import textarea from './textarea';
+import tooltip from './tooltip';
 
 export default {
     Accordion: accordion,
@@ -32,5 +32,6 @@ export default {
     // Switch: _switch,
     IconsSwitch: iconsSwitch,
     Tabs: tabs,
+    Tooltip: tooltip,
     Textarea: textarea,
 };

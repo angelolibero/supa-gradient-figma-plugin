@@ -1,13 +1,12 @@
 import * as React from 'react';
 import {useMemo, useCallback} from 'react';
-import {BoxProps, Circle} from '@chakra-ui/react';
+import {Tooltip, Radio, Center, RadioProps} from '@chakra-ui/react';
 import {bgGradientColorsFromStops, bgGradientFromColors, gradientAngleFromTransform} from '../lib/colors';
-import {GradientStops} from '../typings';
 
 type Props = {
     paintStyle: PaintStyle;
-    onSelect?: (angle) => void;
-} & BoxProps;
+    onSelect?: (paintStyle: PaintStyle) => void;
+} & Omit<RadioProps, 'onSelect'>;
 
 const GradientSwatch: React.FC<Props> = ({paintStyle, onSelect, ...rest}) => {
     const angle = 180;
@@ -22,7 +21,33 @@ const GradientSwatch: React.FC<Props> = ({paintStyle, onSelect, ...rest}) => {
         return bgGradientFromColors(bgGradientColors, gradientAngleFromTransform(paint.gradientTransform));
     }, [angle, paintStyle, bgGradientColors]);
 
-    return <Circle bgGradient={bgGradient} border="1px solid #000" size={5} {...rest}></Circle>;
+    const onSelectStyle = useCallback(() => {
+        onSelect(paintStyle);
+    }, [paintStyle, onSelect]);
+
+    return (
+        <Tooltip label={paintStyle.name}>
+            <Center>
+                {/*DON'T remove wrapper, tooltips will not work properly without  */}
+                <Radio
+                    bgGradient={bgGradient}
+                    value={paintStyle.id}
+                    onClick={onSelectStyle}
+                    name={paintStyle.name}
+                    id={paintStyle.id}
+                    variant="swatch"
+                    {...rest}
+                    _checked={{
+                        bgGradient: bgGradient,
+                        border: '2px solid',
+                        borderColor: 'white',
+                        shadow: 'outline',
+                        boxSize: 7,
+                    }}
+                />
+            </Center>
+        </Tooltip>
+    );
 };
 
 export default GradientSwatch;

@@ -7,9 +7,9 @@ export const variantSolid = (props: Record<string, any>) => {
         const bg = mode('white', 'gray.700')(props);
         return {
             bg,
+            color: 'gray.500',
             _hover: {
                 bg: mode('gray.100', 'whiteAlpha.100')(props),
-                shadow: 'sm',
                 textDecor: 'none',
                 _disabled: {
                     bg,
@@ -27,7 +27,7 @@ export const variantSolid = (props: Record<string, any>) => {
         color: mode(color, 'gray.800')(props),
         _hover: {
             bg: mode(hoverBg, `${c}.300`)(props),
-            shadow: 'sm',
+            shadow: 'hover',
             textDecor: 'none',
             _disabled: {
                 bg: background,

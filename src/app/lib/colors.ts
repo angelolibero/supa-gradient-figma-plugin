@@ -71,19 +71,21 @@ const paletteToGradientStops = (palette: Palette, alpha: boolean = false) => {
     return rgbaObjects;
 };
 
-const paletteFromGradientStops = (gradientStops: any, alpha: boolean = true) => {
-    let palette = gradientStops.map((value, index) => {
-        return {
-            offset: parseFloat(new Number(value.position).toFixed(2)),
-            color: !alpha
-                ? `rgb(${(value.color.r * 255).toFixed(0)}, ${(value.color.g * 255).toFixed(0)}, ${(
-                      value.color.b * 255
-                  ).toFixed(0)})`
-                : `rgba(${(value.color.r * 255).toFixed(0)}, ${(value.color.g * 255).toFixed(0)}, ${(
-                      value.color.b * 255
-                  ).toFixed(0)}, ${value.a || 1})`,
-        };
-    });
+const paletteFromGradientStops = (gradientStops: GradientStops, alpha: boolean = true) => {
+    let palette = !gradientStops
+        ? undefined
+        : gradientStops.map((value, index) => {
+              return {
+                  offset: parseFloat(new Number(value.position).toFixed(2)),
+                  color: !alpha
+                      ? `rgb(${(value.color.r * 255).toFixed(0)}, ${(value.color.g * 255).toFixed(0)}, ${(
+                            value.color.b * 255
+                        ).toFixed(0)})`
+                      : `rgba(${(value.color.r * 255).toFixed(0)}, ${(value.color.g * 255).toFixed(0)}, ${(
+                            value.color.b * 255
+                        ).toFixed(0)}, ${value.a || 1})`,
+              };
+          });
     return palette;
 };
 
@@ -94,6 +96,7 @@ const gradientAngleFromTransform = (transform: any) => {
             return parseInt(key);
         }
     }
+    return 0;
 };
 
 const bgGradientColorsFromStops = (gradientStops: GradientStops) => {

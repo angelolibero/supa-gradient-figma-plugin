@@ -1,12 +1,13 @@
-const isGradientCompatible = (node: SceneNode): boolean => {
-    return (
-        node.type == 'RECTANGLE' ||
-        node.type == 'ELLIPSE' ||
-        node.type == 'POLYGON' ||
-        node.type == 'VECTOR' ||
-        node.type == 'FRAME'
-    );
-};
+import {GradientStops} from '../typings';
+import {hexToRGBAObject} from './colors';
+
+const isGradientCompatible = (node: SceneNode): boolean =>
+    node.type == 'RECTANGLE' ||
+    node.type == 'ELLIPSE' ||
+    node.type == 'POLYGON' ||
+    node.type == 'VECTOR' ||
+    node.type == 'FRAME' ||
+    node.type == 'STAR';
 
 const getGradientsFromStyles = (paintStyles: PaintStyle[]) => {
     return paintStyles
@@ -26,4 +27,19 @@ const getGradientsFromStyles = (paintStyles: PaintStyle[]) => {
         .filter((value) => !!value);
 };
 
-export {isGradientCompatible, getGradientsFromStyles};
+const createGradientStyle = (
+    colorName: string,
+    gradient: {gradientStops: GradientStops; gradientTransform: Transform}
+) => {
+    const style = figma.createPaintStyle();
+    style.name = colorName;
+    style.paints = [
+        {
+            type: 'GRADIENT_LINEAR',
+            ...gradient,
+        },
+    ];
+    return style;
+};
+
+export {isGradientCompatible, getGradientsFromStyles, createGradientStyle};
