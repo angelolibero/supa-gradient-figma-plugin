@@ -6,5 +6,6 @@ export type Palette = {
 }[];
 
 export type Preferences = {
-    liveEditMode: boolean;
+    liveUpdates?: boolean;
+    updateStyles?: boolean;
 };

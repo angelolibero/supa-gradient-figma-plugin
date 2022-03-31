@@ -1,8 +1,8 @@
 const radii = {
     none: '0',
-    sm: '1px',
+    sm: '3px',
     base: '4px',
-    md: '6px',
+    md: '5px',
     lg: '8px',
     xl: '10px',
     '2xl': '12px',

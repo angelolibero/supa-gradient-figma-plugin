@@ -13,12 +13,16 @@ import {
     DrawerOverlay,
     useDisclosure,
     ButtonProps,
+    chakra,
 } from '@chakra-ui/react';
 import {MdAdd} from 'react-icons/md';
 
-type Props = {gradientPaint: GradientPaint; onSave: (name: string) => void} & ButtonProps;
+type Props = {
+    gradientPaint: GradientPaint;
+    onCreate: (name: string, gradientPaint: GradientPaint) => void;
+} & Omit<ButtonProps, 'onCreate'>;
 
-const CreateStyleDrawerButton: React.FC<Props> = ({gradientPaint, onSave, ...rest}) => {
+const CreateStyleDrawerButton: React.FC<Props> = ({gradientPaint, onCreate, ...rest}) => {
     const {isOpen, onOpen, onClose} = useDisclosure();
     const btnRef = React.useRef();
     const [value, setValue] = React.useState('');
@@ -26,7 +30,7 @@ const CreateStyleDrawerButton: React.FC<Props> = ({gradientPaint, onSave, ...res
     const handleChange = React.useCallback((event) => setValue(event.target.value), [value]);
 
     const handleOnSave = React.useCallback(() => {
-        onSave(value);
+        onCreate(value, gradientPaint);
         onClose();
     }, [value]);
 
@@ -43,6 +47,7 @@ const CreateStyleDrawerButton: React.FC<Props> = ({gradientPaint, onSave, ...res
                     rounded="full"
                     border="1px dashed"
                     borderColor="gray.200"
+                    bgColor="white"
                     _focus={{
                         shadow: 'none',
                     }}
@@ -56,10 +61,18 @@ const CreateStyleDrawerButton: React.FC<Props> = ({gradientPaint, onSave, ...res
                 <DrawerContent textAlign="left">
                     <DrawerHeader pb={4}>Create gradient style {gradientPaint ? 'si' : 'no'}</DrawerHeader>
                     <DrawerBody>
-                        <Stack direction="row" boxSize="100%" flex="1">
-                            {/* {gradientPaint && <GradientSwatch defaultPaint={gradientPaint} boxSize={24} />} */}
-                            <Input size="md" placeholder="Insert gradient name" onChange={handleChange} />
-                        </Stack>
+                        <chakra.form
+                            onSubmit={(event) => {
+                                event.stopPropagation();
+                                event.preventDefault();
+                                handleOnSave();
+                            }}
+                        >
+                            <Stack direction="row" boxSize="100%" flex="1">
+                                {/* {gradientPaint && <GradientSwatch defaultPaint={gradientPaint} boxSize={24} />} */}
+                                <Input size="md" placeholder="Insert gradient name" onChange={handleChange} />
+                            </Stack>
+                        </chakra.form>
                     </DrawerBody>
                     <DrawerFooter pt={4}>
                         <Stack direction="row">

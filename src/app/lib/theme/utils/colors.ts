@@ -4,7 +4,7 @@ export const variantSolid = (props: Record<string, any>) => {
     const {colorScheme: c} = props;
 
     if (c === 'gray') {
-        const bg = mode('white', 'gray.700')(props);
+        const bg = mode('gray.100', 'gray.700')(props);
         return {
             bg,
             color: 'gray.500',
@@ -25,6 +25,7 @@ export const variantSolid = (props: Record<string, any>) => {
     return {
         bg: background,
         color: mode(color, 'gray.800')(props),
+        shadow: c == 'primary' && 'button',
         _hover: {
             bg: mode(hoverBg, `${c}.300`)(props),
             shadow: 'hover',

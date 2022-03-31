@@ -26,7 +26,7 @@ export default {
     Heading: heading,
     Input: input,
     Link: link,
-    Menu: menu,
+    // Menu: menu,
     PinInput: pinInput,
     Radio: radio,
     Select: select,

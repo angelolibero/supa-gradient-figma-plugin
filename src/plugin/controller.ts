@@ -1,33 +1,15 @@
 import {anglesTransform} from '../app/lib/angles';
 import {gradientAngleFromTransform} from '../app/lib/colors';
+import {updateSelection, updatedGradientStyles} from '../app/lib/figma';
 import {getGradientsFromStyles, isGradientCompatible, createGradientStyle} from '../app/lib/utils';
 import {GradientStops} from '../app/typings';
 
-const defaultPreferences = {liveEditMode: true};
-
-const updateSelection = () => {
-    if (figma.currentPage.selection && figma.currentPage.selection.length) {
-        const gradientNodes = figma.currentPage.selection.map((node) => {
-            if (node && isGradientCompatible(node)) {
-                return {id: node.id, fills: node.fills};
-            }
-        });
-        if (gradientNodes && gradientNodes.length >= 0) {
-            figma.ui.postMessage({
-                type: 'figma:selectionchange',
-                message: {selection: figma.currentPage.selection, fills: gradientNodes[0].fills},
-            });
-        }
-    } else {
-        figma.ui.postMessage({
-            type: 'figma:selectionchange',
-            message: {selection: figma.currentPage.selection},
-        });
-    }
-};
+const defaultPreferences = {liveUpdates: true};
+var poolingInterval = undefined;
+var poolingTimeout = 1000 * 5; //10 second
 
 figma.showUI(__html__);
-figma.ui.resize(300, 400);
+figma.ui.resize(300, 440);
 
 figma.ui.onmessage = (msg) => {
     // Apply gradient to current selection event
@@ -35,6 +17,9 @@ figma.ui.onmessage = (msg) => {
     if (msg.type === 'apply-gradient') {
         const angle = msg.angle;
         const gradientStops: GradientStops = msg.gradientStops;
+
+        console.log('APPPLY ', gradientStops);
+
         figma.currentPage.selection &&
             figma.currentPage.selection.forEach((node) => {
                 if (
@@ -80,10 +65,12 @@ figma.ui.onmessage = (msg) => {
     if (msg.type === 'preferences-update') {
         let valueToStore = JSON.stringify(msg.preferences);
         figma.clientStorage.setAsync('preferences', valueToStore);
+        console.log('STORE PREFERE', msg.preferences);
         figma.ui.postMessage({
             type: 'figma:preferencesupdate',
             message: {preferences: msg.preferences},
         });
+        figma.notify('Plugin preferences updated', {timeout: 1000});
     }
 
     // Clears preferences event
@@ -91,6 +78,7 @@ figma.ui.onmessage = (msg) => {
     if (msg.type === 'preferences-clear') {
         let valueToStore = JSON.stringify(defaultPreferences);
         figma.clientStorage.setAsync('preferences', valueToStore);
+        console.log('CLEAR PREFERE', msg.preferences);
         figma.ui.postMessage({
             type: 'figma:preferencesupdate',
             storage: valueToStore,
@@ -110,15 +98,13 @@ figma.ui.onmessage = (msg) => {
                 node.fillStyleId = newStyle.id;
             }
         });
-
-        const gradientPaintStyles = getGradientsFromStyles(figma.getLocalPaintStyles());
-        //Gradient styles change event
-        figma.ui.postMessage({
-            type: 'figma:styles:gradientschange',
-            message: {paintStyles: gradientPaintStyles},
-        });
-
+        updatedGradientStyles();
         figma.notify('New gradient style created', {timeout: msg.timeout || 1000});
+    }
+
+    // Clear selection
+    if (msg.type === 'clear-selection') {
+        figma.currentPage.selection = [];
     }
 
     // Notification event
@@ -141,11 +127,21 @@ figma.on('selectionchange', () => {
     updateSelection();
 });
 
-figma.on('run', ({command, parameters}) => {
-    //Load preferences
-    const gradientPaintStyles = getGradientsFromStyles(figma.getLocalPaintStyles());
+figma.on('currentpagechange', () => {
+    // figma.ui.postMessage({
+    //     type: 'figma:selectionchange',
+    //     message: {selection: figma.currentPage.selection, fills: gradientNodes[0].fills},
+    // });
+    console.log('currentpagechange');
+    // updateSelection();
+});
 
+figma.on('run', ({command, parameters}) => {
+    //Gradient styles change event
+    updatedGradientStyles();
+    //Load preferences
     figma.clientStorage.getAsync('preferences').then((preferences) => {
+        console.log('GET PREFERE', preferences);
         figma.ui.postMessage({
             type: 'figma:preferencesupdate',
             message: {preferences: JSON.parse(preferences) || defaultPreferences},
@@ -155,11 +151,10 @@ figma.on('run', ({command, parameters}) => {
     //Update selection event
     updateSelection();
 
-    //Gradient styles change event
-    figma.ui.postMessage({
-        type: 'figma:styles:gradientschange',
-        message: {paintStyles: gradientPaintStyles},
-    });
+    //Starting polling interval
+    poolingInterval = setInterval(() => {
+        updatedGradientStyles();
+    }, poolingTimeout);
 
     //   switch (command) {
     //     case "resize":
@@ -170,4 +165,8 @@ figma.on('run', ({command, parameters}) => {
     //       break
     //     ...
     //   }
+});
+
+figma.on('close', () => {
+    clearInterval(poolingInterval);
 });

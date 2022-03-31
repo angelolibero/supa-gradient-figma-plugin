@@ -69,8 +69,8 @@ const AngularSlider: React.FC<Props> = ({
                         <SliderTrack bgColor="transparent">
                             <Box position="relative" right={10} />
                         </SliderTrack>
-                        <SliderThumb boxSize={7} borderRadius="md" _active={{boxSize: 8}} transition="all 0.2s">
-                            <Box transform={`rotate(${sliderValue}deg)`}>
+                        <SliderThumb boxSize={7} borderRadius="md" _active={{boxSize: 8}} transition="all 0.25s">
+                            <Box transform={`rotate(${sliderValue}deg)`} transition="all 0.25s">
                                 <MdArrowUpward />
                             </Box>
                         </SliderThumb>

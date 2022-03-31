@@ -31,20 +31,22 @@ const LinearGradientPicker: React.FC<Props> = ({onChange, value, defaultValue}) 
             <GradientPicker
                 {...{
                     width: 268,
-                    paletteHeight: 24,
+                    paletteHeight: 20,
                     palette,
                     onPaletteChange: didChangePalette,
                 }}
-            ></GradientPicker>
+            >
+                <WrappedColorPicker />
+            </GradientPicker>
         </Box>
     );
 };
 
-const WrappedColorPicker = ({onSelect, ...rest}) => (
+const WrappedColorPicker = ({onSelect = undefined, ...rest}) => (
     <ColorPicker
         {...rest}
         onChange={(c) => {
-            onSelect(c.color, c.alpha / 100);
+            onSelect && onSelect(c.color, c.alpha / 100);
         }}
     />
 );

@@ -1,4 +1,3 @@
-import {rgba} from 'style-value-types';
 import {GradientStops, Palette} from '../typings';
 import {anglesTransform} from './angles';
 
@@ -89,7 +88,7 @@ const paletteFromGradientStops = (gradientStops: GradientStops, alpha: boolean =
     return palette;
 };
 
-const gradientAngleFromTransform = (transform: any) => {
+const gradientAngleFromTransform = (transform: Transform) => {
     for (let key in anglesTransform) {
         let angleTransform = anglesTransform[key];
         if (JSON.stringify(angleTransform) == JSON.stringify(transform)) {
