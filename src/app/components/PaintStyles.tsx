@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {RadioGroup, IconButton, Tooltip, Stack, RadioGroupProps, chakra} from '@chakra-ui/react';
+import {RadioGroup, IconButton, Tooltip, Center, RadioGroupProps, SimpleGrid} from '@chakra-ui/react';
 import {MdAdd} from 'react-icons/md';
 import GradientSwatch from './GradientSwatch';
 
@@ -12,31 +12,33 @@ type Props = {
 
 const PaintStyles: React.FC<Props> = ({paintStyles, id, onSelect, onCreate, ...rest}) => {
     return (
-        <RadioGroup overflowX="scroll" overflowY="visible" w="100%" maxW="100%" minH={9} value={id} {...rest}>
-            <Stack direction="row" w="100%" h="full" alignItems="center" spacing={3}>
-                <Tooltip label="Create gradient style">
-                    <IconButton
-                        onClick={onCreate}
-                        // isDisabled={!isSelected}
-                        icon={<MdAdd />}
-                        aria-label="create gradient style"
-                        boxSize={8}
-                        minW={8}
-                        maxW={8}
-                        p={0}
-                        rounded="full"
-                        border="1px dashed"
-                        borderColor="gray.200"
-                        _focus={{
-                            shadow: 'none',
-                        }}
-                    />
-                </Tooltip>
+        <RadioGroup overflow="scroll" w="100%" maxW="100%" height={24} value={id} {...rest}>
+            <SimpleGrid columns={6} w="100%" height="auto" alignItems="center" spacing={3} p={4}>
+                <Center>
+                    <Tooltip label="Create gradient style">
+                        <IconButton
+                            onClick={onCreate}
+                            // isDisabled={!isSelected}
+                            icon={<MdAdd />}
+                            aria-label="create gradient style"
+                            boxSize={7}
+                            minW={7}
+                            maxW={7}
+                            p={0}
+                            rounded="full"
+                            border="1px dashed"
+                            borderColor="gray.200"
+                            _focus={{
+                                shadow: 'none',
+                            }}
+                        />
+                    </Tooltip>
+                </Center>
                 {paintStyles &&
                     paintStyles.map((paintStyle, index) => {
                         return <GradientSwatch paintStyle={paintStyle} key={index} onSelect={onSelect} boxSize={6} />;
                     })}
-            </Stack>
+            </SimpleGrid>
         </RadioGroup>
     );
 };

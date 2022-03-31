@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {useMemo, useCallback} from 'react';
-import {Tooltip, Radio, Center, RadioProps} from '@chakra-ui/react';
+import {Tooltip, Radio, Center, RadioProps, Box} from '@chakra-ui/react';
 import {bgGradientColorsFromStops, bgGradientFromColors, gradientAngleFromTransform} from '../lib/colors';
 
 type Props = {
@@ -26,27 +26,29 @@ const GradientSwatch: React.FC<Props> = ({paintStyle, onSelect, ...rest}) => {
     }, [paintStyle, onSelect]);
 
     return (
-        <Tooltip label={paintStyle.name}>
-            <Center>
-                {/*DON'T remove wrapper, tooltips will not work properly without  */}
-                <Radio
-                    bgGradient={bgGradient}
-                    value={paintStyle.id}
-                    onClick={onSelectStyle}
-                    name={paintStyle.name}
-                    id={paintStyle.id}
-                    variant="swatch"
-                    {...rest}
-                    _checked={{
-                        bgGradient: bgGradient,
-                        border: '2px solid',
-                        borderColor: 'white',
-                        shadow: 'outline',
-                        boxSize: 7,
-                    }}
-                />
-            </Center>
-        </Tooltip>
+        <Box>
+            <Tooltip label={paintStyle.name}>
+                <Center>
+                    {/*DON'T remove wrapper, tooltips will not work properly without  */}
+                    <Radio
+                        bgGradient={bgGradient}
+                        value={paintStyle.id}
+                        onClick={onSelectStyle}
+                        name={paintStyle.name}
+                        id={paintStyle.id}
+                        variant="swatch"
+                        {...rest}
+                        _checked={{
+                            bgGradient: bgGradient,
+                            border: '2px solid',
+                            borderColor: 'white',
+                            shadow: 'outline',
+                            boxSize: 7,
+                        }}
+                    />
+                </Center>
+            </Tooltip>
+        </Box>
     );
 };
 

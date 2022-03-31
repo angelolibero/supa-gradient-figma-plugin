@@ -1,10 +1,10 @@
 import * as React from 'react';
 import {useEffect} from 'react';
 import {useMemo} from 'react';
-import {Flex, Button, FlexProps, Text} from '@chakra-ui/react';
+import {Flex, Button, FlexProps, Text, Tooltip} from '@chakra-ui/react';
 import {GradientStops} from '../typings';
 import {useClipboard} from '@chakra-ui/react';
-import {MdCopyAll} from 'react-icons/md';
+import {MdCode, MdCopyAll} from 'react-icons/md';
 import {bgGradientColorsFromStops, bgGradientFromColors} from '../lib/colors';
 
 type Props = {
@@ -48,9 +48,11 @@ const GradientPreview: React.FC<Props> = ({gradientStops, angle, ...rest}) => {
         >
             {!gradientStops && <Text>No gradient selected</Text>}
             {gradientStops && (
-                <Button h={5} w={5} px={0} onClick={onCopy} colorScheme={hasCopied ? 'primary' : 'gray'}>
-                    <MdCopyAll />
-                </Button>
+                <Tooltip label="Copy CSS code">
+                    <Button h={5} w={5} minW={5} px={0} onClick={onCopy} colorScheme={hasCopied ? 'primary' : 'gray'}>
+                        <MdCode />
+                    </Button>
+                </Tooltip>
             )}
         </Flex>
     );

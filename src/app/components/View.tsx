@@ -79,7 +79,6 @@ const View = ({}) => {
     }, []);
 
     const onCreateStyle = useCallback(() => {
-        console.log('CRESTE', gradientStops, gradientTransform);
         parent.postMessage(
             {
                 pluginMessage: {
@@ -90,7 +89,7 @@ const View = ({}) => {
             },
             '*'
         );
-    }, [currentPaintStyle, paintStyles]);
+    }, [currentPaintStyle, paintStyles, gradientStops, gradientTransform]);
 
     const onChangeAngle = useCallback(
         (angle) => {
@@ -175,22 +174,21 @@ const View = ({}) => {
                 overflow="hidden"
                 flex="1"
                 alignItems="center"
-                pt={4}
                 pb={4}
-                spacing={2}
+                spacing={0}
                 w="100%"
                 h="100%"
                 minW="100%"
                 maxW="100%"
             >
                 <PaintStyles
-                    px={4}
                     paintStyles={paintStyles}
                     id={currentPaintStyle && currentPaintStyle.id}
                     onSelect={onSelectPaintStyle}
                     onCreate={onCreateStyle}
                 />
-                <Stack h="100%" w="100%" px={4}>
+                <Divider borderColor="blackAlpha.50" />
+                <Stack h="100%" w="100%" px={4} pt={4} shadow="md" bgColor="white">
                     <GradientPreview
                         gradientStops={gradientStops}
                         angle={gradientAngle}
@@ -215,7 +213,6 @@ const View = ({}) => {
                     )}
                 </Stack>
             </Stack>
-            <Divider />
             <Stack direction="row" spacing={4} py={4} px={4}>
                 <Button size="md" colorScheme="primary" w="full" onClick={applyGradient} isDisabled={!isSelected}>
                     {isSelected ? 'Apply' : 'No selection'}
