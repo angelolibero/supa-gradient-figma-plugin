@@ -18,6 +18,11 @@ const updateSelection = () => {
                 message: {selection: figma.currentPage.selection, fills: gradientNodes[0].fills},
             });
         }
+    } else {
+        figma.ui.postMessage({
+            type: 'figma:selectionchange',
+            message: {selection: figma.currentPage.selection},
+        });
     }
 };
 

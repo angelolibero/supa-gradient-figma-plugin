@@ -4,7 +4,6 @@ import button from './button';
 import checkbox from './checkbox';
 import drawer from './drawer';
 import heading from './heading';
-import iconsSwitch from './iconsSwitch';
 import input from './input';
 import link from './link';
 import menu from './menu';
@@ -15,6 +14,8 @@ import _switch from './switch';
 import tabs from './tabs';
 import textarea from './textarea';
 import tooltip from './tooltip';
+//Custom
+import iconsSwitch from './custom/iconsSwitch';
 
 export default {
     Accordion: accordion,

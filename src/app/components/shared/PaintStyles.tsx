@@ -13,7 +13,12 @@ type Props = {
 
 const PaintStyles: React.FC<Props> = ({gradientPaint, paintStyles, currentPaintStyle, onSelect, onCreate, ...rest}) => {
     return (
-        <Box w="100%" maxW="100%" bgColor="gray.100">
+        <Box
+            w="100%"
+            maxW="100%"
+            boxShadow="inset 0 -1px 8px rgba(0,0,0,0.075)"
+            bgGradient="linear(to-b, white, gray.100)"
+        >
             <RadioGroup
                 overflow="scroll"
                 w="100%"

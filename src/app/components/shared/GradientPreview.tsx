@@ -2,10 +2,10 @@ import * as React from 'react';
 import {useEffect} from 'react';
 import {useMemo} from 'react';
 import {Flex, Button, FlexProps, Text, Tooltip} from '@chakra-ui/react';
-import {GradientStops} from '../typings';
+import {GradientStops} from '../../typings';
 import {useClipboard} from '@chakra-ui/react';
 import {MdCode, MdCopyAll} from 'react-icons/md';
-import {bgGradientColorsFromStops, bgGradientFromColors} from '../lib/colors';
+import {bgGradientColorsFromStops, bgGradientFromColors} from '../../lib/colors';
 
 type Props = {
     gradientStops: GradientStops;

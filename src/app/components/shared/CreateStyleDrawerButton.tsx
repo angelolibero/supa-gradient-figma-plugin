@@ -32,7 +32,7 @@ const CreateStyleDrawerButton: React.FC<Props> = ({gradientPaint, onSave, ...res
 
     return (
         <>
-            <Tooltip label="Create gradient style">
+            <Tooltip label="Create style">
                 <IconButton
                     icon={<MdAdd />}
                     aria-label="create gradient style"

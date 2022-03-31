@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {useMemo, useCallback} from 'react';
 import {Tooltip, Radio, Center, RadioProps, Box} from '@chakra-ui/react';
-import {bgGradientColorsFromStops, bgGradientFromColors, gradientAngleFromTransform} from '../lib/colors';
+import {bgGradientColorsFromStops, bgGradientFromColors, gradientAngleFromTransform} from '../../lib/colors';
 
 type Props = {
     paintStyle?: PaintStyle;
@@ -28,7 +28,7 @@ const GradientSwatch: React.FC<Props> = ({paintStyle, defaultPaint, onSelect, ..
 
     return (
         <Box>
-            <Tooltip label={paintStyle.name}>
+            <Tooltip label={paintStyle.name} openDelay={400}>
                 <Center>
                     {/*DON'T remove wrapper, tooltips will not work properly without  */}
                     <Radio

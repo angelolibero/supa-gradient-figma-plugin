@@ -1,12 +1,12 @@
 import * as React from 'react';
 import {useState, useCallback, useEffect} from 'react';
-import {Stack, Box, Button, FormControl, Flex, Switch, FormLabel, Divider} from '@chakra-ui/react';
-import SegmetedSlider from './SegmetedSlider';
-import LinearGradientPicker from './LinearGradientPicker';
+import {Stack, Badge, Button, FormControl, Flex, Switch, FormLabel, Divider} from '@chakra-ui/react';
+import AngularSlider from './shared/AngularSlider';
+import LinearGradientPicker from './shared/LinearGradientPicker';
 import {GradientStops, Preferences} from '../typings';
 import {gradientAngleFromTransform} from '../lib/colors';
-import GradientPreview from './GradientPreview';
-import PaintStyles from './PaintStyles';
+import GradientPreview from './shared/GradientPreview';
+import PaintStyles from './shared/PaintStyles';
 import {anglesTransform} from '../lib/angles';
 
 const defaultGradientStops = [
@@ -195,7 +195,7 @@ const View = ({}) => {
                     onSelect={onSelectPaintStyle}
                     onCreate={onCreateStyle}
                 />
-                <Divider borderColor="blackAlpha.50" />
+                {/* <Divider borderColor="blackAlpha.50" /> */}
                 <Stack h="100%" w="100%" px={4} pt={4} bgColor="white" shadow="0 -4px -16px rgba(0,0,0,0.1)">
                     <GradientPreview
                         gradientStops={gradientStops}
@@ -210,7 +210,7 @@ const View = ({}) => {
                         />
                     )}
                     {gradientStops && (
-                        <SegmetedSlider
+                        <AngularSlider
                             onChange={onChangeAngle}
                             defaultValue={180}
                             min={0}
@@ -224,10 +224,23 @@ const View = ({}) => {
             <Stack direction="row" spacing={4} py={4} px={4}>
                 <Button size="md" colorScheme="primary" w="full" onClick={applyGradient} isDisabled={!isSelected}>
                     {isSelected ? 'Apply' : 'No selection'}
+                    {selection && isSelected ? (
+                        <Badge
+                            ml={2}
+                            size="sm"
+                            px={1}
+                            boxSize={4}
+                            lineHeight={4}
+                            colorScheme="whiteAlpha"
+                            color="whiteAlpha.700"
+                        >
+                            {selection.length}
+                        </Badge>
+                    ) : null}
                 </Button>
-                <FormControl d="flex" flexDir="column" alignItems="end" w="auto">
+                <FormControl d="flex" flexDir="column" alignItems="flex-end" w="auto">
                     <FormLabel whiteSpace="nowrap" htmlFor="live-mode" fontSize="xs" mx={0} mb={1} textAlign="right">
-                        Live:
+                        Live edit
                     </FormLabel>
                     <Switch
                         defaultChecked={false}
