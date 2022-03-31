@@ -78,18 +78,22 @@ const View = ({}) => {
         setGradientAngle(gradientAngleFromTransform(gradientPaint.gradientTransform));
     }, []);
 
-    const onCreateStyle = useCallback(() => {
-        parent.postMessage(
-            {
-                pluginMessage: {
-                    type: 'create-style',
-                    gradientStops: gradientStops,
-                    gradientTransform: gradientTransform,
+    const onCreateStyle = useCallback(
+        (newName: string) => {
+            parent.postMessage(
+                {
+                    pluginMessage: {
+                        type: 'create-style',
+                        gradientStops: gradientStops,
+                        gradientTransform: gradientTransform,
+                        name: newName,
+                    },
                 },
-            },
-            '*'
-        );
-    }, [currentPaintStyle, paintStyles, gradientStops, gradientTransform]);
+                '*'
+            );
+        },
+        [currentPaintStyle, paintStyles, gradientStops, gradientTransform]
+    );
 
     const onChangeAngle = useCallback(
         (angle) => {
@@ -168,13 +172,12 @@ const View = ({}) => {
     }, []);
 
     return (
-        <Flex direction="column" h="100%" w="100%" overflow="hidden">
+        <Flex direction="column" h="100%" w="100%" overflow="hidden" pos="relative">
             <Stack
                 direction="column"
                 overflow="hidden"
                 flex="1"
                 alignItems="center"
-                pb={4}
                 spacing={0}
                 w="100%"
                 h="100%"
@@ -183,12 +186,17 @@ const View = ({}) => {
             >
                 <PaintStyles
                     paintStyles={paintStyles}
-                    id={currentPaintStyle && currentPaintStyle.id}
+                    gradientPaint={{
+                        type: 'GRADIENT_LINEAR',
+                        gradientStops,
+                        gradientTransform: gradientTransform as Transform,
+                    }}
+                    currentPaintStyle={currentPaintStyle}
                     onSelect={onSelectPaintStyle}
                     onCreate={onCreateStyle}
                 />
                 <Divider borderColor="blackAlpha.50" />
-                <Stack h="100%" w="100%" px={4} pt={4} shadow="md" bgColor="white">
+                <Stack h="100%" w="100%" px={4} pt={4} bgColor="white" shadow="0 -4px -16px rgba(0,0,0,0.1)">
                     <GradientPreview
                         gradientStops={gradientStops}
                         angle={gradientAngle}

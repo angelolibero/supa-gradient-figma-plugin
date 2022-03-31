@@ -46,11 +46,11 @@ export default {
         swatch: {
             control: {
                 boxSize: 7,
-                shadow: 'xs',
+                shadow: 'sm',
                 rounded: 'full',
                 outline: 'none',
-                border: '3px solid',
-                borderColor: 'gray.300',
+                border: '2px solid',
+                borderColor: 'white',
                 p: 0,
                 cursor: 'pointer',
             },

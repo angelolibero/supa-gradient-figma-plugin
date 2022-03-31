@@ -4,13 +4,14 @@ import {Tooltip, Radio, Center, RadioProps, Box} from '@chakra-ui/react';
 import {bgGradientColorsFromStops, bgGradientFromColors, gradientAngleFromTransform} from '../lib/colors';
 
 type Props = {
-    paintStyle: PaintStyle;
+    paintStyle?: PaintStyle;
+    defaultPaint?: GradientPaint;
     onSelect?: (paintStyle: PaintStyle) => void;
 } & Omit<RadioProps, 'onSelect'>;
 
-const GradientSwatch: React.FC<Props> = ({paintStyle, onSelect, ...rest}) => {
+const GradientSwatch: React.FC<Props> = ({paintStyle, defaultPaint, onSelect, ...rest}) => {
     const angle = 180;
-    const paint = paintStyle.paints[0] as GradientPaint;
+    const paint = defaultPaint ? defaultPaint : (paintStyle.paints[0] as GradientPaint);
     const bgGradientColors = useMemo(() => {
         if (paintStyle.paints[0].type == 'GRADIENT_LINEAR') {
             return bgGradientColorsFromStops(paint.gradientStops);

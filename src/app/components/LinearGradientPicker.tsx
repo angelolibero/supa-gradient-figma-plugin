@@ -1,9 +1,7 @@
 import * as React from 'react';
-import {useState} from 'react';
 import {Box, useControllableState} from '@chakra-ui/react';
 import {Panel as ColorPicker} from 'rc-color-picker';
 import {GradientPicker} from 'react-linear-gradient-picker';
-import 'react-linear-gradient-picker/dist/index.css';
 import {GradientStops, Palette} from '../typings';
 import {paletteFromGradientStops, paletteToGradientStops} from '../lib/colors';
 

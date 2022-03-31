@@ -95,7 +95,7 @@ figma.ui.onmessage = (msg) => {
 
     // Create new Figma styles event
     if (msg.type === 'create-style') {
-        const newStyle = createGradientStyle('Gradient name', {
+        const newStyle = createGradientStyle(msg.name, {
             gradientStops: msg.gradientStops,
             gradientTransform: msg.gradientTransform,
         });
