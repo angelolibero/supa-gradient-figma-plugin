@@ -2,7 +2,7 @@ const radii = {
     none: '0',
     sm: '3px',
     base: '4px',
-    md: '5px',
+    md: '6px',
     lg: '8px',
     xl: '10px',
     '2xl': '12px',

@@ -84,7 +84,8 @@ const GradientPreview: React.FC<Props> = ({name, angle, gradientStops, gradientT
         <Flex
             {...checkredGradientProps}
             w="100%"
-            h={!isGradient ? '100%' : '100px'}
+            h="100%"
+            // h={!isGradient ? '100%' : '100px'}
             borderRadius="md"
             overflow="hidden"
         >
@@ -132,7 +133,7 @@ const GradientPreview: React.FC<Props> = ({name, angle, gradientStops, gradientT
                 {name && (
                     <Flex w="100%" alignItems="flex-start">
                         <SlideFade in={!!name} offsetY={-2}>
-                            <Badge size="sm" fontSize="xs" rounded="md" maxW="150px" h={5} lineHeight={5}>
+                            <Badge size="sm" fontSize="xs" borderRadius="sm" maxW="150px" h={5} lineHeight={5}>
                                 <Text isTruncated>{name}</Text>
                             </Badge>
                         </SlideFade>
@@ -148,6 +149,8 @@ const GradientPreview: React.FC<Props> = ({name, angle, gradientStops, gradientT
                             px={0}
                             onClick={onCopy}
                             colorScheme={hasCopied ? 'primary' : 'gray'}
+                            size="sm"
+                            fontSize="sm"
                         >
                             <MdCode />
                         </Button>

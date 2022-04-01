@@ -2,6 +2,11 @@ import {Preferences} from '../typings';
 
 export const poolingTimeout = 1000 * 2; //10 second
 
+export const defaultWindowSize = {
+    width: 240,
+    height: 375,
+};
+
 export const defaultPreferences: Preferences = {liveUpdates: true, updateStyles: true};
 
 export const anglesTransform = {

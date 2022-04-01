@@ -30,9 +30,9 @@ const LinearGradientPicker: React.FC<Props> = ({onChange, value, defaultValue}) 
         <Box>
             <GradientPicker
                 {...{
-                    width: 268,
-                    paletteHeight: 20,
+                    width: 208,
                     palette,
+                    paletteHeight: 16,
                     onPaletteChange: didChangePalette,
                 }}
             >

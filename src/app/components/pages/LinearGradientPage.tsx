@@ -89,7 +89,7 @@ const LinearGradientPage = ({}) => {
 
     const selectPaintStyle = useCallback(
         (paintStyle: PaintStyle) => {
-            if (!paintStyle) return;
+            if (!paintStyle || !paintStyle.paints) return;
             const gradientPaint = paintStyle.paints[0] as GradientPaint;
             setCurrentPaintStyle(paintStyle);
             setGradientStops(gradientPaint.gradientStops);
@@ -254,10 +254,10 @@ const LinearGradientPage = ({}) => {
                         w="100%"
                         px={4}
                         pt={4}
-                        pb={!isGradient && 4}
+                        pb={4}
                         bgColor="white"
                         shadow="0 -1px 20px rgba(0,0,0,0.01)"
-                        overflow="scroll"
+                        overflow="hidden"
                     >
                         <GradientPreview
                             gradientStops={gradientStops}
@@ -289,12 +289,11 @@ const LinearGradientPage = ({}) => {
                 {/* 
                 FOOTER 
             */}
-                <Stack direction="row" spacing={2} py={3} px={3}>
+                <Stack direction="row" spacing={1} py={3} px={3}>
                     <Button
-                        size="md"
+                        size="sm"
                         colorScheme={isSelected && !isGradient ? 'gray' : 'primary'}
                         w="full"
-                        rounded="md"
                         onClick={() => applyGradient(true)}
                         isDisabled={!isSelected || !isGradient}
                     >
@@ -308,6 +307,7 @@ const LinearGradientPage = ({}) => {
                                 lineHeight={4}
                                 colorScheme="whiteAlpha"
                                 color="whiteAlpha.700"
+                                fontSize="xs"
                             >
                                 {selection.length}
                             </Badge>

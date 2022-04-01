@@ -22,6 +22,7 @@ import {
 } from '@chakra-ui/react';
 import {GoSettings} from 'react-icons/go';
 import {Preferences} from '../../typings';
+import {MdMoreVert} from 'react-icons/md';
 
 type Props = {
     defaultPreferences: Preferences;
@@ -69,12 +70,12 @@ const PreferencesDrawerButton: FC<Props> = ({defaultPreferences, onChange, ...re
         <>
             {/* <Tooltip label="Preferences" openDelay={300}> */}
             <IconButton
-                icon={<GoSettings />}
+                icon={<MdMoreVert />}
                 aria-label="Show preferences"
                 ref={btnRef}
                 onClick={onOpen}
-                size="md"
-                fontSize="xl"
+                size="sm"
+                fontSize="lg"
                 bgColor="white"
                 _focus={{
                     shadow: 'none',
@@ -112,15 +113,17 @@ export const PreferencesDrawer: FC<PreferencesDrawerProps> = ({
         <Drawer isOpen={isOpen} placement="bottom" onClose={onClose} finalFocusRef={btnRef} {...rest}>
             <DrawerOverlay />
             <DrawerContent textAlign="left">
-                <DrawerHeader pb={4}>Preferences</DrawerHeader>
-                <DrawerBody w="full">
+                <DrawerHeader p={4} fontSize="md">
+                    Preferences
+                </DrawerHeader>
+                <DrawerBody w="full" px={4}>
                     <Stack direction="row" boxSize="100%" flex="1">
-                        <Stack w="full" spacing={4}>
+                        <Stack w="full" spacing={3}>
                             {/* liveUpdates */}
                             <FormControl d="flex" w="full" alignItems="center" justifyContent="center">
                                 <FormLabel htmlFor="live-mode" mx={0} mr={3} w="100%">
                                     <Stack flex="1" spacing={0}>
-                                        <Text fontSize="sm">Live updates</Text>
+                                        <Text fontSize="xs">Live updates</Text>
                                         <Text fontSize="xs" color="gray.400">
                                             Update selection automatically or manually
                                         </Text>
@@ -128,7 +131,7 @@ export const PreferencesDrawer: FC<PreferencesDrawerProps> = ({
                                 </FormLabel>
                                 <Switch
                                     isChecked={preferences.liveUpdates}
-                                    size="md"
+                                    size="sm"
                                     colorScheme="green"
                                     id="live-mode"
                                     onChange={(event) => onUpdate('liveUpdates', !preferences.liveUpdates)}
@@ -136,12 +139,12 @@ export const PreferencesDrawer: FC<PreferencesDrawerProps> = ({
                             </FormControl>
                             {/* updateStyles */}
                             <FormControl d="flex" w="full" alignItems="center" justifyContent="center">
-                                <FormLabel htmlFor="update-styles" fontSize="sm" mx={0} mr={3} w="100%">
+                                <FormLabel htmlFor="update-styles" fontSize="xs" mx={0} mr={3} w="100%">
                                     Update color styles
                                 </FormLabel>
                                 <Switch
                                     isChecked={preferences.updateStyles}
-                                    size="md"
+                                    size="sm"
                                     colorScheme="green"
                                     id="update-styles"
                                     onChange={(event) => onUpdate('updateStyles', !preferences.updateStyles)}
@@ -150,9 +153,9 @@ export const PreferencesDrawer: FC<PreferencesDrawerProps> = ({
                         </Stack>
                     </Stack>
                 </DrawerBody>
-                <DrawerFooter pt={4} pb={6}>
-                    <Stack direction="row" w="full">
-                        <Button w="full" size="md" onClick={onClose}>
+                <DrawerFooter p={4}>
+                    <Stack direction="row" w="full" spacing={1}>
+                        <Button w="full" size="sm" onClick={onClose}>
                             Close
                         </Button>
                     </Stack>

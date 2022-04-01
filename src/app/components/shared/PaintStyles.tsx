@@ -24,9 +24,9 @@ const PaintStyles: FC<Props> = ({
     ...rest
 }) => {
     const height = useMemo(() => {
-        if (paintStyles && paintStyles.length > 11) return '96px';
+        if (paintStyles && paintStyles.length > 11) return '88px';
         else if (paintStyles && paintStyles.length > 5) return '80px';
-        else if (paintStyles && paintStyles.length > 0) return '60px';
+        else if (paintStyles && paintStyles.length > 0) return '48px';
         else return '0px';
     }, [paintStyles]);
 
@@ -61,10 +61,13 @@ const PaintStyles: FC<Props> = ({
                                 paintStyle={currentPaintStyle}
                                 gradientPaint={gradientPaint}
                                 onCreate={onCreate}
+                                boxSize={6}
+                                minW={6}
+                                maxW={6}
                             />
                             {isChanged && (
                                 <Box
-                                    boxSize={4}
+                                    boxSize={3}
                                     pos="absolute"
                                     right="-3px"
                                     top={-1}

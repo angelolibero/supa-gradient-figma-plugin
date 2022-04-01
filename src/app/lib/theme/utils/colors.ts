@@ -25,10 +25,10 @@ export const variantSolid = (props: Record<string, any>) => {
     return {
         bg: background,
         color: mode(color, 'gray.800')(props),
-        shadow: c == 'primary' && 'button',
+        // shadow: c == 'primary' && 'button',
         _hover: {
             bg: mode(hoverBg, `${c}.300`)(props),
-            shadow: 'hover',
+            shadow: 'none',
             textDecor: 'none',
             _disabled: {
                 bg: background,

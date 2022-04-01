@@ -30,7 +30,7 @@ export default {
     PinInput: pinInput,
     Radio: radio,
     Select: select,
-    // Switch: _switch,
+    Switch: _switch,
     Tabs: tabs,
     Tooltip: tooltip,
     Textarea: textarea,

@@ -52,9 +52,8 @@ const GradientSwatch: React.FC<Props> = ({paintStyle, defaultPaint, isActive, sh
                     <Box as="label" {...checkredGradientProps} rounded="full" pos="relative">
                         <input {...input} onKeyDown={onPressEnter} />
                         <Box
-                            {...checkbox}
                             bgGradient={bgGradient}
-                            boxSize={size == 'lg' ? 10 : 7}
+                            boxSize={size == 'lg' ? 10 : 6}
                             shadow={isActive ? 'outline' : 'sm'}
                             rounded="full"
                             outline="none"
@@ -66,12 +65,14 @@ const GradientSwatch: React.FC<Props> = ({paintStyle, defaultPaint, isActive, sh
                                 boxShadow: 'outline',
                             }}
                             onClick={onSelectStyle}
+                            {...rest}
+                            {...checkbox}
                         />
                         {/* // show reset original style  */}
                         {/* {isActive ? 'si' : 'no'} */}
                         {showReset && (
                             <Center
-                                boxSize={4}
+                                boxSize={3}
                                 pos="absolute"
                                 right="-3px"
                                 top={-1}
@@ -79,9 +80,10 @@ const GradientSwatch: React.FC<Props> = ({paintStyle, defaultPaint, isActive, sh
                                 border="2px solid"
                                 borderColor="white"
                                 shadow="sm"
-                                fontSize="8px"
+                                fontSize="md"
                                 overflow="hidden"
                                 pointerEvents="none"
+                                bgColor="white"
                             >
                                 <MdRefresh />
                             </Center>

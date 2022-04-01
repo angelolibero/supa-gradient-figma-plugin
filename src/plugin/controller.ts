@@ -1,4 +1,4 @@
-import {anglesTransform} from '../app/lib/constants';
+import {anglesTransform, defaultWindowSize} from '../app/lib/constants';
 import {gradientAngleFromTransform} from '../app/lib/colors';
 import {updateSelection, updateGradientStyles, selectPaintStyle} from '../app/lib/figma';
 import {isGradientCompatible, createGradientStyle} from '../app/lib/utils';
@@ -8,134 +8,109 @@ import {defaultPreferences, poolingTimeout} from '../app/lib/constants';
 var poolingInterval;
 
 figma.showUI(__html__);
-figma.ui.resize(300, 440);
+figma.ui.resize(240, defaultWindowSize.width);
 
 figma.ui.onmessage = (msg) => {
-    // Apply gradient to current selection event
-    // only gradient compatible nodes
-    if (msg.type === 'apply-gradient') {
-        const angle = msg.angle;
-        const gradientStops: GradientStops = msg.gradientStops;
+    switch (msg.type) {
+        // Apply gradient to current selection event
+        // only gradient compatible nodes
+        case 'apply-gradient':
+            const angle = msg.angle;
+            const gradientStops: GradientStops = msg.gradientStops;
 
-        console.log('FILL SELECTION ', gradientStops);
+            console.log('FILL SELECTION ', gradientStops);
 
-        figma.currentPage.selection &&
-            figma.currentPage.selection.forEach((node) => {
-                if (
-                    node &&
-                    gradientStops &&
-                    (node.type == 'RECTANGLE' ||
-                        node.type == 'ELLIPSE' ||
-                        node.type == 'POLYGON' ||
-                        node.type == 'VECTOR' ||
-                        node.type == 'FRAME' ||
-                        node.type == 'STAR')
-                ) {
-                    const style = figma.getStyleById(msg.id);
-                    const isChanged =
-                        (style && JSON.stringify(msg.gradientStops) != JSON.stringify(style.paints[0].gradientStops)) ||
-                        (style && angle != gradientAngleFromTransform(style.paints[0].gradientTransform));
+            figma.currentPage.selection &&
+                figma.currentPage.selection.forEach((node) => {
+                    if (
+                        node &&
+                        gradientStops &&
+                        (node.type == 'RECTANGLE' ||
+                            node.type == 'ELLIPSE' ||
+                            node.type == 'POLYGON' ||
+                            node.type == 'VECTOR' ||
+                            node.type == 'FRAME' ||
+                            node.type == 'STAR')
+                    ) {
+                        const style = figma.getStyleById(msg.id);
+                        const isChanged =
+                            (style &&
+                                JSON.stringify(msg.gradientStops) != JSON.stringify(style.paints[0].gradientStops)) ||
+                            (style && angle != gradientAngleFromTransform(style.paints[0].gradientTransform));
 
-                    if (style && !isChanged) {
-                        node.fillStyleId = style.id;
-                    } else {
-                        node.fills = [
-                            {
-                                type: 'GRADIENT_LINEAR',
-                                gradientTransform: anglesTransform[angle],
-                                gradientStops,
-                            },
-                        ];
+                        if (style && !isChanged) {
+                            node.fillStyleId = style.id;
+                        } else {
+                            node.fills = [
+                                {
+                                    type: 'GRADIENT_LINEAR',
+                                    gradientTransform: anglesTransform[angle],
+                                    gradientStops,
+                                },
+                            ];
+                        }
                     }
-                }
-                //else {
-                //     figma.notify(`Can't apply gradient to node ${node.name}`, {timeout: 3000});
-                // }
+                    //else {
+                    //     figma.notify(`Can't apply gradient to node ${node.name}`, {timeout: 3000});
+                    // }
+                });
+            break;
+        // Close plugin event
+        case 'preferences-update':
+            figma.clientStorage.setAsync('preferences', JSON.stringify(msg.preferences));
+            figma.ui.postMessage({
+                type: 'figma:preferencesupdate',
+                message: {preferences: msg.preferences},
             });
-        //figma.viewport.scrollAndZoomIntoView(figma.currentPage.selection);
+            figma.notify('Plugin preferences updated', {timeout: 1000});
+            break;
+        case 'preferences-clear':
+            const newPreferencesValue = JSON.stringify(defaultPreferences);
+            figma.clientStorage.setAsync('preferences', newPreferencesValue);
+            figma.ui.postMessage({
+                type: 'figma:preferencesupdate',
+                message: {preferences: newPreferencesValue},
+            });
+            figma.notify('Cleared preferences', {timeout: 1000});
+            break;
+        // Create new paint style and updates styles
+        case 'create-style':
+            const newStyle = createGradientStyle(msg.name, {
+                gradientStops: msg.gradientStops,
+                gradientTransform: msg.gradientTransform,
+            });
+            figma.notify('New gradient style created', {timeout: msg.timeout || 1000});
+            figma.currentPage.selection.map((node) => {
+                if (node && isGradientCompatible(node)) {
+                    (node as RectangleNode).fillStyleId = newStyle.id;
+                }
+            });
+            updateGradientStyles();
+            selectPaintStyle(newStyle);
+            break;
+        // Basic figma notification event
+        case 'notify':
+            figma.notify(msg.title, {timeout: msg.timeout || 1000});
+            break;
+        // Resize event
+        case 'resize':
+            console.log('RESIZE');
+            figma.ui.resize(msg.size.w, msg.size.h);
+            break;
+        default:
+            break;
     }
-
-    // Close plugin event
-    if (msg.type === 'close-plugin') {
-        figma.closePlugin();
-    }
-
-    // Updates client storage with a new preferences event
-    if (msg.type === 'preferences-update') {
-        let valueToStore = JSON.stringify(msg.preferences);
-        figma.clientStorage.setAsync('preferences', valueToStore);
-        figma.ui.postMessage({
-            type: 'figma:preferencesupdate',
-            message: {preferences: msg.preferences},
-        });
-        figma.notify('Plugin preferences updated', {timeout: 1000});
-    }
-
-    // Clears preferences event
-    // invoked from options menu
-    if (msg.type === 'preferences-clear') {
-        let valueToStore = JSON.stringify(defaultPreferences);
-        figma.clientStorage.setAsync('preferences', valueToStore);
-        console.log('CLEAR PREFERE', msg.preferences);
-        figma.ui.postMessage({
-            type: 'figma:preferencesupdate',
-            storage: valueToStore,
-        });
-        figma.notify('Cleared preferences', {timeout: 1000});
-    }
-
-    // Create new Figma styles event
-    if (msg.type === 'create-style') {
-        const newStyle = createGradientStyle(msg.name, {
-            gradientStops: msg.gradientStops,
-            gradientTransform: msg.gradientTransform,
-        });
-        figma.notify('New gradient style created', {timeout: msg.timeout || 1000});
-
-        figma.currentPage.selection.map((node) => {
-            if (node && isGradientCompatible(node)) {
-                (node as RectangleNode).fillStyleId = newStyle.id;
-            }
-        });
-        updateGradientStyles();
-        selectPaintStyle(newStyle);
-    }
-
-    // Clear selection
-    if (msg.type === 'clear-selection') {
-        figma.currentPage.selection = [];
-    }
-
-    // Notification event
-    if (msg.type === 'notify') {
-        figma.notify(msg.title, {timeout: msg.timeout || 1000});
-    }
-
-    // if (msg.type === 'log-gradient') {
-    //     if (figma.currentPage.selection && figma.currentPage.selection[0]) {
-    //         console.log(figma.currentPage.selection[0]);
-    //     }
-    // }
 };
 
 figma.on('selectionchange', () => {
-    // figma.ui.postMessage({
-    //     type: 'figma:selectionchange',
-    //     message: {selection: figma.currentPage.selection, fills: gradientNodes[0].fills},
-    // });
     updateSelection();
 });
 
 figma.on('currentpagechange', () => {
-    // figma.ui.postMessage({
-    //     type: 'figma:selectionchange',
-    //     message: {selection: figma.currentPage.selection, fills: gradientNodes[0].fills},
-    // });
     console.log('currentpagechange');
-    // updateSelection();
 });
 
-figma.on('run', () => {
+figma.on('run' as any, () => {
     //Send initial events
     updateGradientStyles();
     updateSelection();
@@ -153,16 +128,6 @@ figma.on('run', () => {
             message: {preferences: JSON.parse(preferences) || defaultPreferences},
         });
     });
-
-    //   switch (command) {
-    //     case "resize":
-    //       handleResize(parameters.width, parameters.height)
-    //       break
-    //     case "move":
-    //       handleMove(parameters.dx, parameters.dy)
-    //       break
-    //     ...
-    //   }
 });
 
 figma.on('close', () => {

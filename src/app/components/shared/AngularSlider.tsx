@@ -10,10 +10,10 @@ import {
     SliderMark,
     Box,
     Circle,
-    Badge,
+    Center,
     useControllableState,
 } from '@chakra-ui/react';
-import {MdArrowUpward} from 'react-icons/md';
+import {MdArrowUpward, MdOutlineDragHandle} from 'react-icons/md';
 
 type Props = {
     onChange: (angle) => void;
@@ -42,8 +42,20 @@ const AngularSlider: React.FC<Props> = ({
 
     return (
         <Box>
-            <Stack direction="row" borderRadius="lg" bgColor="gray.100" py={2} px={2} alignItems="center">
-                <Text fontWeight="bold" fontSize="sm" width={14} mr={5} pos="relative">
+            <Stack
+                direction="row"
+                borderRadius="md"
+                bgColor="gray.100"
+                spacing={1}
+                py={2}
+                pr={1}
+                pl={3}
+                alignItems="center"
+            >
+                <Box transform={`rotate(${sliderValue}deg)`} transition="all 0.25s" fontSize="10px">
+                    <MdArrowUpward />
+                </Box>
+                <Text fontWeight="bold" fontSize="xs" maxW={8} minW={8} pos="relative" textAlign="left">
                     {sliderValue}°
                 </Text>
 
@@ -69,10 +81,16 @@ const AngularSlider: React.FC<Props> = ({
                         <SliderTrack bgColor="transparent">
                             <Box position="relative" right={10} />
                         </SliderTrack>
-                        <SliderThumb boxSize={7} borderRadius="md" _active={{boxSize: 8}} transition="all 0.25s">
-                            <Box transform={`rotate(${sliderValue}deg)`} transition="all 0.25s">
-                                <MdArrowUpward />
-                            </Box>
+                        <SliderThumb
+                            boxSize={5}
+                            borderRadius="full"
+                            _active={{boxSize: 6}}
+                            transition="all 0.25s"
+                            position="relative"
+                        >
+                            <Center pos="absolute" top={0} right={0} boxSize="100%" fontSize="xs">
+                                <MdOutlineDragHandle />
+                            </Center>
                         </SliderThumb>
                     </Slider>
                 </Box>

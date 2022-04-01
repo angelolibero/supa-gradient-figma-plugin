@@ -9,7 +9,7 @@ import {
     Drawer,
     DrawerBody,
     DrawerContent,
-    DrawerFooter,
+    DrawerProps,
     DrawerHeader,
     DrawerOverlay,
     useDisclosure,
@@ -31,16 +31,12 @@ type Props = {
 const CreateStyleDrawerButton: React.FC<Props> = ({gradientPaint, paintStyle, onCreate, ...rest}) => {
     const {isOpen, onOpen, onClose} = useDisclosure();
     const btnRef = useRef<HTMLButtonElement>();
-    const [value, setValue] = React.useState('');
-    const inputRef = useRef<HTMLInputElement>();
 
-    const handleChange = React.useCallback((event) => setValue(event.target.value), [value]);
-
-    const handleOnSave = React.useCallback(() => {
-        if (!inputRef.current.value || inputRef.current.value.length == 0) return;
-        onCreate(value, gradientPaint);
+    const handleCreate = (name: string) => {
+        if (!name || name.length == 0) return;
+        onCreate(name, gradientPaint);
         onClose();
-    }, [value]);
+    };
 
     return (
         <>
@@ -62,72 +58,112 @@ const CreateStyleDrawerButton: React.FC<Props> = ({gradientPaint, paintStyle, on
                     {...rest}
                 />
             </Tooltip>
-            <Drawer
+            <CreateStyleDrawer
+                gradientPaint={gradientPaint}
+                paintStyle={paintStyle}
                 isOpen={isOpen}
                 placement="bottom"
                 onClose={onClose}
-                finalFocusRef={btnRef}
-                initialFocusRef={inputRef}
-            >
-                <DrawerOverlay />
-                <DrawerContent textAlign="left">
-                    <DrawerHeader>
-                        <Stack flex="1" spacing={2} alignItems="flex-start">
-                            <GradientSwatch
-                                paintStyle={{...paintStyle, id: undefined, name: undefined}}
-                                h={12}
-                                pointerEvents="none"
-                                size="lg"
-                                shadow="md"
-                            />
-                            <Text>New style</Text>
-                            {/* <Text fontSize="sm" color="gray.400">
+                onCreate={handleCreate}
+                btnRef={btnRef}
+            />
+        </>
+    );
+};
+
+type CreateStyleDrawerProps = {
+    paintStyle?: PaintStyle;
+    gradientPaint: GradientPaint;
+    btnRef: React.RefObject<HTMLButtonElement>;
+    onCreate: (name: string) => void;
+} & Omit<DrawerProps, 'children'>;
+
+export const CreateStyleDrawer: React.FC<CreateStyleDrawerProps> = ({
+    gradientPaint,
+    paintStyle,
+    isOpen,
+    onClose,
+    onCreate,
+    btnRef,
+    ...rest
+}) => {
+    const [name, setName] = React.useState('');
+    const inputRef = useRef<HTMLInputElement>();
+
+    const handleChange = React.useCallback((event) => setName(event.target.value), [name]);
+
+    const handleCreate = React.useCallback((event) => onCreate(name), [name]);
+
+    return (
+        <Drawer
+            isOpen={isOpen}
+            placement="bottom"
+            onClose={onClose}
+            finalFocusRef={btnRef}
+            initialFocusRef={inputRef}
+            {...rest}
+        >
+            <DrawerOverlay />
+            <DrawerContent textAlign="left">
+                <DrawerHeader p={4} fontSize="md">
+                    <Stack flex="1" spacing={2} alignItems="flex-start">
+                        <GradientSwatch
+                            paintStyle={{...paintStyle, id: undefined, name: undefined}}
+                            h={12}
+                            pointerEvents="none"
+                            size="lg"
+                            shadow="md"
+                        />
+                        <Text>New style</Text>
+                        {/* <Text fontSize="sm" color="gray.400">
                                 Create a gradient style to reuse all over the project:
                             </Text> */}
-                        </Stack>
-                    </DrawerHeader>
-                    <DrawerBody pb={6}>
-                        <chakra.form
-                            m={0}
-                            pb={4}
-                            onSubmit={(event) => {
-                                event.stopPropagation();
-                                event.preventDefault();
-                                handleOnSave();
-                            }}
+                    </Stack>
+                </DrawerHeader>
+                <DrawerBody px={4} pb={4}>
+                    <chakra.form
+                        m={0}
+                        pb={4}
+                        onSubmit={(event) => {
+                            event.stopPropagation();
+                            event.preventDefault();
+                            onCreate(name);
+                        }}
+                    >
+                        <Input
+                            ref={inputRef}
+                            placeholder="Insert style name"
+                            onChange={handleChange}
+                            w="100%"
+                            type="text"
+                            size="sm"
+                            variant="filled"
+                            mb={2}
+                        />
+                        <Text fontSize="xs" color="gray.400">
+                            <Badge colorScheme="green" size="sm" fontSize="xs">
+                                Tip
+                            </Badge>{' '}
+                            Use slash naming convention to name and organize gradient styles (E.g. Gradients/Primary).
+                        </Text>
+                    </chakra.form>
+                    <Stack direction="row" w="full">
+                        <Button onClick={onClose} w="100%" size="sm">
+                            Cancel
+                        </Button>
+                        <Button
+                            colorScheme="primary"
+                            onClick={handleCreate}
+                            isDisabled={!name || name.length == 0}
+                            w="100%"
+                            size="sm"
                         >
-                            <Input
-                                ref={inputRef}
-                                placeholder="Insert style name"
-                                onChange={handleChange}
-                                w="100%"
-                                type="text"
-                                size="md"
-                                variant="filled"
-                                mb={2}
-                            />
-                            <Text fontSize="sm" color="gray.400">
-                                <Badge colorScheme="green">Tip</Badge> Use slash naming convention to name and organize
-                                gradient styles (E.g. Gradients/Primary).
-                            </Text>
-                        </chakra.form>
-                        <Stack direction="row" w="full">
-                            <Button onClick={onClose} w="100%">
-                                Cancel
-                            </Button>
-                            <Button
-                                colorScheme="primary"
-                                onClick={handleOnSave}
-                                isDisabled={!value || value.length == 0}
-                                w="100%"
-                            >
-                                Save style
-                            </Button>
-                        </Stack>
-                    </DrawerBody>
-                </DrawerContent>
-            </Drawer>
-        </>
+                            Save style
+                        </Button>
+                    </Stack>
+                </DrawerBody>
+            </DrawerContent>
+        </Drawer>
     );
 };
 
