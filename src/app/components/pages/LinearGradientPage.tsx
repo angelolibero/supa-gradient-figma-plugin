@@ -171,33 +171,43 @@ const LinearGradientPage = ({}) => {
         // This is how we read messages sent from the plugin controller
         const onMessage = (event) => {
             const {type, message} = event.data.pluginMessage;
-            if (type === 'figma:selectionchange') {
-                //   const fills = message.fills;
 
-                if (message.fills) {
-                    console.log('GRADIENT FILL FROM SELECTION');
-                    const fills: GradientPaint[] = JSON.parse(message.fills);
-                    setGradientStops(fills[0].gradientStops);
-                    setGradientTransform(fills[0].gradientTransform);
-                }
+            switch (type) {
+                case 'figma:selectionchange':
+                    if (message.fills) {
+                        console.log('GRADIENT FILL FROM SELECTION');
+                        const fills: GradientPaint[] = JSON.parse(message.fills);
+                        setGradientStops(fills[0].gradientStops);
+                        setGradientTransform(fills[0].gradientTransform);
+                    }
 
-                setSelection(message.selection);
-                //setCurrentPaintStyle(undefined);
-                // if (fills) {
-                //     setGradientStops(fills[0].gradientStops);
-                //     fills[0].gradientTransform &&
-                //         setGradientAngle(gradientAngleFromTransform(fills[0].gradientTransform));
-                // }
-            } else if (type === 'figma:styles:gradientschange' && message.paintStyles) {
-                const _paintStyles: PaintStyle[] = message.paintStyles.reverse();
-                if (
-                    (paintStyles && JSON.stringify(message.paintStyles) != JSON.stringify(paintStyles)) ||
-                    !paintStyles
-                ) {
-                    setPaintStyles(_paintStyles);
-                }
-            } else if (type === 'figma:preferencesupdate') {
-                setPreferences(message.preferences);
+                    setSelection(message.selection);
+                    //setCurrentPaintStyle(undefined);
+                    // if (fills) {
+                    //     setGradientStops(fills[0].gradientStops);
+                    //     fills[0].gradientTransform &&
+                    //         setGradientAngle(gradientAngleFromTransform(fills[0].gradientTransform));
+                    // }
+                    break;
+                case 'figma:styles:gradientschange':
+                    const _paintStyles: PaintStyle[] = message.paintStyles.reverse();
+                    if (
+                        (paintStyles && JSON.stringify(message.paintStyles) != JSON.stringify(paintStyles)) ||
+                        !paintStyles
+                    ) {
+                        setPaintStyles(_paintStyles);
+                    }
+                    break;
+                case 'figma:preferencesupdate':
+                    setPreferences(message.preferences);
+                    break;
+                case 'figma:selectstyle':
+                    const selectedPaintStyle = JSON.parse(message.paintStyle);
+                    console.log('SISISIS', selectedPaintStyle);
+                    if (message.paintStyle) selectPaintStyle(selectedPaintStyle);
+                    break;
+                default:
+                    break;
             }
         };
         window.onmessage = onMessage;
@@ -229,7 +239,7 @@ const LinearGradientPage = ({}) => {
                         <PaintStyles
                             paintStyles={paintStyles}
                             currentPaintStyle={currentPaintStyle}
-                            newPaintStyle={isChanged && currentPaintStyle}
+                            isChanged={isChanged}
                             gradientPaint={currentGradientPaint}
                             onSelect={selectPaintStyle}
                             onCreate={onCreateStyle}

@@ -2,16 +2,18 @@ import * as React from 'react';
 import {useMemo, useCallback} from 'react';
 import {Tooltip, Radio, Center, RadioProps, Box, useRadio} from '@chakra-ui/react';
 import {bgGradientColorsFromStops, bgGradientFromColors, gradientAngleFromTransform} from '../../lib/colors';
-import {defaultAngle} from '../../lib/constants';
+import {checkredGradientProps, defaultAngle} from '../../lib/constants';
+import {MdRefresh} from 'react-icons/md';
 
 type Props = {
     paintStyle?: PaintStyle;
     defaultPaint?: GradientPaint;
     isActive?: boolean;
+    showReset?: boolean;
     onSelect?: (paintStyle: PaintStyle) => void;
 } & Omit<RadioProps, 'onSelect'>;
 
-const GradientSwatch: React.FC<Props> = ({paintStyle, defaultPaint, isActive, size, onSelect, ...rest}) => {
+const GradientSwatch: React.FC<Props> = ({paintStyle, defaultPaint, isActive, showReset, size, onSelect, ...rest}) => {
     const angle = defaultAngle;
     const paint = defaultPaint ? defaultPaint : (paintStyle.paints[0] as GradientPaint);
     const {getInputProps, getCheckboxProps} = useRadio({value: paintStyle.id, name: paintStyle.id, ...rest});
@@ -47,13 +49,13 @@ const GradientSwatch: React.FC<Props> = ({paintStyle, defaultPaint, isActive, si
         <Box>
             <Tooltip label={paintStyle.name} openDelay={300} isDisabled={!paintStyle.id}>
                 <Center>
-                    <Box as="label">
+                    <Box as="label" {...checkredGradientProps} rounded="full" pos="relative">
                         <input {...input} onKeyDown={onPressEnter} />
                         <Box
                             {...checkbox}
                             bgGradient={bgGradient}
                             boxSize={size == 'lg' ? 10 : 7}
-                            shadow="sm"
+                            shadow={isActive ? 'outline' : 'sm'}
                             rounded="full"
                             outline="none"
                             border="2px solid"
@@ -65,6 +67,25 @@ const GradientSwatch: React.FC<Props> = ({paintStyle, defaultPaint, isActive, si
                             }}
                             onClick={onSelectStyle}
                         />
+                        {/* // show reset original style  */}
+                        {/* {isActive ? 'si' : 'no'} */}
+                        {showReset && (
+                            <Center
+                                boxSize={4}
+                                pos="absolute"
+                                right="-3px"
+                                top={-1}
+                                rounded="full"
+                                border="2px solid"
+                                borderColor="white"
+                                shadow="sm"
+                                fontSize="8px"
+                                overflow="hidden"
+                                pointerEvents="none"
+                            >
+                                <MdRefresh />
+                            </Center>
+                        )}
                     </Box>
                 </Center>
             </Tooltip>

@@ -16,9 +16,9 @@ import {
 } from '@chakra-ui/react';
 import {GradientStops} from '../../typings';
 import {useClipboard} from '@chakra-ui/react';
-import {MdAdd, MdCheckCircle, MdCode, MdCopyAll} from 'react-icons/md';
+import {MdCheckCircle, MdCode} from 'react-icons/md';
 import {bgGradientColorsFromStops, bgGradientFromColors} from '../../lib/colors';
-import {checkredGradient} from '../../lib/utils';
+import {checkredGradientProps} from '../../lib/constants';
 import CreateStyleDrawerButton from './CreateStyleDrawerButton';
 
 type Props = {
@@ -81,7 +81,13 @@ const GradientPreview: React.FC<Props> = ({name, angle, gradientStops, gradientT
     }, [hasCopied]);
 
     return (
-        <Flex {...checkredGradient} w="100%" h={!isGradient ? '100%' : '100px'} borderRadius="md" overflow="hidden">
+        <Flex
+            {...checkredGradientProps}
+            w="100%"
+            h={!isGradient ? '100%' : '100px'}
+            borderRadius="md"
+            overflow="hidden"
+        >
             <Flex
                 w="100%"
                 h="inherit"

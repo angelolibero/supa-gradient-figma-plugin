@@ -1,12 +1,11 @@
 import {anglesTransform} from '../app/lib/constants';
 import {gradientAngleFromTransform} from '../app/lib/colors';
-import {updateSelection, updateGradientStyles} from '../app/lib/figma';
+import {updateSelection, updateGradientStyles, selectPaintStyle} from '../app/lib/figma';
 import {isGradientCompatible, createGradientStyle} from '../app/lib/utils';
 import {GradientStops} from '../app/typings';
+import {defaultPreferences, poolingTimeout} from '../app/lib/constants';
 
-const defaultPreferences = {liveUpdates: true};
-var poolingInterval = undefined;
-var poolingTimeout = 1000 * 5; //10 second
+var poolingInterval;
 
 figma.showUI(__html__);
 figma.ui.resize(300, 440);
@@ -99,6 +98,7 @@ figma.ui.onmessage = (msg) => {
             }
         });
         updateGradientStyles();
+        selectPaintStyle(newStyle);
     }
 
     // Clear selection

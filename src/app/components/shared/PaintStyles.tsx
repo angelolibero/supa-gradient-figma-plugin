@@ -8,7 +8,7 @@ import {bgGradientColorsFromStops, bgGradientFromColors, gradientAngleFromTransf
 type Props = {
     paintStyles: PaintStyle[];
     currentPaintStyle?: PaintStyle;
-    newPaintStyle?: PaintStyle;
+    isChanged?: boolean;
     gradientPaint?: GradientPaint;
     onSelect: (paintStyle: PaintStyle) => void;
     onCreate?: (name: string) => void;
@@ -18,23 +18,24 @@ const PaintStyles: FC<Props> = ({
     gradientPaint,
     paintStyles,
     currentPaintStyle,
-    newPaintStyle,
+    isChanged,
     onSelect,
     onCreate,
     ...rest
 }) => {
     const height = useMemo(() => {
-        if (paintStyles && paintStyles.length > 5) return '72px';
+        if (paintStyles && paintStyles.length > 11) return '96px';
+        else if (paintStyles && paintStyles.length > 5) return '80px';
         else if (paintStyles && paintStyles.length > 0) return '60px';
         else return '0px';
     }, [paintStyles]);
 
     const newBgGradient = useMemo(() => {
-        if (!newPaintStyle) return;
+        if (!isChanged) return;
         // const newPaint = newPaintStyle.paints[0] as GradientPaint;
         const bgGradientColors = bgGradientColorsFromStops(gradientPaint.gradientStops);
         return bgGradientFromColors(bgGradientColors, gradientAngleFromTransform(gradientPaint.gradientTransform));
-    }, [currentPaintStyle, gradientPaint, newPaintStyle]);
+    }, [currentPaintStyle, gradientPaint, isChanged]);
 
     return (
         <Box
@@ -52,7 +53,7 @@ const PaintStyles: FC<Props> = ({
                 transition="all 0.5s"
                 {...rest}
             >
-                <SimpleGrid columns={6} w="100%" height="auto" alignItems="center" spacing={3} p={4}>
+                <SimpleGrid columns={6} w="100%" height="auto" alignItems="center" spacing={2} p={3}>
                     {gradientPaint && (
                         <Center pos="relative">
                             <CreateStyleDrawerButton
@@ -61,7 +62,7 @@ const PaintStyles: FC<Props> = ({
                                 gradientPaint={gradientPaint}
                                 onCreate={onCreate}
                             />
-                            {newPaintStyle && (
+                            {isChanged && (
                                 <Box
                                     boxSize={4}
                                     pos="absolute"
@@ -84,6 +85,7 @@ const PaintStyles: FC<Props> = ({
                                     key={index}
                                     onSelect={onSelect}
                                     isActive={currentPaintStyle && paintStyle.id == currentPaintStyle.id}
+                                    showReset={isChanged && currentPaintStyle && paintStyle.id == currentPaintStyle.id}
                                 />
                             );
                         })}

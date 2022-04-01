@@ -1,5 +1,9 @@
 import {Preferences} from '../typings';
 
+export const poolingTimeout = 1000 * 2; //10 second
+
+export const defaultPreferences: Preferences = {liveUpdates: true, updateStyles: true};
+
 export const anglesTransform = {
     //Affine tranformations for common angles
     // custom: [
@@ -51,9 +55,7 @@ export const defaultGradientStops = [
 ];
 export const defaultGradientTransform = anglesTransform[defaultAngle] as Transform;
 
-export const defaultPreferences: Preferences = {liveUpdates: true, updateStyles: true};
-
-export const checkredGradient = {
+export const checkredGradientProps = {
     backgroundColor: 'gray.200',
     bgGradient:
         'linear-gradient(45deg, #eee 25%, transparent 25%, transparent 75%, #eee 75%, #eee 100%),linear-gradient(45deg, #eee 25%, white 25%, white 75%, #eee 75%, #eee 100%)',

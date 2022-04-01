@@ -37,4 +37,11 @@ const updateGradientStyles = (postMessage = true): PaintStyle[] => {
     return gradientPaintStyles;
 };
 
-export {updateSelection, updateGradientStyles};
+const selectPaintStyle = (paintStyle: PaintStyle) => {
+    figma.ui.postMessage({
+        type: 'figma:selectstyle',
+        message: {paintStyle: JSON.stringify(paintStyle)},
+    });
+};
+
+export {updateSelection, updateGradientStyles, selectPaintStyle};

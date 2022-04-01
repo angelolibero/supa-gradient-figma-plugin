@@ -44,10 +44,10 @@ const CreateStyleDrawerButton: React.FC<Props> = ({gradientPaint, paintStyle, on
 
     return (
         <>
-            <Tooltip label="New gradient" openDelay={300}>
+            <Tooltip label="New style" openDelay={300}>
                 <IconButton
                     icon={<MdAdd />}
-                    aria-label="New gradient"
+                    aria-label="New style"
                     boxSize={7}
                     minW={7}
                     maxW={7}
@@ -80,7 +80,7 @@ const CreateStyleDrawerButton: React.FC<Props> = ({gradientPaint, paintStyle, on
                                 size="lg"
                                 shadow="md"
                             />
-                            <Text>Add gradient</Text>
+                            <Text>New style</Text>
                             {/* <Text fontSize="sm" color="gray.400">
                                 Create a gradient style to reuse all over the project:
                             </Text> */}
@@ -98,7 +98,7 @@ const CreateStyleDrawerButton: React.FC<Props> = ({gradientPaint, paintStyle, on
                         >
                             <Input
                                 ref={inputRef}
-                                placeholder="Insert gradient name"
+                                placeholder="Insert style name"
                                 onChange={handleChange}
                                 w="100%"
                                 type="text"

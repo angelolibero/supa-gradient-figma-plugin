@@ -9,7 +9,7 @@ const isGradientCompatible = (node: SceneNode): boolean =>
     node.type == 'FRAME' ||
     node.type == 'STAR';
 
-const getGradientsFromStyles = (paintStyles: PaintStyle[]) => {
+const getGradientsFromStyles = (paintStyles: PaintStyle[]): any => {
     return paintStyles
         .map((style) => {
             let stylePaints: GradientPaint[] = [];
