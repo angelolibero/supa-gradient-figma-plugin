@@ -5,18 +5,18 @@ import AngularSlider from '../shared/AngularSlider';
 import LinearGradientPicker from '../shared/LinearGradientPicker';
 import {GradientStops, Preferences} from '../../typings';
 import {gradientAngleFromTransform} from '../../lib/colors';
-import {defaultGradientStops, defaultAngle, defaultGradientTransform, defaultPreferences} from '../../lib/utils';
+import {defaultGradientStops, defaultAngle, defaultPreferences} from '../../lib/constants';
 import GradientPreview from '../shared/GradientPreview';
 import PaintStyles from '../shared/PaintStyles';
 import PreferencesDrawerButton from '../shared/PreferencesDrawerButton';
 import StylesSkeleton from '../shared/StylesSkeleton';
-import {anglesTransform} from '../../lib/angles';
+import {anglesTransform} from '../../lib/constants';
 
 const LinearGradientPage = ({}) => {
     const [selection, setSelection] = useState<NodeType[]>();
-    const [gradientAngle, setGradientAngle] = useState(defaultAngle);
-    const [gradientStops, setGradientStops] = useState<GradientStops>(defaultGradientStops);
-    const [gradientTransform, setGradientTransform] = useState(defaultGradientTransform);
+    const [gradientAngle, setGradientAngle] = useState<number>(defaultAngle);
+    const [gradientStops, setGradientStops] = useState<GradientStops>(); //defaultGradientStops
+    const [gradientTransform, setGradientTransform] = useState<Transform>(); //defaultGradientTransform
     const [currentPaintStyle, setCurrentPaintStyle] = useState<PaintStyle>();
     const [paintStyles, setPaintStyles] = useState<PaintStyle[]>([]);
     const [preferences, setPreferences] = useState<Preferences>(defaultPreferences);

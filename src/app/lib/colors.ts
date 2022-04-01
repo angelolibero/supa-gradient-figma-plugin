@@ -1,5 +1,5 @@
 import {GradientStops, Palette} from '../typings';
-import {anglesTransform} from './angles';
+import {anglesTransform} from './constants';
 
 const hexRegex = /^#([0-9a-f]{3}){1,2}$/i;
 const rgbRegex =

@@ -1,4 +1,4 @@
-import {anglesTransform} from '../app/lib/angles';
+import {anglesTransform} from '../app/lib/constants';
 import {gradientAngleFromTransform} from '../app/lib/colors';
 import {updateSelection, updateGradientStyles} from '../app/lib/figma';
 import {isGradientCompatible, createGradientStyle} from '../app/lib/utils';
@@ -95,7 +95,7 @@ figma.ui.onmessage = (msg) => {
 
         figma.currentPage.selection.map((node) => {
             if (node && isGradientCompatible(node)) {
-                node.fillStyleId = newStyle.id;
+                (node as RectangleNode).fillStyleId = newStyle.id;
             }
         });
         updateGradientStyles();
@@ -135,7 +135,7 @@ figma.on('currentpagechange', () => {
     // updateSelection();
 });
 
-figma.on('run', ({command, parameters}) => {
+figma.on('run', () => {
     //Send initial events
     updateGradientStyles();
     updateSelection();

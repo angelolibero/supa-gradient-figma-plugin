@@ -43,7 +43,6 @@ const PaintStyles: FC<Props> = ({
             boxShadow="inset 0 -1px 24px rgba(0,0,0,0.075)"
             bgGradient="linear(to-br, white, gray.100)"
         >
-            {currentPaintStyle && currentPaintStyle.id}
             <RadioGroup
                 overflow="scroll"
                 w="100%"
@@ -80,10 +79,12 @@ const PaintStyles: FC<Props> = ({
                     {paintStyles &&
                         paintStyles.map((paintStyle, index) => {
                             return (
-                                <>
-                                    {currentPaintStyle && paintStyle.id == currentPaintStyle.id ? 'uguali' : 'no'}
-                                    <GradientSwatch paintStyle={paintStyle} key={index} onSelect={onSelect} />
-                                </>
+                                <GradientSwatch
+                                    paintStyle={paintStyle}
+                                    key={index}
+                                    onSelect={onSelect}
+                                    isActive={currentPaintStyle && paintStyle.id == currentPaintStyle.id}
+                                />
                             );
                         })}
                 </SimpleGrid>
