@@ -3,8 +3,8 @@ import {variantSolid} from '../utils/colors';
 
 const baseStyle: SystemStyleObject = {
     overlay: {
-        backdropFilter: 'blur(32px)',
-        transition: 'all 0.1s',
+        backdropFilter: 'blur(28px)',
+        transition: 'all 0.15s',
     },
 };
 

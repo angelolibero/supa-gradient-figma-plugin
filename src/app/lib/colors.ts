@@ -7,8 +7,13 @@ const rgbRegex =
 const rgbaRegex =
     /^rgba[(](?: \s * 0 * (?: \d\d ? (?: \.\d +) ? (?: \s*%)?|\.\d +\s *%| 100(?: \.0 *) ?\s *%| (?: 1\d\d | 2[0 - 4]\d | 25[0 - 5]) (?: \.\d +)?) \s *,) { 3 } \s * 0 * (?: \.\d +| 1(?: \.0 *) ?) \s * [)]$/i;
 
-const isHex = (color: string) => {
+const checkIsHex = (color: string) => {
     return hexRegex.test(color);
+};
+
+const checkIsGradient = (paint: Paint | GradientPaint) => {
+    const gradientPaint = paint as GradientPaint;
+    return !!(gradientPaint.gradientStops && gradientPaint.gradientTransform);
 };
 
 const hexToRgb = (hex: string, alpha?: boolean) => {
@@ -43,7 +48,7 @@ const paletteToRgbArray = (palette: Palette, alpha?: boolean) => {
     return (
         palette &&
         palette.map((value) =>
-            isHex(value.color) ? hexToRgb(value.color, alpha).match(/\d+/g) : value.color.match(/\d+/g)
+            checkIsHex(value.color) ? hexToRgb(value.color, alpha).match(/\d+/g) : value.color.match(/\d+/g)
         )
     );
 };
@@ -119,6 +124,8 @@ const colorStringToRGBAObject = (color) => {
 };
 
 export {
+    checkIsHex,
+    checkIsGradient,
     hexToRgb,
     hexToRGBAObject,
     paletteToGradientStops,
@@ -127,7 +134,6 @@ export {
     bgGradientColorsFromStops,
     bgGradientFromColors,
     colorStringToRGBAObject,
-    isHex,
     hexRegex,
     rgbRegex,
     rgbaRegex,

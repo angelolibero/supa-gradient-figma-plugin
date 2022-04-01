@@ -90,6 +90,7 @@ const GradientPreview: React.FC<Props> = ({name, angle, gradientStops, gradientT
                 justifyContent={isGradient ? 'flex-end' : 'center'}
                 p={2}
                 bgColor={!isGradient && 'gray.100'}
+                transition="all 0.25s"
                 {...rest}
             >
                 {!isGradient && (

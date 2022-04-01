@@ -43,17 +43,22 @@ export default {
     sizes,
     defaultProps,
     variants: {
-        swatch: {
-            control: {
-                boxSize: 7,
-                shadow: 'sm',
-                rounded: 'full',
-                outline: 'none',
-                border: '2px solid',
-                borderColor: 'white',
-                p: 0,
-                cursor: 'pointer',
-            },
+        swatch: (props) => {
+            return {
+                control: {
+                    boxSize: props.size == 'lg' ? 10 : 7,
+                    shadow: 'sm',
+                    rounded: 'full',
+                    outline: 'none',
+                    border: '2px solid',
+                    borderColor: 'white',
+                    p: 0,
+                    cursor: 'pointer',
+                    _checked: {
+                        boxSize: props.size == 'lg' ? 12 : 8,
+                    },
+                },
+            };
         },
     },
 };

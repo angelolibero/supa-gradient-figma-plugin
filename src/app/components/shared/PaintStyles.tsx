@@ -8,22 +8,33 @@ import {bgGradientColorsFromStops, bgGradientFromColors, gradientAngleFromTransf
 type Props = {
     paintStyles: PaintStyle[];
     currentPaintStyle?: PaintStyle;
+    newPaintStyle?: PaintStyle;
     gradientPaint?: GradientPaint;
     onSelect: (paintStyle: PaintStyle) => void;
     onCreate?: (name: string) => void;
 } & Omit<RadioGroupProps, 'onSelect' | 'children'>;
 
-const PaintStyles: FC<Props> = ({gradientPaint, paintStyles, currentPaintStyle, onSelect, onCreate, ...rest}) => {
+const PaintStyles: FC<Props> = ({
+    gradientPaint,
+    paintStyles,
+    currentPaintStyle,
+    newPaintStyle,
+    onSelect,
+    onCreate,
+    ...rest
+}) => {
     const height = useMemo(() => {
         if (paintStyles && paintStyles.length > 5) return '72px';
         else if (paintStyles && paintStyles.length > 0) return '60px';
         else return '0px';
-    }, [paintStyles, currentPaintStyle]);
+    }, [paintStyles]);
 
-    const bgGradient = useMemo(() => {
+    const newBgGradient = useMemo(() => {
+        if (!newPaintStyle) return;
+        // const newPaint = newPaintStyle.paints[0] as GradientPaint;
         const bgGradientColors = bgGradientColorsFromStops(gradientPaint.gradientStops);
         return bgGradientFromColors(bgGradientColors, gradientAngleFromTransform(gradientPaint.gradientTransform));
-    }, [gradientPaint, currentPaintStyle]);
+    }, [currentPaintStyle, gradientPaint, newPaintStyle]);
 
     return (
         <Box
@@ -32,6 +43,7 @@ const PaintStyles: FC<Props> = ({gradientPaint, paintStyles, currentPaintStyle, 
             boxShadow="inset 0 -1px 24px rgba(0,0,0,0.075)"
             bgGradient="linear(to-br, white, gray.100)"
         >
+            {currentPaintStyle && currentPaintStyle.id}
             <RadioGroup
                 overflow="scroll"
                 w="100%"
@@ -45,18 +57,19 @@ const PaintStyles: FC<Props> = ({gradientPaint, paintStyles, currentPaintStyle, 
                     {gradientPaint && (
                         <Center pos="relative">
                             <CreateStyleDrawerButton
-                                //isDisabled={!!(currentPaintStyle && currentPaintStyle.id)}
+                                // isDisabled={!newPaintStyle}
+                                paintStyle={currentPaintStyle}
                                 gradientPaint={gradientPaint}
                                 onCreate={onCreate}
                             />
-                            {(!currentPaintStyle || !currentPaintStyle.id) && (
+                            {newPaintStyle && (
                                 <Box
                                     boxSize={4}
                                     pos="absolute"
                                     right="-3px"
                                     top={-1}
                                     rounded="full"
-                                    bgGradient={bgGradient}
+                                    bgGradient={newBgGradient}
                                     border="2px solid"
                                     borderColor="white"
                                     shadow="sm"
@@ -66,7 +79,12 @@ const PaintStyles: FC<Props> = ({gradientPaint, paintStyles, currentPaintStyle, 
                     )}
                     {paintStyles &&
                         paintStyles.map((paintStyle, index) => {
-                            return <GradientSwatch paintStyle={paintStyle} key={index} onSelect={onSelect} />;
+                            return (
+                                <>
+                                    {currentPaintStyle && paintStyle.id == currentPaintStyle.id ? 'uguali' : 'no'}
+                                    <GradientSwatch paintStyle={paintStyle} key={index} onSelect={onSelect} />
+                                </>
+                            );
                         })}
                 </SimpleGrid>
             </RadioGroup>

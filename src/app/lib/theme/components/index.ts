@@ -31,8 +31,9 @@ export default {
     Radio: radio,
     Select: select,
     // Switch: _switch,
-    IconsSwitch: iconsSwitch,
     Tabs: tabs,
     Tooltip: tooltip,
     Textarea: textarea,
+    //CUSTOM components
+    IconsSwitch: iconsSwitch,
 };

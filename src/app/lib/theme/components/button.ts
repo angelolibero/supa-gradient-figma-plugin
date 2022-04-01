@@ -5,13 +5,13 @@ const baseStyle: SystemStyleObject = {};
 
 const sizes: Record<string, SystemStyleObject> = {
     sm: {
-        fontSize: 'button-secondary',
+        fontSize: 'sm',
         h: 8,
     },
     md: {
         px: 4,
         h: 10,
-        fontSize: 'button-secondary',
+        fontSize: 'sm',
     },
     lg: {
         px: 6,

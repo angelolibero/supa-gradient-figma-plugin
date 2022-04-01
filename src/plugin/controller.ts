@@ -1,7 +1,7 @@
 import {anglesTransform} from '../app/lib/angles';
 import {gradientAngleFromTransform} from '../app/lib/colors';
-import {updateSelection, updatedGradientStyles} from '../app/lib/figma';
-import {getGradientsFromStyles, isGradientCompatible, createGradientStyle} from '../app/lib/utils';
+import {updateSelection, updateGradientStyles} from '../app/lib/figma';
+import {isGradientCompatible, createGradientStyle} from '../app/lib/utils';
 import {GradientStops} from '../app/typings';
 
 const defaultPreferences = {liveUpdates: true};
@@ -18,7 +18,7 @@ figma.ui.onmessage = (msg) => {
         const angle = msg.angle;
         const gradientStops: GradientStops = msg.gradientStops;
 
-        console.log('APPPLY ', gradientStops);
+        console.log('FILL SELECTION ', gradientStops);
 
         figma.currentPage.selection &&
             figma.currentPage.selection.forEach((node) => {
@@ -33,11 +33,11 @@ figma.ui.onmessage = (msg) => {
                         node.type == 'STAR')
                 ) {
                     const style = figma.getStyleById(msg.id);
-                    const hasChanged =
+                    const isChanged =
                         (style && JSON.stringify(msg.gradientStops) != JSON.stringify(style.paints[0].gradientStops)) ||
                         (style && angle != gradientAngleFromTransform(style.paints[0].gradientTransform));
 
-                    if (style && !hasChanged) {
+                    if (style && !isChanged) {
                         node.fillStyleId = style.id;
                     } else {
                         node.fills = [
@@ -65,7 +65,6 @@ figma.ui.onmessage = (msg) => {
     if (msg.type === 'preferences-update') {
         let valueToStore = JSON.stringify(msg.preferences);
         figma.clientStorage.setAsync('preferences', valueToStore);
-        console.log('STORE PREFERE', msg.preferences);
         figma.ui.postMessage({
             type: 'figma:preferencesupdate',
             message: {preferences: msg.preferences},
@@ -92,14 +91,14 @@ figma.ui.onmessage = (msg) => {
             gradientStops: msg.gradientStops,
             gradientTransform: msg.gradientTransform,
         });
+        figma.notify('New gradient style created', {timeout: msg.timeout || 1000});
 
         figma.currentPage.selection.map((node) => {
             if (node && isGradientCompatible(node)) {
                 node.fillStyleId = newStyle.id;
             }
         });
-        updatedGradientStyles();
-        figma.notify('New gradient style created', {timeout: msg.timeout || 1000});
+        updateGradientStyles();
     }
 
     // Clear selection
@@ -137,8 +136,15 @@ figma.on('currentpagechange', () => {
 });
 
 figma.on('run', ({command, parameters}) => {
-    //Gradient styles change event
-    updatedGradientStyles();
+    //Send initial events
+    updateGradientStyles();
+    updateSelection();
+
+    //Starting polling interval
+    poolingInterval = setInterval(() => {
+        updateGradientStyles();
+    }, poolingTimeout);
+
     //Load preferences
     figma.clientStorage.getAsync('preferences').then((preferences) => {
         console.log('GET PREFERE', preferences);
@@ -147,14 +153,6 @@ figma.on('run', ({command, parameters}) => {
             message: {preferences: JSON.parse(preferences) || defaultPreferences},
         });
     });
-
-    //Update selection event
-    updateSelection();
-
-    //Starting polling interval
-    poolingInterval = setInterval(() => {
-        updatedGradientStyles();
-    }, poolingTimeout);
 
     //   switch (command) {
     //     case "resize":

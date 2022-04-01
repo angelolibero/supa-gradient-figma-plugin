@@ -20,7 +20,7 @@ import {
     Switch,
     Flex,
 } from '@chakra-ui/react';
-import {MdAdd, MdMoreVert} from 'react-icons/md';
+import {GoSettings} from 'react-icons/go';
 import {Preferences} from '../../typings';
 
 type Props = {
@@ -67,17 +67,21 @@ const PreferencesDrawerButton: FC<Props> = ({defaultPreferences, onChange, ...re
 
     return (
         <>
-            <Tooltip label="Preferences">
-                <IconButton
-                    icon={<MdMoreVert />}
-                    aria-label="Show preferences"
-                    ref={btnRef}
-                    onClick={onOpen}
-                    size="md"
-                    fontSize="md"
-                    {...rest}
-                />
-            </Tooltip>
+            {/* <Tooltip label="Preferences" openDelay={300}> */}
+            <IconButton
+                icon={<GoSettings />}
+                aria-label="Show preferences"
+                ref={btnRef}
+                onClick={onOpen}
+                size="md"
+                fontSize="xl"
+                bgColor="white"
+                _focus={{
+                    shadow: 'none',
+                }}
+                {...rest}
+            />
+            {/* </Tooltip> */}
             <PreferencesDrawer
                 preferences={preferences}
                 isOpen={isOpen}
@@ -146,7 +150,7 @@ export const PreferencesDrawer: FC<PreferencesDrawerProps> = ({
                         </Stack>
                     </Stack>
                 </DrawerBody>
-                <DrawerFooter pt={4}>
+                <DrawerFooter pt={4} pb={6}>
                     <Stack direction="row" w="full">
                         <Button w="full" size="md" onClick={onClose}>
                             Close
