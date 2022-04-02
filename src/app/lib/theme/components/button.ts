@@ -1,5 +1,5 @@
 import {SystemStyleObject} from '@chakra-ui/theme-tools';
-import {variantSolid, variantGradient} from '../utils/colors';
+import {variantSolid, variantGradient, variantOutline, variantGhost} from '../utils/colors';
 
 const baseStyle: SystemStyleObject = {
     fontWeight: 'semibold',
@@ -32,6 +32,8 @@ const sizes: Record<string, SystemStyleObject> = {
 const variants = {
     solid: variantSolid,
     gradient: variantGradient,
+    outline: variantOutline,
+    ghost: variantGhost,
 };
 
 const defaultProps = {

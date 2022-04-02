@@ -1,4 +1,4 @@
-import {mode} from '@chakra-ui/theme-tools';
+import {mode, SystemStyleFunction, transparentize} from '@chakra-ui/theme-tools';
 
 export const variantSolid = (props: Record<string, any>) => {
     const {colorScheme: c} = props;
@@ -7,13 +7,14 @@ export const variantSolid = (props: Record<string, any>) => {
         const bg = mode('gray.100', 'gray.700')(props);
         return {
             bg,
-            color: 'gray.500',
+            color: 'gray.700',
             _hover: {
                 bg: mode('gray.100', 'whiteAlpha.100')(props),
                 textDecor: 'none',
                 _disabled: {
                     bg,
                 },
+                shadow: 'none',
             },
             _active: {bg: mode('gray.200', 'whiteAlpha.200')(props)},
         };
@@ -26,6 +27,7 @@ export const variantSolid = (props: Record<string, any>) => {
         bg: background,
         color: mode(color, 'gray.800')(props),
         // shadow: c == 'primary' && 'button',
+        shadow: 'none',
         _hover: {
             bg: mode(hoverBg, `${c}.300`)(props),
             shadow: 'none',
@@ -35,6 +37,47 @@ export const variantSolid = (props: Record<string, any>) => {
             },
         },
         _active: {bg: mode(activeBg, `${c}.400`)(props)},
+    };
+};
+
+export const variantGhost: SystemStyleFunction = (props) => {
+    const {colorScheme: c, theme} = props;
+
+    if (c === 'gray') {
+        return {
+            color: mode(`inherit`, `whiteAlpha.900`)(props),
+            _hover: {
+                bg: mode(`gray.100`, `whiteAlpha.200`)(props),
+            },
+            _active: {bg: mode(`gray.200`, `whiteAlpha.300`)(props)},
+        };
+    }
+
+    const darkHoverBg = transparentize(`${c}.200`, 0.12)(theme);
+    const darkActiveBg = transparentize(`${c}.200`, 0.24)(theme);
+
+    return {
+        color: mode(`${c}.600`, `${c}.200`)(props),
+        bg: 'transparent',
+        _hover: {
+            bg: mode(`${c}.50`, darkHoverBg)(props),
+        },
+        _active: {
+            bg: mode(`${c}.100`, darkActiveBg)(props),
+        },
+    };
+};
+
+export const variantOutline: SystemStyleFunction = (props) => {
+    const {colorScheme: c} = props;
+    const borderColor = mode(`gray.200`, `whiteAlpha.300`)(props);
+    return {
+        ...variantGhost(props),
+        border: 'none',
+        _hover: {
+            border: '1px solid',
+            borderColor: c === 'gray' ? borderColor : 'currentColor',
+        },
     };
 };
 

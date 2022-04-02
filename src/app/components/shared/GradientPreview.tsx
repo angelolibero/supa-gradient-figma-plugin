@@ -42,33 +42,34 @@ const GradientPreview: React.FC<Props> = ({name, angle, gradientStops, gradientT
         return bgGradientFromColors(bgGradientColors, angle);
     }, [angle, gradientStops]);
 
-    // const clearSelection = useCallback(() => {
-    //     parent.postMessage(
-    //         {
-    //             pluginMessage: {
-    //                 type: 'clear-selection',
-    //             },
-    //         },
-    //         '*'
-    //     );
-    // }, []);
-
-    const handleCreateStyle = useCallback(
-        (name: string, gradientPaing: GradientPaint) => {
-            parent.postMessage(
-                {
-                    pluginMessage: {
-                        type: 'create-style',
-                        gradientStops: gradientStops,
-                        gradientTransform: gradientTransform,
-                        name: name,
-                    },
-                },
-                '*'
-            );
-        },
-        [gradientStops, gradientTransform]
-    );
+    const InvalidSelection = useCallback(() => {
+        return (
+            <Stack py={4} px={4} spacing={3} alignItems="center" justifyContent="center">
+                <Stack>
+                    <Text textAlign="center" fontSize="sm" fontWeight="bold">
+                        Selection has't gradients fills
+                    </Text>
+                    <Text textAlign="center" fontSize="xs">
+                        Here is what you can do:
+                    </Text>
+                </Stack>
+                <List fontSize="xs" w="100%" textAlign="center" alignItems="center" justifyContent="center">
+                    <ListItem d="flex">
+                        <ListIcon as={MdCheckCircle} color="primary.500" d="inline-block" />
+                        <Text>Select a layer with linear gradient or create new gradient</Text>
+                    </ListItem>
+                    <ListItem d="flex">
+                        <ListIcon as={MdCheckCircle} color="primary.500" d="inline-block" />
+                        <Text> Select a existing gradient</Text>
+                    </ListItem>
+                    <ListItem d="flex">
+                        <ListIcon as={MdCheckCircle} color="primary.500" d="inline-block" />
+                        <Text> Or create a new gradient</Text>
+                    </ListItem>
+                </List>
+            </Stack>
+        );
+    }, []);
 
     useEffect(() => {
         bgGradient && setValue(`background-image: ${bgGradient};`);
@@ -100,37 +101,8 @@ const GradientPreview: React.FC<Props> = ({name, angle, gradientStops, gradientT
                 transition="all 0.25s"
                 {...rest}
             >
-                {!isGradient && (
-                    <Stack py={4} px={8} spacing={4} alignItems="center" justifyContent="center">
-                        <Stack>
-                            <Text textAlign="center" fontSize="sm" fontWeight="bold">
-                                Selection has't gradients fills
-                            </Text>
-                            <Text textAlign="center" fontSize="xs">
-                                Here is what you can do:
-                            </Text>
-                        </Stack>
-                        <List fontSize="xs" w="100%" textAlign="center" alignItems="center" justifyContent="center">
-                            <ListItem d="flex">
-                                <ListIcon as={MdCheckCircle} color="primary.500" d="inline-block" />
-                                <Text>Select a layer with linear gradient fill to edit</Text>
-                            </ListItem>
-                            <ListItem d="flex">
-                                <ListIcon as={MdCheckCircle} color="primary.500" d="inline-block" />
-                                <Text> Select a existing gradient</Text>
-                            </ListItem>
-                            <ListItem d="flex">
-                                <ListIcon as={MdCheckCircle} color="primary.500" d="inline-block" />
-                                <Text> Or create a new gradient</Text>
-                            </ListItem>
-                        </List>
-                        <CreateStyleDrawerButton
-                            gradientPaint={{type: 'GRADIENT_ANGULAR', gradientStops, gradientTransform}}
-                            onCreate={handleCreateStyle}
-                        />
-                    </Stack>
-                )}
-                {name && (
+                {/* {!isGradient && <InvalidSelection />} */}
+                {1 && (
                     <Flex w="100%" alignItems="flex-start">
                         <SlideFade in={!!name} offsetY={-2}>
                             <Badge size="sm" fontSize="xs" borderRadius="sm" maxW="150px" h={5} lineHeight={5}>

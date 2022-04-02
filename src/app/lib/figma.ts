@@ -1,34 +1,60 @@
 import {getGradientsFromStyles, isGradientCompatible} from './utils';
 import {defaultWindowSize} from './constants';
 
-const getGradientNode = (node: SceneNode): RectangleNode | undefined => {
-    if (node && isGradientCompatible(node)) {
-        const gradientNode = node as RectangleNode;
-        return {id: node.id, fills: gradientNode.fills, fillStyleId: gradientNode.fillStyleId} as RectangleNode;
-    }
+const filterGradientCompatibleNodes = (selection: any[]) => {
+    console.log('SEL 2', selection);
+
+    const gradientCompatibleNodes =
+        selection &&
+        selection.map((node, index) => {
+            console.log('NODE', node);
+
+            if (node && isGradientCompatible(node) && node.fills[0].gradientStops) {
+                const gradientNode = node;
+                console.log('COMPATIBLE', gradientNode, node);
+                return {
+                    id: node.id,
+                    fillStyleId: gradientNode.fillStyleId,
+                    fills: gradientNode.fills,
+                    type: 'RECTANGLE',
+                };
+            }
+        });
+
+    console.log('TESTINO', gradientCompatibleNodes);
+    console.log('YESTIO 2', gradientCompatibleNodes && gradientCompatibleNodes.filter((value) => !!value));
+
+    return gradientCompatibleNodes && gradientCompatibleNodes.filter((value) => !!value);
 };
 
 const updateSelection = () => {
     if (figma.currentPage.selection && figma.currentPage.selection.length) {
-        const gradientNodes = figma.currentPage.selection.map(getGradientNode);
-        if (gradientNodes && gradientNodes.length > 0 && gradientNodes[0]) {
+        const selection = [...figma.currentPage.selection];
+        console.log('SEL', selection);
+        const gradientCompatibleNodes = filterGradientCompatibleNodes(selection);
+        if (gradientCompatibleNodes && gradientCompatibleNodes.length > 0 && gradientCompatibleNodes[0]) {
             figma.ui.postMessage({
                 type: 'figma:selectionchange',
-                message: {selection: figma.currentPage.selection, fills: JSON.stringify(gradientNodes[0].fills)},
+                message: JSON.stringify({
+                    selection: gradientCompatibleNodes.length ? gradientCompatibleNodes : [{id: selection[0].id}],
+                    fills: gradientCompatibleNodes[0] && gradientCompatibleNodes[0].fills,
+                }),
+            });
+        } else {
+            figma.ui.postMessage({
+                type: 'figma:selectionchange',
+                message: JSON.stringify({
+                    selection: [{id: selection[0].id}],
+                }),
             });
         }
-    } else {
-        figma.ui.postMessage({
-            type: 'figma:selectionchange',
-            message: {selection: figma.currentPage.selection},
-        });
     }
 };
 
 const updateGradientStyles = (postMessage = true): PaintStyle[] => {
     const gradientPaintStyles = getGradientsFromStyles(figma.getLocalPaintStyles());
 
-    console.log('gradientPaintStyles', gradientPaintStyles);
+    // console.log('update gradientPaintStyles');
 
     if (gradientPaintStyles && gradientPaintStyles.length > 11) {
         figma.ui.resize(defaultWindowSize.width, 415);
@@ -55,4 +81,4 @@ const selectPaintStyle = (paintStyle: PaintStyle) => {
     });
 };
 
-export {updateSelection, updateGradientStyles, selectPaintStyle};
+export {filterGradientCompatibleNodes, updateSelection, updateGradientStyles, selectPaintStyle};

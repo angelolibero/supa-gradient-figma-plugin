@@ -154,7 +154,7 @@ export const PreferencesDrawer: FC<PreferencesDrawerProps> = ({
                     </Stack>
                 </DrawerBody>
                 <DrawerFooter p={4}>
-                    <Stack direction="row" w="full" spacing={1}>
+                    <Stack direction="row" w="full" spacing={2}>
                         <Button w="full" size="sm" onClick={onClose}>
                             Close
                         </Button>

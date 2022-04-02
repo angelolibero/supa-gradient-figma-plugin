@@ -67,8 +67,8 @@ const baseStyle: PartsStyleFunction<typeof parts> = (props) => ({
 const sizes: Record<string, PartsStyleObject<typeof parts>> = {
     sm: {
         container: {
-            [$width.variable]: '32px',
-            [$height.variable]: '16px',
+            [$width.variable]: '28px',
+            [$height.variable]: '14px',
         },
     },
     md: {
@@ -97,9 +97,9 @@ export const variantRound = (props: Record<string, any>) => {
     return {
         container: {},
         track: {
-            borderRadius: props.size == 'lg' ? 'sm' : 'md',
+            borderRadius: props.size == 'lg' ? 'md' : 'sm',
         },
-        thumb: {borderRadius: props.size == 'lg' ? 'sm' : 'md'},
+        thumb: {borderRadius: props.size == 'lg' ? 'md' : 'sm'},
     };
 };
 
@@ -131,7 +131,6 @@ export const variantRound = (props: Record<string, any>) => {
 const defaultProps = {
     size: 'md',
     colorScheme: 'primary',
-    variant: 'round',
 };
 
 export default {

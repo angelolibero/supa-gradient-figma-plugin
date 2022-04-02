@@ -1,19 +1,21 @@
 import * as React from 'react';
 import {useState, useCallback, useEffect} from 'react';
-import {Stack, Badge, Button, Flex, Divider, Fade} from '@chakra-ui/react';
+import {Stack, Badge, Button, Flex, Divider, Fade, SlideFade} from '@chakra-ui/react';
 import AngularSlider from '../shared/AngularSlider';
 import LinearGradientPicker from '../shared/LinearGradientPicker';
 import {GradientStops, Preferences} from '../../typings';
 import {gradientAngleFromTransform} from '../../lib/colors';
 import {defaultGradientStops, defaultAngle, defaultPreferences} from '../../lib/constants';
+import {filterGradientCompatibleNodes} from '../../lib/figma';
 import GradientPreview from '../shared/GradientPreview';
 import PaintStyles from '../shared/PaintStyles';
 import PreferencesDrawerButton from '../shared/PreferencesDrawerButton';
 import StylesSkeleton from '../shared/StylesSkeleton';
 import {anglesTransform} from '../../lib/constants';
+import ImportButton from '../shared/ImportButton';
 
 const LinearGradientPage = ({}) => {
-    const [selection, setSelection] = useState<NodeType[]>();
+    const [selection, setSelection] = useState<SceneNode[]>();
     const [gradientAngle, setGradientAngle] = useState<number>(defaultAngle);
     const [gradientStops, setGradientStops] = useState<GradientStops>(); //defaultGradientStops
     const [gradientTransform, setGradientTransform] = useState<Transform>(); //defaultGradientTransform
@@ -27,6 +29,12 @@ const LinearGradientPage = ({}) => {
         return {...paint, gradientStops, gradientTransform};
     }, [gradientTransform, gradientStops]);
 
+    const isSelection = React.useMemo(() => selection && selection.length > 0, [selection]);
+    const hasGradientInSelection = React.useMemo(() => {
+        const gradientNodes = filterGradientCompatibleNodes(selection);
+        console.log('hasGradientInSelection:', !!gradientNodes && gradientNodes.length > 0);
+        return !!gradientNodes && gradientNodes.length > 0;
+    }, [selection]);
     const isGradient = React.useMemo(() => !!gradientStops, [gradientStops]);
     const isChanged = React.useMemo(() => {
         const paint = currentPaintStyle && (currentPaintStyle.paints[0] as GradientPaint);
@@ -35,8 +43,6 @@ const LinearGradientPage = ({}) => {
             (currentPaintStyle && gradientAngle != gradientAngleFromTransform(paint.gradientTransform))
         );
     }, [currentPaintStyle, gradientAngle, gradientStops]);
-    const isSelected = React.useMemo(() => selection && selection.length, [selection]);
-
     const paintStyle: PaintStyle = React.useMemo(() => {
         //check if current style is similar to one existing style and return it
         if (currentPaintStyle && currentPaintStyle.paints && currentPaintStyle.paints.length) {
@@ -174,14 +180,26 @@ const LinearGradientPage = ({}) => {
 
             switch (type) {
                 case 'figma:selectionchange':
-                    if (message.fills) {
-                        console.log('GRADIENT FILL FROM SELECTION');
-                        const fills: GradientPaint[] = JSON.parse(message.fills);
-                        setGradientStops(fills[0].gradientStops);
-                        setGradientTransform(fills[0].gradientTransform);
+                    //if selection has fills
+                    const objectMessage = JSON.parse(message);
+                    console.log('MDessage', objectMessage, message);
+
+                    if (!objectMessage.fills) {
+                        console.log('NO GRADIENT IN SELECTION', objectMessage.selection);
+                        //  setSelection(undefined);
+                        setSelection(objectMessage.selection);
+                        return;
+                    } else {
+                        console.log('GRADIENT FILL FROM SELECTION', objectMessage.selection);
+
+                        const fills: GradientPaint[] = objectMessage.fills;
+                        const selectionGradientPaint = fills[0];
+
+                        setGradientStops(selectionGradientPaint.gradientStops);
+                        setGradientTransform(selectionGradientPaint.gradientTransform);
+                        setSelection(objectMessage.selection);
                     }
 
-                    setSelection(message.selection);
                     //setCurrentPaintStyle(undefined);
                     // if (fills) {
                     //     setGradientStops(fills[0].gradientStops);
@@ -289,16 +307,19 @@ const LinearGradientPage = ({}) => {
                 {/* 
                 FOOTER 
             */}
-                <Stack direction="row" spacing={1} py={3} px={3}>
+                {hasGradientInSelection ? 'si' : 'no'}
+
+                <Stack direction="row" spacing={2} py={3} px={3}>
+                    {isSelection && hasGradientInSelection && <ImportButton />}
                     <Button
                         size="sm"
-                        colorScheme={isSelected && !isGradient ? 'gray' : 'primary'}
+                        colorScheme={'primary'}
                         w="full"
                         onClick={() => applyGradient(true)}
-                        isDisabled={!isSelected || !isGradient}
+                        isDisabled={!isSelection}
                     >
-                        {!isGradient ? 'No gradients' : !isSelected ? 'No selection' : 'Apply'}
-                        {selection && isSelected && isGradient ? (
+                        {!isSelection ? 'No selection' : 'Apply'}
+                        {selection && isSelection && isGradient ? (
                             <Badge
                                 ml={2}
                                 size="xs"

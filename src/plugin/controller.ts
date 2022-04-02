@@ -122,7 +122,6 @@ figma.on('run' as any, () => {
 
     //Load preferences
     figma.clientStorage.getAsync('preferences').then((preferences) => {
-        console.log('GET PREFERE', preferences);
         figma.ui.postMessage({
             type: 'figma:preferencesupdate',
             message: {preferences: JSON.parse(preferences) || defaultPreferences},

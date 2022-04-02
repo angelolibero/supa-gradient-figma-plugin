@@ -88,7 +88,14 @@ const AngularSlider: React.FC<Props> = ({
                             transition="all 0.25s"
                             position="relative"
                         >
-                            <Center pos="absolute" top={0} right={0} boxSize="100%" fontSize="xs">
+                            <Center
+                                pos="absolute"
+                                top={0}
+                                right={0}
+                                boxSize="100%"
+                                fontSize="xs"
+                                transform="rotate(90deg)"
+                            >
                                 <MdOutlineDragHandle />
                             </Center>
                         </SliderThumb>
