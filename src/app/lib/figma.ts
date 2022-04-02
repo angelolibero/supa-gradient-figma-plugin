@@ -9,7 +9,7 @@ const filterGradientCompatibleNodes = (selection: any[]) => {
         selection.map((node, index) => {
             console.log('NODE', node);
 
-            if (node && isGradientCompatible(node) && node.fills[0].gradientStops) {
+            if (node && isGradientCompatible(node) && node.fills[0] && node.fills[0].gradientStops) {
                 const gradientNode = node;
                 console.log('COMPATIBLE', gradientNode, node);
                 return {
@@ -37,7 +37,7 @@ const updateSelection = () => {
                 type: 'figma:selectionchange',
                 message: JSON.stringify({
                     selection: gradientCompatibleNodes.length ? gradientCompatibleNodes : [{id: selection[0].id}],
-                    fills: gradientCompatibleNodes[0] && gradientCompatibleNodes[0].fills,
+                    selectionFills: gradientCompatibleNodes[0] && gradientCompatibleNodes[0].fills,
                 }),
             });
         } else {
@@ -48,6 +48,13 @@ const updateSelection = () => {
                 }),
             });
         }
+    } else {
+        figma.ui.postMessage({
+            type: 'figma:selectionchange',
+            message: JSON.stringify({
+                selection: [],
+            }),
+        });
     }
 };
 

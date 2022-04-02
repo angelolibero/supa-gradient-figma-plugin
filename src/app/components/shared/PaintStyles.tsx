@@ -37,63 +37,67 @@ const PaintStyles: FC<Props> = ({
     }, [currentPaintStyle, gradientPaint, isChanged]);
 
     return (
-        <Box
-            w="100%"
-            maxW="100%"
-            boxShadow="inset 0 -1px 24px rgba(0,0,0,0.075)"
-            bgGradient="linear(to-br, white, gray.100)"
-        >
-            <RadioGroup
-                overflow="scroll"
+        (gradientPaint || (paintStyles && paintStyles.length > 0)) && (
+            <Box
                 w="100%"
                 maxW="100%"
-                height={height}
-                value={currentPaintStyle ? currentPaintStyle.id : undefined}
-                transition="all 0.5s"
-                {...rest}
+                boxShadow="inset 0 -1px 24px rgba(0,0,0,0.075)"
+                bgGradient="linear(to-br, white, gray.100)"
             >
-                <SimpleGrid columns={6} w="100%" height="auto" alignItems="center" spacing={2} p={3}>
-                    {gradientPaint && (
-                        <Center pos="relative">
-                            <CreateStyleDrawerButton
-                                // isDisabled={!newPaintStyle}
-                                paintStyle={currentPaintStyle || ({paints: [gradientPaint]} as any)}
-                                gradientPaint={gradientPaint}
-                                onCreate={onCreate}
-                                boxSize={6}
-                                minW={6}
-                                maxW={6}
-                            />
-                            {isChanged && (
-                                <Box
-                                    boxSize={3}
-                                    pos="absolute"
-                                    right="-3px"
-                                    top={-1}
-                                    rounded="full"
-                                    bgGradient={newBgGradient}
-                                    border="2px solid"
-                                    borderColor="white"
-                                    shadow="sm"
+                <RadioGroup
+                    overflow="scroll"
+                    w="100%"
+                    maxW="100%"
+                    height={height}
+                    value={currentPaintStyle ? currentPaintStyle.id : undefined}
+                    transition="all 0.5s"
+                    {...rest}
+                >
+                    <SimpleGrid columns={6} w="100%" height="auto" alignItems="center" spacing={2} p={3}>
+                        {gradientPaint && (
+                            <Center pos="relative">
+                                <CreateStyleDrawerButton
+                                    // isDisabled={!newPaintStyle}
+                                    paintStyle={currentPaintStyle || ({paints: [gradientPaint]} as any)}
+                                    gradientPaint={gradientPaint}
+                                    onCreate={onCreate}
+                                    boxSize={6}
+                                    minW={6}
+                                    maxW={6}
                                 />
-                            )}
-                        </Center>
-                    )}
-                    {paintStyles &&
-                        paintStyles.map((paintStyle, index) => {
-                            return (
-                                <GradientSwatch
-                                    paintStyle={paintStyle}
-                                    key={index}
-                                    onSelect={onSelect}
-                                    isActive={currentPaintStyle && paintStyle.id == currentPaintStyle.id}
-                                    showReset={isChanged && currentPaintStyle && paintStyle.id == currentPaintStyle.id}
-                                />
-                            );
-                        })}
-                </SimpleGrid>
-            </RadioGroup>
-        </Box>
+                                {isChanged && (
+                                    <Box
+                                        boxSize={3}
+                                        pos="absolute"
+                                        right="-3px"
+                                        top={-1}
+                                        rounded="full"
+                                        bgGradient={newBgGradient}
+                                        border="2px solid"
+                                        borderColor="white"
+                                        shadow="sm"
+                                    />
+                                )}
+                            </Center>
+                        )}
+                        {paintStyles &&
+                            paintStyles.map((paintStyle, index) => {
+                                return (
+                                    <GradientSwatch
+                                        paintStyle={paintStyle}
+                                        key={index}
+                                        onSelect={onSelect}
+                                        isActive={currentPaintStyle && paintStyle.id == currentPaintStyle.id}
+                                        showReset={
+                                            isChanged && currentPaintStyle && paintStyle.id == currentPaintStyle.id
+                                        }
+                                    />
+                                );
+                            })}
+                    </SimpleGrid>
+                </RadioGroup>
+            </Box>
+        )
     );
 };
 

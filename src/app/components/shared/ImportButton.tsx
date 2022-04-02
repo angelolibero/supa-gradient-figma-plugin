@@ -4,7 +4,7 @@ import {IconButton, Tooltip, ButtonProps} from '@chakra-ui/react';
 import {CgImport} from 'react-icons/cg';
 
 type Props = {
-    onImport?: (paintStyle) => void;
+    onImport?: () => void;
 } & ButtonProps;
 
 const ImportButton: FC<Props> = ({onImport, ...rest}) => {
