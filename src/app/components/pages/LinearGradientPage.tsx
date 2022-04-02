@@ -163,6 +163,7 @@ const LinearGradientPage = ({}) => {
     useEffect(() => {
         if (isLoading && preferences) {
             setPreferences({...preferences});
+            setIsLoading(false);
         }
     }, [preferences]);
 
@@ -170,7 +171,7 @@ const LinearGradientPage = ({}) => {
         if (paintStyles && paintStyles.length && !currentPaintStyle) {
             selectPaintStyle(paintStyles[0]);
         }
-        if (isLoading) setIsLoading(false);
+        setIsLoading(false);
     }, [paintStyles, isLoading]);
 
     useEffect(() => {
@@ -307,7 +308,12 @@ const LinearGradientPage = ({}) => {
                 {/* 
                 FOOTER 
             */}
-                {hasGradientInSelection ? 'si' : 'no'}
+                <Stack direction="row" fontSize="xx-small">
+                    {hasGradientInSelection ? 'hasGradients' : ''}
+                    {isChanged ? 'isChanged' : ''}
+                    {isSelection ? 'isSelection' : ''}
+                    {isGradient ? 'isGradient' : ''}
+                </Stack>
 
                 <Stack direction="row" spacing={2} py={3} px={3}>
                     {isSelection && hasGradientInSelection && <ImportButton />}

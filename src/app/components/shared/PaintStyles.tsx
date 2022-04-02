@@ -26,8 +26,7 @@ const PaintStyles: FC<Props> = ({
     const height = useMemo(() => {
         if (paintStyles && paintStyles.length > 11) return '88px';
         else if (paintStyles && paintStyles.length > 5) return '80px';
-        else if (paintStyles && paintStyles.length > 0) return '48px';
-        else return '0px';
+        else return '48px';
     }, [paintStyles]);
 
     const newBgGradient = useMemo(() => {
@@ -58,7 +57,7 @@ const PaintStyles: FC<Props> = ({
                         <Center pos="relative">
                             <CreateStyleDrawerButton
                                 // isDisabled={!newPaintStyle}
-                                paintStyle={currentPaintStyle}
+                                paintStyle={currentPaintStyle || ({paints: [gradientPaint]} as any)}
                                 gradientPaint={gradientPaint}
                                 onCreate={onCreate}
                                 boxSize={6}
