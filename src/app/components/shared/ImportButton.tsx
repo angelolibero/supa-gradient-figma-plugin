@@ -17,8 +17,6 @@ const ImportButton: FC<Props> = ({onImport, ...rest}) => {
                     onClick={onImport}
                     size="sm"
                     fontSize="lg"
-                    bgColor="white"
-                    variant="outline"
                     {...rest}
                 />
             </Tooltip>

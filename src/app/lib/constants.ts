@@ -1,6 +1,6 @@
 import {Preferences} from '../typings';
 
-export const poolingTimeout = 1000 * 5; //10 second
+export const poolingTimeout = 1000 * 3; //10 second
 
 export const defaultWindowSize = {
     width: 240,

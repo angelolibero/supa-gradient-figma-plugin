@@ -57,8 +57,8 @@ const PaintStyles: FC<Props> = ({
                         {gradientPaint && (
                             <Center pos="relative">
                                 <CreateStyleDrawerButton
-                                    // isDisabled={!newPaintStyle}
-                                    paintStyle={currentPaintStyle || ({paints: [gradientPaint]} as any)}
+                                    paintStyle={currentPaintStyle}
+                                    // || ({paints: [gradientPaint]} as any
                                     gradientPaint={gradientPaint}
                                     onCreate={onCreate}
                                     boxSize={6}

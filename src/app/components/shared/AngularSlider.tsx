@@ -82,9 +82,10 @@ const AngularSlider: React.FC<Props> = ({
                             <Box position="relative" right={10} />
                         </SliderTrack>
                         <SliderThumb
-                            boxSize={5}
-                            borderRadius="full"
-                            _active={{boxSize: 6}}
+                            w={4}
+                            h={6}
+                            borderRadius="sm"
+                            _active={{w: 4}}
                             transition="all 0.25s"
                             position="relative"
                         >
@@ -93,6 +94,7 @@ const AngularSlider: React.FC<Props> = ({
                                 top={0}
                                 right={0}
                                 boxSize="100%"
+                                w="100%"
                                 fontSize="xs"
                                 transform="rotate(90deg)"
                             >

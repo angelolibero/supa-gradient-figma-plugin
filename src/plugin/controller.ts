@@ -1,6 +1,6 @@
 import {anglesTransform, defaultWindowSize} from '../app/lib/constants';
 import {gradientAngleFromTransform} from '../app/lib/colors';
-import {updateSelection, updateGradientStyles, selectPaintStyle} from '../app/lib/figma';
+import {updateSelection, updateGradientStyles, selectPaintStyleWithId} from '../app/lib/figma';
 import {isGradientCompatible, createGradientStyle} from '../app/lib/utils';
 import {GradientStops} from '../app/typings';
 import {defaultPreferences, poolingTimeout} from '../app/lib/constants';
@@ -86,7 +86,7 @@ figma.ui.onmessage = (msg) => {
                 }
             });
             updateGradientStyles();
-            selectPaintStyle(newStyle);
+            selectPaintStyleWithId(newStyle.id);
             break;
         // Basic figma notification event
         case 'notify':
@@ -112,8 +112,8 @@ figma.on('currentpagechange', () => {
 
 figma.on('run' as any, () => {
     //Send initial events
-    updateGradientStyles();
     updateSelection();
+    updateGradientStyles();
 
     //Starting polling interval
     poolingInterval = setInterval(() => {

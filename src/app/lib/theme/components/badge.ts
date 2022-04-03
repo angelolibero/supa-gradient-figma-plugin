@@ -22,7 +22,7 @@ const variantSubtle: SystemStyleFunction = (props) => {
     const {colorScheme: c, theme} = props;
     return {
         bg: mode(`${c}.100`, `${c}.800`)(props),
-        color: mode(`${c}.500`, `${c}.300`)(props),
+        color: mode(`${c}.700`, `${c}.200`)(props),
     };
 };
 

@@ -20,7 +20,7 @@ const baseStyleTrack: SystemStyleFunction = (props) => {
 
     return {
         borderRadius: 'full',
-        p: props.size == 'sm' ? '2px' : '4px',
+        p: props.size == 'sm' ? '2px' : '8px',
         width: [$width.reference],
         height: [$height.reference],
         transitionProperty: 'common',

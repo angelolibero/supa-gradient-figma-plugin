@@ -81,11 +81,14 @@ const updateGradientStyles = (postMessage = true): PaintStyle[] => {
     return gradientPaintStyles;
 };
 
-const selectPaintStyle = (paintStyle: PaintStyle) => {
+const selectPaintStyleWithId = (id: string) => {
+    const gradientPaintStyles = getGradientsFromStyles(figma.getLocalPaintStyles());
+    const selectedPaintStyle = gradientPaintStyles.filter((value) => value.id && value.id == id)[0];
+
     figma.ui.postMessage({
         type: 'figma:selectstyle',
-        message: {paintStyle: JSON.stringify(paintStyle)},
+        message: {paintStyle: selectedPaintStyle},
     });
 };
 
-export {filterGradientCompatibleNodes, updateSelection, updateGradientStyles, selectPaintStyle};
+export {filterGradientCompatibleNodes, updateSelection, updateGradientStyles, selectPaintStyleWithId};

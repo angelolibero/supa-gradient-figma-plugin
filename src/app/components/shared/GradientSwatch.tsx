@@ -14,21 +14,29 @@ type Props = {
 } & Omit<RadioProps, 'onSelect'>;
 
 const GradientSwatch: React.FC<Props> = ({paintStyle, defaultPaint, isActive, showReset, size, onSelect, ...rest}) => {
-    const angle = defaultAngle;
-    const paint = defaultPaint ? defaultPaint : (paintStyle.paints[0] as GradientPaint);
-    const {getInputProps, getCheckboxProps} = useRadio({value: paintStyle.id, name: paintStyle.id, ...rest});
+    // const angle = defaultAngle;
+
+    const currentPaint = useMemo(() => {
+        return defaultPaint ? defaultPaint : paintStyle && (paintStyle.paints[0] as GradientPaint);
+    }, [defaultPaint, paintStyle]);
+
+    const {getInputProps, getCheckboxProps} = useRadio({
+        value: paintStyle ? paintStyle.id : 'custom',
+        name: paintStyle && paintStyle.name,
+        ...rest,
+    });
     const input = getInputProps();
     const checkbox = getCheckboxProps();
 
     const bgGradientColors = useMemo(() => {
-        if (paintStyle.paints[0].type == 'GRADIENT_LINEAR') {
-            return bgGradientColorsFromStops(paint.gradientStops);
+        if (currentPaint.type == 'GRADIENT_LINEAR') {
+            return bgGradientColorsFromStops(currentPaint.gradientStops);
         }
-    }, [paintStyle]);
+    }, [paintStyle, defaultPaint]);
 
     const bgGradient = useMemo(() => {
-        return bgGradientFromColors(bgGradientColors, gradientAngleFromTransform(paint.gradientTransform));
-    }, [angle, paintStyle, bgGradientColors]);
+        return bgGradientFromColors(bgGradientColors, gradientAngleFromTransform(currentPaint.gradientTransform));
+    }, [paintStyle, bgGradientColors, defaultPaint]);
 
     const onSelectStyle = useCallback(() => {
         onSelect(paintStyle);
@@ -47,7 +55,11 @@ const GradientSwatch: React.FC<Props> = ({paintStyle, defaultPaint, isActive, sh
 
     return (
         <Box>
-            <Tooltip label={paintStyle.name} openDelay={300} isDisabled={!paintStyle.id}>
+            <Tooltip
+                label={paintStyle && paintStyle.name}
+                openDelay={300}
+                isDisabled={!paintStyle || !(paintStyle && paintStyle.id)}
+            >
                 <Center>
                     <Box as="label" {...checkredGradientProps} rounded="full" pos="relative">
                         <input {...input} onKeyDown={onPressEnter} />
