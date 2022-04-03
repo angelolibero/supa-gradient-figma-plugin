@@ -1,5 +1,5 @@
-import {GradientStops, Preferences} from '../typings';
-import {anglesTransform} from './constants';
+import {GradientPaintType, GradientStops, Preferences} from '../typings';
+import {linearTransforms} from './constants';
 
 const isGradientCompatible = (node: SceneNode): boolean =>
     node.type == 'RECTANGLE' ||
@@ -14,9 +14,14 @@ const getGradientsFromStyles = (paintStyles: PaintStyle[]): any => {
         .map((style) => {
             let stylePaints: GradientPaint[] = [];
             style.paints.forEach((paint) => {
-                if (paint.type == 'GRADIENT_LINEAR') {
+                if (
+                    paint.type == 'GRADIENT_LINEAR' ||
+                    paint.type == 'GRADIENT_RADIAL' ||
+                    paint.type == 'GRADIENT_ANGULAR' ||
+                    paint.type == 'GRADIENT_DIAMOND'
+                ) {
                     stylePaints.push({
-                        type: 'GRADIENT_LINEAR',
+                        ...paint,
                         gradientStops: paint.gradientStops,
                         gradientTransform: paint.gradientTransform,
                     });
@@ -27,15 +32,11 @@ const getGradientsFromStyles = (paintStyles: PaintStyle[]): any => {
         .filter((value) => !!value);
 };
 
-const createGradientStyle = (
-    colorName: string,
-    gradient: {gradientStops: GradientStops; gradientTransform: Transform}
-) => {
+const createGradientStyle = (colorName: string, gradient: GradientPaint) => {
     const style = figma.createPaintStyle();
     style.name = colorName;
     style.paints = [
         {
-            type: 'GRADIENT_LINEAR',
             ...gradient,
         },
     ];

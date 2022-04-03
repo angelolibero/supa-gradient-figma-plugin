@@ -1,8 +1,8 @@
-import {anglesTransform, defaultWindowSize} from '../app/lib/constants';
+import {linearTransforms, defaultWindowSize} from '../app/lib/constants';
 import {gradientAngleFromTransform} from '../app/lib/colors';
 import {updateSelection, updateGradientStyles, selectPaintStyleWithId} from '../app/lib/figma';
 import {isGradientCompatible, createGradientStyle} from '../app/lib/utils';
-import {GradientStops} from '../app/typings';
+import {GradientPaintType, GradientStops} from '../app/typings';
 import {defaultPreferences, poolingTimeout} from '../app/lib/constants';
 
 var poolingInterval;
@@ -17,9 +17,9 @@ figma.ui.onmessage = (msg) => {
         case 'apply-gradient':
             const angle = msg.angle;
             const gradientStops: GradientStops = msg.gradientStops;
-
-            console.log('FILL SELECTION ', gradientStops);
-
+            const gradientType: GradientPaintType = msg.gradientType;
+            const paintStyleId: string = msg.paintStyleId;
+            console.log('FILL SELECTION ', gradientStops, gradientType, paintStyleId);
             figma.currentPage.selection &&
                 figma.currentPage.selection.forEach((node) => {
                     if (
@@ -32,22 +32,25 @@ figma.ui.onmessage = (msg) => {
                             node.type == 'FRAME' ||
                             node.type == 'STAR')
                     ) {
-                        const style = figma.getStyleById(msg.id);
+                        const style = figma.getStyleById(paintStyleId) as PaintStyle;
+                        const paint = style && ((style as PaintStyle).paints[0] as GradientPaint);
+                        const updatedPaint = {
+                            type: gradientType,
+                            gradientTransform: linearTransforms[angle],
+                            gradientStops,
+                        };
+
                         const isChanged =
-                            (style &&
-                                JSON.stringify(msg.gradientStops) != JSON.stringify(style.paints[0].gradientStops)) ||
-                            (style && angle != gradientAngleFromTransform(style.paints[0].gradientTransform));
+                            (style && JSON.stringify(gradientStops) != JSON.stringify(gradientStops)) ||
+                            (style && angle != gradientAngleFromTransform(paint.gradientTransform)) ||
+                            (style && gradientType != paint.type);
 
                         if (style && !isChanged) {
                             node.fillStyleId = style.id;
+                        } else if (paintStyleId && style) {
+                            style.paints = [updatedPaint];
                         } else {
-                            node.fills = [
-                                {
-                                    type: 'GRADIENT_LINEAR',
-                                    gradientTransform: anglesTransform[angle],
-                                    gradientStops,
-                                },
-                            ];
+                            node.fills = [updatedPaint];
                         }
                     }
                     //else {
@@ -78,6 +81,7 @@ figma.ui.onmessage = (msg) => {
             const newStyle = createGradientStyle(msg.name, {
                 gradientStops: msg.gradientStops,
                 gradientTransform: msg.gradientTransform,
+                type: msg.gradientType,
             });
             figma.notify('New gradient style created', {timeout: msg.timeout || 1000});
             figma.currentPage.selection.map((node) => {

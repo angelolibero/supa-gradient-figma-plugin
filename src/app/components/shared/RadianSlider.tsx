@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {useState, useCallback} from 'react';
+import {useCallback} from 'react';
 import {
     Text,
     Slider,
@@ -19,7 +19,7 @@ type Props = {
     onChange: (angle) => void;
 } & SliderProps;
 
-const AngularSlider: React.FC<Props> = ({
+const RadianSlider: React.FC<Props> = ({
     onChange,
     value,
     defaultValue = 180,
@@ -30,7 +30,7 @@ const AngularSlider: React.FC<Props> = ({
 }) => {
     const [sliderValue, setSliderValue] = useControllableState({value, defaultValue});
 
-    const onChangeAngle = useCallback(
+    const handleOnChange = useCallback(
         (angle) => {
             onChange(angle);
             setSliderValue(angle);
@@ -47,20 +47,20 @@ const AngularSlider: React.FC<Props> = ({
                 borderRadius="md"
                 bgColor="gray.100"
                 spacing={1}
-                py={2}
-                pr={1}
-                pl={3}
+                py={1}
+                pl={2}
+                pr={3}
                 alignItems="center"
             >
                 <Box transform={`rotate(${sliderValue}deg)`} transition="all 0.25s" fontSize="10px">
                     <MdArrowUpward />
                 </Box>
-                <Text fontWeight="bold" fontSize="xs" maxW={8} minW={8} pos="relative" textAlign="left">
+                <Text fontWeight="semibold" fontSize="xs" maxW={8} minW={8} pos="relative" textAlign="left">
                     {sliderValue}°
                 </Text>
 
-                <Box w="100%" pr={4}>
-                    <Slider value={sliderValue} min={min} max={max} step={step} onChange={onChangeAngle} {...rest}>
+                <Box w="100%">
+                    <Slider value={sliderValue} min={min} max={max} step={step} onChange={handleOnChange} {...rest}>
                         {marks &&
                             marks.map((value, index) => {
                                 return (
@@ -108,4 +108,4 @@ const AngularSlider: React.FC<Props> = ({
     );
 };
 
-export default AngularSlider;
+export default RadianSlider;

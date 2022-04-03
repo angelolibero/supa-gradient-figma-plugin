@@ -9,7 +9,7 @@ export const defaultWindowSize = {
 
 export const defaultPreferences: Preferences = {liveUpdates: true, updateStyles: true};
 
-export const anglesTransform = {
+export const linearTransforms = {
     //Affine tranformations for common angles
     // custom: [
     //     [Math.cos(angle), Math.sin(angle), 0],
@@ -58,7 +58,7 @@ export const defaultGradientStops = [
     {position: 0.5, color: {r: 215 / 255, g: 128 / 255, b: 37 / 255, a: 1}},
     {position: 1.0, color: {r: 126 / 255, g: 32 / 255, b: 207 / 255, a: 1}},
 ];
-export const defaultGradientTransform = anglesTransform[defaultAngle] as Transform;
+export const defaultGradientTransform = linearTransforms[defaultAngle] as Transform;
 
 export const checkredGradientProps = {
     backgroundColor: 'gray.200',

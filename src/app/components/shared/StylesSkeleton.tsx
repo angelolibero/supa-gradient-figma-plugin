@@ -12,10 +12,10 @@ import {
 } from '@chakra-ui/react';
 
 type Props = {
-    isLoading: boolean;
+    isLoading?: boolean;
 } & SkeletonProps;
 
-const StylesSkeleton: React.FC<Props> = ({isLoading = false, ...rest}) => {
+const StylesSkeleton: React.FC<Props> = ({isLoading = true, ...rest}) => {
     return (
         <Flex direction="column" h="72px">
             <Box w="100%" h="72px" p={4} overflow="hidden">

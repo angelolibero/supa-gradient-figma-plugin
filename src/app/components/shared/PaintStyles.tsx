@@ -38,12 +38,7 @@ const PaintStyles: FC<Props> = ({
 
     return (
         (gradientPaint || (paintStyles && paintStyles.length > 0)) && (
-            <Box
-                w="100%"
-                maxW="100%"
-                boxShadow="inset 0 -1px 24px rgba(0,0,0,0.075)"
-                bgGradient="linear(to-br, white, gray.100)"
-            >
+            <Box w="100%" maxW="100%">
                 <RadioGroup
                     overflow="scroll"
                     w="100%"

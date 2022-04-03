@@ -16,6 +16,7 @@ import textarea from './textarea';
 import tooltip from './tooltip';
 //Custom
 import iconsSwitch from './custom/iconsSwitch';
+import buttonTabs from './custom/buttonTabs';
 
 export default {
     Accordion: accordion,
@@ -35,5 +36,6 @@ export default {
     Tooltip: tooltip,
     Textarea: textarea,
     //CUSTOM components
+    ButtonTabs: buttonTabs,
     IconsSwitch: iconsSwitch,
 };

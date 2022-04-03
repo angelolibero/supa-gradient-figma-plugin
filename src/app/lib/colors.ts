@@ -1,5 +1,5 @@
-import {GradientStops, Palette} from '../typings';
-import {anglesTransform} from './constants';
+import {GradientPaintType, GradientStops, Palette} from '../typings';
+import {linearTransforms} from './constants';
 
 const hexRegex = /^#([0-9a-f]{3}){1,2}$/i;
 const rgbRegex =
@@ -87,15 +87,15 @@ const paletteFromGradientStops = (gradientStops: GradientStops, alpha: boolean =
                         ).toFixed(0)})`
                       : `rgba(${(value.color.r * 255).toFixed(0)}, ${(value.color.g * 255).toFixed(0)}, ${(
                             value.color.b * 255
-                        ).toFixed(0)}, ${value.a || 1})`,
+                        ).toFixed(0)}, ${value.color.a || 1})`,
               };
           });
     return palette;
 };
 
 const gradientAngleFromTransform = (transform: Transform) => {
-    for (let key in anglesTransform) {
-        let angleTransform = anglesTransform[key];
+    for (let key in linearTransforms) {
+        let angleTransform = linearTransforms[key];
         if (JSON.stringify(angleTransform) == JSON.stringify(transform)) {
             return parseInt(key);
         }
@@ -114,9 +114,24 @@ const bgGradientColorsFromStops = (gradientStops: GradientStops) => {
     return [];
 };
 
-const bgGradientFromColors = (gradientColors, angle = 0) => {
+const bgGradientFromColors = (gradientColors, angle = 0, type: GradientPaintType = 'GRADIENT_LINEAR') => {
+    let gradientTypeMethod;
+    switch (type) {
+        case 'GRADIENT_LINEAR':
+            gradientTypeMethod = 'linear';
+            return `${gradientTypeMethod}(${angle}deg, ${gradientColors})`;
+        case 'GRADIENT_ANGULAR':
+            gradientTypeMethod = 'conic-gradient';
+            return `${gradientTypeMethod}(from ${angle}deg, ${gradientColors})`;
+        case 'GRADIENT_RADIAL':
+            gradientTypeMethod = 'radial-gradient';
+            return `${gradientTypeMethod}(from ${angle}deg, ${gradientColors})`;
+        case 'GRADIENT_DIAMOND':
+            gradientTypeMethod = 'radial-gradient';
+            break;
+    }
+
     //AGGIUNGERE GESTIONE GRADIENTI MULTIPLI
-    return `linear(${angle}deg, ${gradientColors})`;
 };
 
 const colorStringToRGBAObject = (color) => {

@@ -51,21 +51,6 @@ const PreferencesDrawerButton: FC<Props> = ({defaultPreferences, onChange, ...re
         [preferences, isOpen]
     );
 
-    useEffect(() => {
-        // This is how we read messages sent from the plugin controller
-        const onMessage = (event) => {
-            const {type, message} = event.data.pluginMessage;
-            if (type === 'figma:preferencesupdate') {
-                console.log('figma:preferencesupdate!!!!!');
-                setPreferences(message.preferences);
-            }
-        };
-        window.onmessage = onMessage;
-        return () => {
-            window.removeEventListener('message', onMessage);
-        };
-    }, []);
-
     return (
         <>
             {/* <Tooltip label="Preferences" openDelay={300}> */}

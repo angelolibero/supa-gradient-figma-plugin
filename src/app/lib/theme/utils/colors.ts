@@ -28,6 +28,9 @@ export const variantSolid = (props: Record<string, any>) => {
         color: mode(color, 'gray.800')(props),
         // shadow: c == 'primary' && 'button',
         shadow: 'none',
+        _focus: {
+            shadow: 'none',
+        },
         _hover: {
             bg: mode(hoverBg, `${c}.300`)(props),
             shadow: 'none',

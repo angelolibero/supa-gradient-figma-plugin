@@ -4,6 +4,7 @@ import {Tooltip, Radio, Center, RadioProps, Box, useRadio} from '@chakra-ui/reac
 import {bgGradientColorsFromStops, bgGradientFromColors, gradientAngleFromTransform} from '../../lib/colors';
 import {checkredGradientProps, defaultAngle} from '../../lib/constants';
 import {MdRefresh} from 'react-icons/md';
+import {GradientPaintType} from '../../typings';
 
 type Props = {
     paintStyle?: PaintStyle;
@@ -16,10 +17,6 @@ type Props = {
 const GradientSwatch: React.FC<Props> = ({paintStyle, defaultPaint, isActive, showReset, size, onSelect, ...rest}) => {
     // const angle = defaultAngle;
 
-    const currentPaint = useMemo(() => {
-        return defaultPaint ? defaultPaint : paintStyle && (paintStyle.paints[0] as GradientPaint);
-    }, [defaultPaint, paintStyle]);
-
     const {getInputProps, getCheckboxProps} = useRadio({
         value: paintStyle ? paintStyle.id : 'custom',
         name: paintStyle && paintStyle.name,
@@ -28,15 +25,15 @@ const GradientSwatch: React.FC<Props> = ({paintStyle, defaultPaint, isActive, sh
     const input = getInputProps();
     const checkbox = getCheckboxProps();
 
-    const bgGradientColors = useMemo(() => {
-        if (currentPaint.type == 'GRADIENT_LINEAR') {
-            return bgGradientColorsFromStops(currentPaint.gradientStops);
-        }
-    }, [paintStyle, defaultPaint]);
+    const currentPaint = useMemo(() => {
+        return defaultPaint ? defaultPaint : paintStyle && (paintStyle.paints[0] as GradientPaint);
+    }, [defaultPaint, paintStyle]);
 
     const bgGradient = useMemo(() => {
-        return bgGradientFromColors(bgGradientColors, gradientAngleFromTransform(currentPaint.gradientTransform));
-    }, [paintStyle, bgGradientColors, defaultPaint]);
+        const bgGradientColors = bgGradientColorsFromStops(currentPaint.gradientStops);
+        const angle = gradientAngleFromTransform(currentPaint.gradientTransform);
+        return bgGradientFromColors(bgGradientColors, angle, currentPaint.type);
+    }, [currentPaint]);
 
     const onSelectStyle = useCallback(() => {
         onSelect(paintStyle);

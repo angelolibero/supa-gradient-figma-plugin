@@ -1,4 +1,5 @@
-import {SystemStyleObject, mode} from '@chakra-ui/theme-tools';
+import {tabsAnatomy as parts} from '@chakra-ui/anatomy';
+import {SystemStyleObject, mode, PartsStyleObject} from '@chakra-ui/theme-tools';
 
 const baseStyle: SystemStyleObject = {};
 
@@ -40,20 +41,23 @@ const variants = {
 
         return {
             tablist: {
-                bg: mode('white', 'gray.800')(props),
                 borderColor: 'inherit',
                 borderBottom: '0',
                 overflow: 'visible',
-                shadow: mode('depth-light', 'depth-dark')(props),
+                shadow: 'none',
             },
             tab: {
                 pos: 'relative',
                 borderBottom: 'none',
+                px: 2,
+                py: 0,
                 overflow: 'visible',
                 [marginProp]: '-1px',
-
+                fontWeight: 'medium',
+                color: mode(`gray.400`, `gray.500`)(props),
                 _selected: {
-                    color: mode(`${c}.600`, `${c}.300`)(props),
+                    fontWeight: 'semibold',
+                    color: mode(`gray.700`, `gray.200`)(props),
                     borderRightColor: mode('gray.100', 'whiteAlpha.400')(props),
                     '&::before': {
                         opacity: 1,
@@ -62,7 +66,12 @@ const variants = {
                     },
                 },
                 _active: {
-                    bg: mode('gray.200', 'whiteAlpha.300')(props),
+                    bg: 'transparent',
+                    boxShadow: 'none',
+                },
+                _focus: {
+                    bg: 'transparent',
+                    boxShadow: 'none',
                 },
                 _disabled: {
                     opacity: 0.4,
@@ -73,10 +82,35 @@ const variants = {
     },
 };
 
+const sizes: Record<string, PartsStyleObject<typeof parts>> = {
+    sm: {
+        tab: {
+            py: 1,
+            px: 4,
+            fontSize: 'xs',
+        },
+    },
+    md: {
+        tab: {
+            fontSize: 'sm',
+            py: 2,
+            px: 4,
+        },
+    },
+    lg: {
+        tab: {
+            fontSize: 'md',
+            py: 3,
+            px: 4,
+        },
+    },
+};
+
 const defaultProps = {};
 
 export default {
     baseStyle,
     variants,
     defaultProps,
+    sizes,
 };
