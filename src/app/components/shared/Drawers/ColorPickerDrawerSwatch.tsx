@@ -16,7 +16,7 @@ import {
     useControllableState,
     Text,
 } from '@chakra-ui/react';
-import ColorSwatch, {ColorSwatchProps} from '../ColorSwatch';
+import ColorSwatch, {ColorSwatchProps} from '../Swatchs/ColorSwatch';
 import {FocusableElement} from '@chakra-ui/utils';
 import {RgbaColorPicker} from 'react-colorful';
 

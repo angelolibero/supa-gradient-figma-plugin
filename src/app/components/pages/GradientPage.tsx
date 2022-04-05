@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {useState, useCallback, useEffect} from 'react';
 import {Stack, Badge, Button, Flex, Divider, Fade, Box, Tab, TabList, TabPanels, TabPanel} from '@chakra-ui/react';
-import RadianSlider from '../shared/RadianSlider';
+import RadianSlider from '../shared/Sliders/RadianSlider';
 import GradientStopsPicker from '../shared/GradientStopsPicker';
 import {GradientPaintType, GradientStops, Preferences} from '../../typings';
 import {gradientAngleFromTransform} from '../../lib/colors';
@@ -9,7 +9,7 @@ import {defaultGradientStops, defaultAngle, defaultPreferences} from '../../lib/
 import {filterGradientCompatibleNodes} from '../../lib/figma';
 import GradientPreview from '../shared/GradientPreview';
 import PaintStyles from '../shared/PaintStyles';
-import PreferencesDrawerButton from '../shared/PreferencesDrawerButton';
+import PreferencesDrawerButton from '../shared/Drawers/PreferencesDrawerButton';
 import StylesSkeleton from '../shared/StylesSkeleton';
 import {linearTransforms} from '../../lib/constants';
 import ImportButton from '../shared/ImportButton';
@@ -77,7 +77,7 @@ const GradientPage = ({}) => {
                 setCurrentPaintStyle(currentPaintStyle);
             }
 
-            if (!selection || (!selection.length && !forceUpdate)) return;
+            //if (!selection || (!selection.length && !forceUpdate)) return;
 
             parent.postMessage(
                 {
@@ -297,7 +297,7 @@ const GradientPage = ({}) => {
                     minW="100%"
                     maxW="100%"
                     overflow="scroll"
-                    pb={4}
+                    pb={2}
                     boxSizing="content-box"
                     ref={scrollElementRef}
                 >
@@ -306,18 +306,11 @@ const GradientPage = ({}) => {
                         w="100%"
                         bgGradient="linear(to-b, white, gray.100)"
                         //boxShadow="inset 0 -1px 20px rgba(0,0,0,0.05)"
-                        pos="absolute"
-                        top="0"
+                        pos="sticky"
+                        top={0}
+                        zIndex="1"
+                        transition="all 0.25s"
                     >
-                        <GradientTypeTabs
-                            gradientType={gradientType}
-                            onChange={onChangeType}
-                            transition="all 0.15s"
-                            h={scrollPosition > 0 ? '0px' : '28px'}
-                            opacity={scrollPosition ? 0 : 1}
-                            overflow="hidden"
-                            pt={scrollPosition ? '0px' : 2}
-                        />
                         {!isLoading ? (
                             <PaintStyles
                                 paintStyles={paintStyles}
@@ -337,7 +330,6 @@ const GradientPage = ({}) => {
                             h="100%"
                             w="100%"
                             bgColor="white"
-                            pt={scrollPosition ? '48px' : '76px'}
                             transition="all 0.15s"
                             //  shadow="0 -2px 20px rgba(0,0,0,0.03)"
                         >
@@ -354,9 +346,17 @@ const GradientPage = ({}) => {
                                 // height={scrollPosition ? 50 : 100}
                                 // minH={scrollPosition ? 50 : 100}
                             />
-
-                            <Stack h="100%" w="100%" pt={4} pb={0} spacing={3}>
-                                <Box px={4}>
+                            <GradientTypeTabs
+                                gradientType={gradientType}
+                                onChange={onChangeType}
+                                transition="all 0.1s"
+                                h={'auto'}
+                                // opacity={scrollPosition ? 0 : 1}
+                                pt={2}
+                                px={3}
+                            />
+                            <Stack h="100%" w="100%" pt={2} pb={0} spacing={3}>
+                                <Box px={3}>
                                     <RadianSlider
                                         onChange={onChangeAngle}
                                         defaultValue={180}

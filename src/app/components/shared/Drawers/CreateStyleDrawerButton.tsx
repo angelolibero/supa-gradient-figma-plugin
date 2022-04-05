@@ -20,7 +20,7 @@ import {
     Text,
 } from '@chakra-ui/react';
 import {MdAdd} from 'react-icons/md';
-import GradientSwatch from './GradientSwatch';
+import GradientSwatch from '../Swatchs/GradientSwatch';
 
 type Props = {
     paintStyle?: PaintStyle;

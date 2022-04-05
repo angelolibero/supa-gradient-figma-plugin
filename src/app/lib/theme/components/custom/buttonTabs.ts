@@ -5,7 +5,6 @@ const parts = ['tabs', 'tab'];
 const baseStyle: PartsStyleFunction = (props) => ({
     tabs: {
         w: '100%',
-        px: 2,
         alignItems: 'flex-start',
     },
     tab: {

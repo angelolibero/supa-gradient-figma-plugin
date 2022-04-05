@@ -1,4 +1,4 @@
-export type GradientStops = ReadonlyArray<ColorStop>;
+export type GradientStopsType = ReadonlyArray<ColorStop>;
 
 export type Palette = {
     offset: number;

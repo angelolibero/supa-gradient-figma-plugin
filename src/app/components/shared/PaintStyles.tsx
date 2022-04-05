@@ -1,8 +1,8 @@
 import * as React from 'react';
 import {useMemo, FC} from 'react';
 import {RadioGroup, Center, RadioGroupProps, SimpleGrid, Box} from '@chakra-ui/react';
-import GradientSwatch from './GradientSwatch';
-import CreateStyleDrawerButton from './CreateStyleDrawerButton';
+import GradientSwatch from './Swatchs/GradientSwatch';
+import CreateStyleDrawerButton from './Drawers/CreateStyleDrawerButton';
 import {bgColorsFromStops, bgGradientFromColors, gradientAngleFromTransform} from '../../lib/colors';
 
 type Props = {

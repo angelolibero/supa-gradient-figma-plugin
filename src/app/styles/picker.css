@@ -1,0 +1,51 @@
+/* ColorPicker */
+.cp div {
+    box-sizing: border-box;
+    cursor: pointer;
+    display: inline-block;
+    height: 16px;
+    width: 16px;
+}
+.cp div:hover {
+    border: 1px solid #fff;
+}
+
+/* ColorStop */
+.cs {
+    height: 17px;
+    position: absolute;
+    width: 11px;
+    cursor: pointer;
+    background: url(../assets/ColorStop.png) right center;
+}
+
+.cs div {
+    height: 7px;
+    left: 2px;
+    width: 7px;
+    position: absolute;
+    top: 8px;
+}
+
+.active {
+    background-position: left center;
+}
+
+/* GradientStops */
+.gp {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.gp .gp-flat {
+    margin: 0 auto;
+    padding: 10px 0 0 !important;
+    box-shadow: none !important;
+    transform: none !important;
+}
+
+.palette {
+    border-radius: 3px;
+    overflow: hidden;
+}

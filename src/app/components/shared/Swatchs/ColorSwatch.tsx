@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {useMemo, useCallback} from 'react';
 import {RadioProps, Box, useRadio, forwardRef} from '@chakra-ui/react';
-import {checkredGradientProps} from '../../lib/constants';
+import {checkredGradientProps} from '../../../lib/constants';
 import {rgbToHex} from '@ctrl/tinycolor';
 
 export type ColorSwatchProps = {

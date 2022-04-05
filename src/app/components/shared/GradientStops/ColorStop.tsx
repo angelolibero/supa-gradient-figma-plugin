@@ -5,9 +5,9 @@ import useStopDragging from '../../../lib/hooks/useStopDragging';
 
 const ColorStop = ({
     stop,
-    limits,
-    onPosChange,
-    onDeleteColor,
+    limits = undefined,
+    onPosChange = undefined,
+    onDeleteColor = undefined,
     onDragStart = (clientX, clientY) => {},
     onDragEnd = (clientX, clientY) => {},
 }) => {

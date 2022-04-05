@@ -16,7 +16,7 @@ import {
     Flex,
 } from '@chakra-ui/react';
 import {MdArrowUpward, MdOutlineDragHandle} from 'react-icons/md';
-import {AxisType} from '../../typings';
+import {AxisType} from '../../../typings';
 
 type Props = {
     title?: string;
@@ -51,12 +51,13 @@ const SegmentedSlider: React.FC<Props> = ({
     return (
         <Stack
             direction="row"
-            borderRadius="md"
+            borderRadius="sm"
             bgColor="gray.100"
             spacing={0}
             py={1}
             pl={2}
             pr={3}
+            h={7}
             alignItems="center"
             {...rest}
         >

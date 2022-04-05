@@ -18,7 +18,7 @@ import {
     FormLabel,
     Switch,
 } from '@chakra-ui/react';
-import {Preferences} from '../../typings';
+import {Preferences} from '../../../typings';
 import {MdMoreVert} from 'react-icons/md';
 
 type Props = {

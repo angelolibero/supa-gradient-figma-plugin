@@ -1,22 +1,20 @@
 import * as React from 'react';
 import {useMemo, useState} from 'react';
 import {Box, BoxProps, useControllableState} from '@chakra-ui/react';
-
-import 'react-linear-gradient-picker/dist/index.css';
-import {GradientStops, Palette} from '../../typings';
+import {GradientStopsType, Palette} from '../../typings';
 import {paletteFromGradientStops, paletteToGradientStops} from '../../lib/colors';
 import GradientStopsList from './GradientStopsList';
-import GradientPicker from './pickers/GradientPicker';
 import useDebounce from '../../lib/hooks/useDebounce';
+import GradientStops from './GradientStops/GradientStops';
 
 type Props = {
-    onChange: (stops: GradientStops) => void;
-    defaultValue?: GradientStops;
-    value?: GradientStops;
+    onChange: (stops: GradientStopsType) => void;
+    defaultValue?: GradientStopsType;
+    value?: GradientStopsType;
 } & Omit<BoxProps, 'value' | 'defaultValue' | 'onChange'>;
 
 const GradientStopsPicker: React.FC<Props> = ({onChange, value, defaultValue, children, ...rest}) => {
-    const [gradientStops, setGradientStops] = useControllableState<GradientStops>({value, defaultValue});
+    const [gradientStops, setGradientStops] = useControllableState<GradientStopsType>({value, defaultValue});
     const palette = useMemo(() => paletteFromGradientStops(gradientStops), [gradientStops]);
 
     //    const debouncedPalette = useDebounce(palette, 200);
@@ -51,7 +49,7 @@ const GradientStopsPicker: React.FC<Props> = ({onChange, value, defaultValue, ch
 
     const gradientPickerProps = React.useMemo(() => {
         return {
-            width: 208,
+            width: 220,
             palette,
             paletteHeight: 16,
             onPaletteChange: handleOnChangePalette,
@@ -61,9 +59,8 @@ const GradientStopsPicker: React.FC<Props> = ({onChange, value, defaultValue, ch
 
     return (
         <Box {...rest}>
-            <GradientPicker {...gradientPickerProps}>
-                <WrapperStopsList gradientStops={gradientStops} onChange={handleOnChangeStops} />
-            </GradientPicker>
+            <GradientStops {...gradientPickerProps} />
+            <WrapperStopsList gradientStops={gradientStops} onChange={handleOnChangeStops} />
         </Box>
     );
 };

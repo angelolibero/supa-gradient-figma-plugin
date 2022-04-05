@@ -6,7 +6,7 @@ const baseStyle: SystemStyleObject = {};
 const sizes: Record<string, SystemStyleObject> = {
     sm: {
         field: {
-            h: 9,
+            h: 7,
             px: 2,
             fontSize: 'xs',
         },
@@ -14,7 +14,7 @@ const sizes: Record<string, SystemStyleObject> = {
     md: {
         field: {
             px: 3,
-            h: 12,
+            h: 10,
             fontSize: 'xs',
         },
     },
@@ -47,11 +47,12 @@ const variantFilled: PartsStyleFunction<typeof parts> = (props) => {
 
     return {
         field: {
-            border: '2px solid',
+            border: '1px solid',
             borderColor: 'transparent',
             bg: mode('gray.100', 'whiteAlpha.50')(props),
             _hover: {
-                bg: mode('gray.200', 'whiteAlpha.100')(props),
+                bg: mode('white', 'whiteAlpha.100')(props),
+                borderColor: 'gray.200',
             },
             _readOnly: {
                 boxShadow: 'none !important',

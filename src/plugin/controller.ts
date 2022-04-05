@@ -14,12 +14,25 @@ figma.ui.onmessage = (msg) => {
     switch (msg.type) {
         // Apply gradient to current selection event
         // only gradient compatible nodes
+
         case 'apply-gradient':
             const angle = msg.angle;
             const gradientStops: GradientStops = msg.gradientStops;
             const gradientType: GradientPaintType = msg.gradientType;
             const paintStyleId: string = msg.paintStyleId;
+            const style = paintStyleId && (figma.getStyleById(paintStyleId) as PaintStyle);
+            const updatedPaint = {
+                type: gradientType,
+                gradientTransform: linearTransforms[angle],
+                gradientStops,
+            };
+
             console.log('FILL SELECTION ', gradientStops, gradientType, paintStyleId);
+            if (paintStyleId && style) {
+                console.log('UPDATE STYLE', gradientStops, gradientType, paintStyleId);
+                style.paints = [updatedPaint];
+            }
+
             figma.currentPage.selection &&
                 figma.currentPage.selection.forEach((node) => {
                     if (
@@ -32,14 +45,7 @@ figma.ui.onmessage = (msg) => {
                             node.type == 'FRAME' ||
                             node.type == 'STAR')
                     ) {
-                        const style = figma.getStyleById(paintStyleId) as PaintStyle;
                         const paint = style && ((style as PaintStyle).paints[0] as GradientPaint);
-                        const updatedPaint = {
-                            type: gradientType,
-                            gradientTransform: linearTransforms[angle],
-                            gradientStops,
-                        };
-
                         const isChanged =
                             (style && JSON.stringify(gradientStops) != JSON.stringify(paint.gradientStops)) ||
                             (style && angle != gradientAngleFromTransform(paint.gradientTransform)) ||
@@ -48,9 +54,7 @@ figma.ui.onmessage = (msg) => {
                         if (style && !isChanged) {
                             node.fillStyleId = style.id;
                         } else {
-                            if (paintStyleId) {
-                                style.paints = [updatedPaint];
-                            } else {
+                            if (!paintStyleId) {
                                 node.fills = [updatedPaint];
                             }
                         }

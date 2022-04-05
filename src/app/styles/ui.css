@@ -36,35 +36,7 @@ input:focus {
     box-shadow: inset 0 0 0 2px #18a0fb;
 } */
 
-
 #react-page {
     width: 100%;
     height: 100%;
-}
-
-/* Color picker overrides */
-
-.rc-color-picker-panel-wrap:not(.rc-color-picker-panel-wrap-has-alpha) {
-    /* display: none; */
-}
-
-.rc-color-picker-panel-preview > input[type=color] {
-    border-radius: 5px;
-}
-
-.rc-color-picker-panel  {
-    width: 100%;
-}
-
-.rc-color-picker-panel-params-input {
-    display: flex
-}
-
-.rc-color-picker-panel-params-input > input {
-
-}
-
-.palette {
-    border-radius: 100px;
-    overflow: hidden;
 }

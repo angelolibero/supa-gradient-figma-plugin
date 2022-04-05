@@ -67,3 +67,32 @@ export const checkredGradientProps = {
     backgroundSize: '20px 20px',
     backgroundPosition: '0px 0px, 10px 10px',
 };
+
+//GradientStops
+const STOP_WIDTH = 10;
+export const HALF_STOP_WIDTH = STOP_WIDTH / 2;
+export const DEFAULT_STOP_REMOVAL_DROP = 50;
+export const DEFAULT_WIDTH = 220;
+export const DEFAULT_HEIGHT = 32;
+export const DEFAULT_MAX_STOPS = 5;
+export const DEFAULT_MIN_STOPS = 2;
+
+//Colors
+export const COLORS = [
+    {value: '#000000', name: 'black'},
+    {value: '#808080', name: 'gray'},
+    {value: '#C0C0C0', name: 'silver'},
+    {value: '#FFFFFF', name: 'white'},
+    {value: '#FF0000', name: 'red'},
+    {value: '#800000', name: 'maroon'},
+    {value: '#FFFF00', name: 'yellow'},
+    {value: '#808000', name: 'olive'},
+    {value: '#00FF00', name: 'lime'},
+    {value: '#008000', name: 'green'},
+    {value: '#00FFFF', name: 'aqua'},
+    {value: '#008080', name: 'teal'},
+    {value: '#0000FF', name: 'blue'},
+    {value: '#000080', name: 'navy'},
+    {value: '#FF00FF', name: 'fuchsia'},
+    {value: '#800080', name: 'purple'},
+];

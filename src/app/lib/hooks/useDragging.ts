@@ -24,8 +24,14 @@ const DRAG_HANDLERS = {
 
 const isTouch = (e) => e.type === EVENTS.TOUCHSTART;
 
-const useDragging = ({onDragStart = (clientX, clientY) => {}, onDrag, onDragEnd = () => {}}) => {
-    const [context, setContext] = useState({});
+type useDraggingProps = {
+    onDragStart: (coordinates: {clientX: number; clientY: number}) => {};
+    onDrag: (coordinates: {clientX: number; clientY: number}) => {};
+    onDragEnd: (coordinates: {clientX: number; clientY: number}) => {};
+};
+
+const useDragging = ({onDragStart, onDrag, onDragEnd}: useDraggingProps) => {
+    const [context, setContext] = useState({} as any);
     const [dragging, setDragging] = useState(false);
 
     const dragHandler = (e) => {
@@ -39,13 +45,11 @@ const useDragging = ({onDragStart = (clientX, clientY) => {}, onDrag, onDragEnd 
     const activate = (e, handler) => {
         setDragging(true);
         context.handler = handler;
-
         onDragStart(handler.coordinates(e));
     };
 
     const deactivate = () => {
         setDragging(false);
-
         onDragEnd(context.change);
         setContext({});
     };
