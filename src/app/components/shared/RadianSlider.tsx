@@ -38,7 +38,7 @@ const RadianSlider: React.FC<Props> = ({
         [sliderValue]
     );
 
-    const marks = new Array(max / step + 1).fill(0);
+    const stopMarks = new Array(max / step + 1).fill(0);
 
     return (
         <Box>
@@ -47,9 +47,9 @@ const RadianSlider: React.FC<Props> = ({
                 borderRadius="md"
                 bgColor="gray.100"
                 spacing={1}
-                py={1}
+                py={2}
                 pl={2}
-                pr={3}
+                pr={4}
                 alignItems="center"
             >
                 <Box transform={`rotate(${sliderValue}deg)`} transition="all 0.25s" fontSize="10px">
@@ -61,8 +61,8 @@ const RadianSlider: React.FC<Props> = ({
 
                 <Box w="100%">
                     <Slider value={sliderValue} min={min} max={max} step={step} onChange={handleOnChange} {...rest}>
-                        {marks &&
-                            marks.map((value, index) => {
+                        {stopMarks &&
+                            stopMarks.map((value, index) => {
                                 return (
                                     <SliderMark
                                         value={step * index}
@@ -83,7 +83,7 @@ const RadianSlider: React.FC<Props> = ({
                         </SliderTrack>
                         <SliderThumb
                             w={4}
-                            h={6}
+                            h={5}
                             borderRadius="sm"
                             _active={{w: 4}}
                             transition="all 0.25s"

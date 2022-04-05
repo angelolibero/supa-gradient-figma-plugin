@@ -12,7 +12,7 @@ const baseStyle: SystemStyleFunction = (props) => {
         bg: [$bg.reference],
         [$arrowBg.variable]: [$bg.reference],
         color: mode('whiteAlpha.900', 'gray.900')(props),
-        borderRadius: 'none',
+        borderRadius: 'xs',
         fontWeight: 'medium',
         fontSize: 'xs',
         boxShadow: 'md',

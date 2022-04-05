@@ -3,7 +3,7 @@ import {useMemo, FC} from 'react';
 import {RadioGroup, Center, RadioGroupProps, SimpleGrid, Box} from '@chakra-ui/react';
 import GradientSwatch from './GradientSwatch';
 import CreateStyleDrawerButton from './CreateStyleDrawerButton';
-import {bgGradientColorsFromStops, bgGradientFromColors, gradientAngleFromTransform} from '../../lib/colors';
+import {bgColorsFromStops, bgGradientFromColors, gradientAngleFromTransform} from '../../lib/colors';
 
 type Props = {
     paintStyles: PaintStyle[];
@@ -32,7 +32,7 @@ const PaintStyles: FC<Props> = ({
     const newBgGradient = useMemo(() => {
         if (!isChanged) return;
         // const newPaint = newPaintStyle.paints[0] as GradientPaint;
-        const bgGradientColors = bgGradientColorsFromStops(gradientPaint.gradientStops);
+        const bgGradientColors = bgColorsFromStops(gradientPaint.gradientStops);
         return bgGradientFromColors(bgGradientColors, gradientAngleFromTransform(gradientPaint.gradientTransform));
     }, [currentPaintStyle, gradientPaint, isChanged]);
 
@@ -62,7 +62,7 @@ const PaintStyles: FC<Props> = ({
                                 />
                                 {isChanged && (
                                     <Box
-                                        boxSize={3}
+                                        boxSize="14px"
                                         pos="absolute"
                                         right="-3px"
                                         top={-1}

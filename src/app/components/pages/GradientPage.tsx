@@ -1,8 +1,8 @@
 import * as React from 'react';
 import {useState, useCallback, useEffect} from 'react';
-import {Stack, Badge, Button, Flex, Divider, Fade, Tabs, Tab, TabList, TabPanels, TabPanel} from '@chakra-ui/react';
+import {Stack, Badge, Button, Flex, Divider, Fade, Box, Tab, TabList, TabPanels, TabPanel} from '@chakra-ui/react';
 import RadianSlider from '../shared/RadianSlider';
-import LinearGradientPicker from '../shared/LinearGradientPicker';
+import GradientStopsPicker from '../shared/GradientStopsPicker';
 import {GradientPaintType, GradientStops, Preferences} from '../../typings';
 import {gradientAngleFromTransform} from '../../lib/colors';
 import {defaultGradientStops, defaultAngle, defaultPreferences} from '../../lib/constants';
@@ -15,7 +15,7 @@ import {linearTransforms} from '../../lib/constants';
 import ImportButton from '../shared/ImportButton';
 import Empty from '../shared/Empty';
 import GradientTypeTabs from '../shared/GradientTypeTabs';
-import AxisSlider from '../shared/AxisSlider';
+import useScrollPosition from '../../lib/hooks/useScrollPosition';
 
 const GradientPage = ({}) => {
     const [selection, setSelection] = useState<RectangleNode[]>();
@@ -27,6 +27,8 @@ const GradientPage = ({}) => {
     const [paintStyles, setPaintStyles] = useState<PaintStyle[]>([]);
     const [preferences, setPreferences] = useState<Preferences>(defaultPreferences);
     const [isLoading, setIsLoading] = useState<boolean>(true);
+    const scrollElementRef = React.useRef();
+    const scrollPosition = useScrollPosition(scrollElementRef);
 
     const currentGradientPaint: GradientPaint = React.useMemo(() => {
         const paint = currentPaintStyle && (currentPaintStyle.paints[0] as GradientPaint);
@@ -181,15 +183,11 @@ const GradientPage = ({}) => {
         [gradientAngle, gradientStops]
     );
 
-    const onChangeGradient = useCallback(
+    const onChangeStops = useCallback(
         (_gradientStops: GradientStops) => {
-            const updatedGradientStops: GradientStops = _gradientStops.map((value) => {
-                return {
-                    color: value.color,
-                    position: value.position,
-                };
-            });
-            if (gradientStops != updatedGradientStops) {
+            const updatedGradientStops: GradientStops = _gradientStops;
+            console.log('SSSSSDDDDDD', _gradientStops);
+            if (JSON.stringify(gradientStops) != JSON.stringify(updatedGradientStops)) {
                 setGradientStops(updatedGradientStops);
             }
         },
@@ -263,19 +261,11 @@ const GradientPage = ({}) => {
                     } else {
                         setSelection(objectMessage.selection);
                     }
-
                     break;
                 case 'figma:styles:gradientschange':
                     const _paintStyles: PaintStyle[] = message.paintStyles.reverse();
                     console.log('figma:styles:gradientschange', _paintStyles);
                     setPaintStyles(_paintStyles);
-
-                    // if (
-                    //     (paintStyles && JSON.stringify(message.paintStyles) != JSON.stringify(paintStyles)) ||
-                    //     (paintStyles && !paintStyles.length)
-                    // ) {
-                    //     setPaintStyles(_paintStyles);
-                    // }
                     break;
                 case 'figma:preferencesupdate':
                     setPreferences(message.preferences);
@@ -297,63 +287,76 @@ const GradientPage = ({}) => {
 
     return (
         <Fade in={!isLoading}>
-            <Flex direction="column" maxH="100%" h="100%">
+            <Flex direction="column" h="100%" w="100%" overflow="hidden">
                 <Stack
+                    direction="column"
+                    alignItems="center"
                     spacing={0}
                     w="100%"
-                    bgGradient="linear(to-b, white, gray.100)"
-                    boxShadow="inset 0 -2px 20px rgba(0,0,0,0.05)"
+                    h="100%"
+                    minW="100%"
+                    maxW="100%"
+                    overflow="scroll"
+                    pb={4}
+                    boxSizing="content-box"
+                    ref={scrollElementRef}
                 >
-                    <GradientTypeTabs gradientType={gradientType} onChange={onChangeType} />
-                    {!isLoading ? (
-                        <PaintStyles
-                            paintStyles={paintStyles}
-                            currentPaintStyle={currentPaintStyle}
-                            isChanged={isChanged}
-                            gradientPaint={currentGradientPaint}
-                            onSelect={selectPaintStyle}
-                            onCreate={onCreateStyle}
-                        />
-                    ) : (
-                        <StylesSkeleton />
-                    )}
-                </Stack>
-                <Flex direction="column" h="100%" w="100%" overflow="hidden">
-                    <Stack
-                        direction="column"
-                        overflow="hidden"
-                        alignItems="center"
-                        spacing={0}
+                    <Flex
+                        flexDir={'column'}
                         w="100%"
-                        h="100%"
-                        minW="100%"
-                        maxW="100%"
+                        bgGradient="linear(to-b, white, gray.100)"
+                        //boxShadow="inset 0 -1px 20px rgba(0,0,0,0.05)"
+                        pos="absolute"
+                        top="0"
                     >
-                        {isGradient ? (
-                            <Flex
-                                direction="column"
-                                h="100%"
-                                w="100%"
-                                bgColor="white"
-                                //  shadow="0 -2px 20px rgba(0,0,0,0.03)"
-                                overflow="hidden"
-                            >
-                                <GradientPreview
-                                    gradientStops={gradientStops}
-                                    gradientTransform={gradientTransform}
-                                    gradientType={gradientType}
-                                    angle={gradientAngle}
-                                    minH={!isGradient && '100%'}
-                                    name={!isChanged && currentPaintStyle && currentPaintStyle.name}
-                                />
+                        <GradientTypeTabs
+                            gradientType={gradientType}
+                            onChange={onChangeType}
+                            transition="all 0.15s"
+                            h={scrollPosition > 0 ? '0px' : '28px'}
+                            opacity={scrollPosition ? 0 : 1}
+                            overflow="hidden"
+                            pt={scrollPosition ? '0px' : 2}
+                        />
+                        {!isLoading ? (
+                            <PaintStyles
+                                paintStyles={paintStyles}
+                                currentPaintStyle={currentPaintStyle}
+                                isChanged={isChanged}
+                                gradientPaint={currentGradientPaint}
+                                onSelect={selectPaintStyle}
+                                onCreate={onCreateStyle}
+                            />
+                        ) : (
+                            <StylesSkeleton />
+                        )}
+                    </Flex>
+                    {isGradient ? (
+                        <Flex
+                            direction="column"
+                            h="100%"
+                            w="100%"
+                            bgColor="white"
+                            pt={scrollPosition ? '48px' : '76px'}
+                            transition="all 0.15s"
+                            //  shadow="0 -2px 20px rgba(0,0,0,0.03)"
+                        >
+                            <GradientPreview
+                                gradientStops={gradientStops}
+                                gradientTransform={gradientTransform}
+                                gradientType={gradientType}
+                                angle={gradientAngle}
+                                name={currentPaintStyle && currentPaintStyle.id && currentPaintStyle.name}
+                                // pos="sticky"
+                                // top={0}
+                                // zIndex="modal"
+                                // transition="all 0.25s"
+                                // height={scrollPosition ? 50 : 100}
+                                // minH={scrollPosition ? 50 : 100}
+                            />
 
-                                <Stack h="100%" w="100%" px={4} py={4}>
-                                    <LinearGradientPicker
-                                        onChange={onChangeGradient}
-                                        value={gradientStops}
-                                        defaultValue={defaultGradientStops}
-                                    />
-
+                            <Stack h="100%" w="100%" pt={4} pb={0} spacing={3}>
+                                <Box px={4}>
                                     <RadianSlider
                                         onChange={onChangeAngle}
                                         defaultValue={180}
@@ -362,60 +365,60 @@ const GradientPage = ({}) => {
                                         step={45}
                                         value={gradientAngle}
                                     />
-                                    {gradientType == 'GRADIENT_ANGULAR' ||
-                                        (gradientType == 'GRADIENT_RADIAL' && <AxisSlider onChange={(axis) => {}} />)}
-                                </Stack>
-                            </Flex>
-                        ) : (
-                            <Empty />
-                        )}
-                    </Stack>
+                                </Box>
+                                <GradientStopsPicker
+                                    onChange={onChangeStops}
+                                    value={gradientStops}
+                                    defaultValue={gradientStops}
+                                />
+                            </Stack>
+                        </Flex>
+                    ) : (
+                        <Empty />
+                    )}
+                </Stack>
 
-                    {isGradient && (
-                        <>
-                            <Divider borderColor="blackAlpha.100" />
-                            {/* <Stack direction="row" fontSize="xx-small" spacing="2px">
+                {isGradient && (
+                    <>
+                        <Divider borderColor="blackAlpha.100" />
+                        {/* <Stack direction="row" fontSize="xx-small" spacing="2px">
                     <span>{hasGradientInSelection ? 'hasGradientInSelection' : ''}</span>
                     <span>{isChanged ? 'isChanged' : ''}</span>
                     <span>{isSelection ? 'isSelection' : ''}</span>
                     <span>{isGradient ? 'isGradient' : ''}</span>
                     <span>{currentGradientPaint ? 'currentGradientPaint' : ''}</span>
                 </Stack> */}
-                            <Stack direction="row" spacing={2} py={3} px={3}>
-                                {isSelection && hasGradientInSelection && (
-                                    <ImportButton onImport={importSelectionGradient} />
-                                )}
-                                <Button
-                                    size="sm"
-                                    colorScheme={'primary'}
-                                    w="full"
-                                    onClick={() => applyGradient(true)}
-                                    isDisabled={!isSelection}
-                                >
-                                    {!isSelection ? 'No selection' : 'Apply'}
-                                    {selection && isSelection && isGradient ? (
-                                        <Badge
-                                            ml={2}
-                                            size="xs"
-                                            px={1}
-                                            boxSize={4}
-                                            lineHeight={4}
-                                            colorScheme="whiteAlpha"
-                                            color="whiteAlpha.700"
-                                            fontSize="xs"
-                                        >
-                                            {selection.length}
-                                        </Badge>
-                                    ) : null}
-                                </Button>
-                                <PreferencesDrawerButton
-                                    defaultPreferences={preferences}
-                                    onChange={onChangePreferences}
-                                />
-                            </Stack>
-                        </>
-                    )}
-                </Flex>
+                        <Stack direction="row" spacing={2} py={3} px={3}>
+                            {isSelection && hasGradientInSelection && (
+                                <ImportButton onImport={importSelectionGradient} />
+                            )}
+                            <Button
+                                size="sm"
+                                colorScheme={'primary'}
+                                w="full"
+                                onClick={() => applyGradient(true)}
+                                isDisabled={!isSelection}
+                            >
+                                {!isSelection ? 'No selection' : 'Apply'}
+                                {selection && isSelection && isGradient ? (
+                                    <Badge
+                                        ml={2}
+                                        size="xs"
+                                        px={1}
+                                        boxSize={4}
+                                        lineHeight={4}
+                                        colorScheme="whiteAlpha"
+                                        color="whiteAlpha.700"
+                                        fontSize="xs"
+                                    >
+                                        {selection.length}
+                                    </Badge>
+                                ) : null}
+                            </Button>
+                            <PreferencesDrawerButton defaultPreferences={preferences} onChange={onChangePreferences} />
+                        </Stack>
+                    </>
+                )}
             </Flex>
         </Fade>
     );

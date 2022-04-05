@@ -44,6 +44,12 @@ const hexToRGBAObject = (hex: string, alpha?: boolean) => {
     throw new Error('Bad Hex');
 };
 
+const RGBAObjetToString = (color: RGBA) => {
+    return `rgba(${parseInt((color.r * 255).toString())}, ${parseInt((color.g * 255).toString())}, ${parseInt(
+        (color.b * 255).toString()
+    )}, ${color.a})`;
+};
+
 const paletteToRgbArray = (palette: Palette, alpha?: boolean) => {
     return (
         palette &&
@@ -103,7 +109,7 @@ const gradientAngleFromTransform = (transform: Transform) => {
     return 0;
 };
 
-const bgGradientColorsFromStops = (gradientStops: GradientStops) => {
+const bgColorsFromStops = (gradientStops: GradientStops) => {
     if (gradientStops && gradientStops.length) {
         return gradientStops.map((value, index) => {
             return `rgba(${value.color.r * 255},${value.color.g * 255},${value.color.b * 255},${value.color.a}) ${
@@ -143,10 +149,11 @@ export {
     checkIsGradient,
     hexToRgb,
     hexToRGBAObject,
+    RGBAObjetToString,
     paletteToGradientStops,
     paletteFromGradientStops,
     gradientAngleFromTransform,
-    bgGradientColorsFromStops,
+    bgColorsFromStops,
     bgGradientFromColors,
     colorStringToRGBAObject,
     hexRegex,

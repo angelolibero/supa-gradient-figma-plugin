@@ -1,8 +1,7 @@
 import * as React from 'react';
-import {useCallback, useEffect, useState, FC} from 'react';
+import {useCallback, useState, FC} from 'react';
 import {
     IconButton,
-    Tooltip,
     Text,
     Stack,
     Button,
@@ -18,9 +17,7 @@ import {
     FormControl,
     FormLabel,
     Switch,
-    Flex,
 } from '@chakra-ui/react';
-import {GoSettings} from 'react-icons/go';
 import {Preferences} from '../../typings';
 import {MdMoreVert} from 'react-icons/md';
 
@@ -34,7 +31,7 @@ const PreferencesDrawerButton: FC<Props> = ({defaultPreferences, onChange, ...re
     const btnRef = React.useRef();
     const [preferences, setPreferences] = useState<Preferences>(defaultPreferences);
 
-    const updatePrefrences = useCallback(
+    const handleOnUpdate = useCallback(
         (key: string, value: string | number | boolean) => {
             setPreferences({...preferences, [key]: value});
             onChange(preferences);
@@ -74,7 +71,7 @@ const PreferencesDrawerButton: FC<Props> = ({defaultPreferences, onChange, ...re
                 placement="bottom"
                 onClose={onClose}
                 btnRef={btnRef}
-                onUpdate={updatePrefrences}
+                onUpdate={handleOnUpdate}
             />
         </>
     );

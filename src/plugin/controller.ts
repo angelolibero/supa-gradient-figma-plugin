@@ -41,16 +41,18 @@ figma.ui.onmessage = (msg) => {
                         };
 
                         const isChanged =
-                            (style && JSON.stringify(gradientStops) != JSON.stringify(gradientStops)) ||
+                            (style && JSON.stringify(gradientStops) != JSON.stringify(paint.gradientStops)) ||
                             (style && angle != gradientAngleFromTransform(paint.gradientTransform)) ||
                             (style && gradientType != paint.type);
 
                         if (style && !isChanged) {
                             node.fillStyleId = style.id;
-                        } else if (paintStyleId && style) {
-                            style.paints = [updatedPaint];
                         } else {
-                            node.fills = [updatedPaint];
+                            if (paintStyleId) {
+                                style.paints = [updatedPaint];
+                            } else {
+                                node.fills = [updatedPaint];
+                            }
                         }
                     }
                     //else {

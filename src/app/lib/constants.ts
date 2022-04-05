@@ -4,7 +4,7 @@ export const poolingTimeout = 1000 * 3; //10 second
 
 export const defaultWindowSize = {
     width: 240,
-    height: 375,
+    height: 445,
 };
 
 export const defaultPreferences: Preferences = {liveUpdates: true, updateStyles: true};

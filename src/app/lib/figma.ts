@@ -25,7 +25,7 @@ const filterGradientCompatibleNodes = (selection: any[]) => {
 const updateSelection = () => {
     if (figma.currentPage.selection && figma.currentPage.selection.length) {
         const selection = [...figma.currentPage.selection];
-        console.log('SEL', selection);
+        console.log('SELECTION', selection);
         const gradientCompatibleNodes = filterGradientCompatibleNodes(selection);
         if (gradientCompatibleNodes && gradientCompatibleNodes.length > 0 && gradientCompatibleNodes[0]) {
             console.log('11111');
@@ -66,9 +66,9 @@ const updateGradientStyles = (postMessage = true): PaintStyle[] => {
     // console.log('update gradientPaintStyles');
 
     if (gradientPaintStyles && gradientPaintStyles.length > 11) {
-        figma.ui.resize(defaultWindowSize.width, 415);
+        figma.ui.resize(defaultWindowSize.width, 485);
     } else if (gradientPaintStyles && gradientPaintStyles.length > 5) {
-        figma.ui.resize(defaultWindowSize.width, 407);
+        figma.ui.resize(defaultWindowSize.width, 477);
     } else {
         figma.ui.resize(defaultWindowSize.width, defaultWindowSize.height);
     }

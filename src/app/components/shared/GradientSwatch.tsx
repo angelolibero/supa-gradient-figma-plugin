@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {useMemo, useCallback} from 'react';
 import {Tooltip, Radio, Center, RadioProps, Box, useRadio} from '@chakra-ui/react';
-import {bgGradientColorsFromStops, bgGradientFromColors, gradientAngleFromTransform} from '../../lib/colors';
+import {bgColorsFromStops, bgGradientFromColors, gradientAngleFromTransform} from '../../lib/colors';
 import {checkredGradientProps, defaultAngle} from '../../lib/constants';
 import {MdRefresh} from 'react-icons/md';
 import {GradientPaintType} from '../../typings';
@@ -30,13 +30,13 @@ const GradientSwatch: React.FC<Props> = ({paintStyle, defaultPaint, isActive, sh
     }, [defaultPaint, paintStyle]);
 
     const bgGradient = useMemo(() => {
-        const bgGradientColors = bgGradientColorsFromStops(currentPaint.gradientStops);
+        const bgGradientColors = bgColorsFromStops(currentPaint.gradientStops);
         const angle = gradientAngleFromTransform(currentPaint.gradientTransform);
         return bgGradientFromColors(bgGradientColors, angle, currentPaint.type);
     }, [currentPaint]);
 
-    const onSelectStyle = useCallback(() => {
-        onSelect(paintStyle);
+    const handleSelectStyle = useCallback(() => {
+        onSelect && onSelect(paintStyle);
     }, [paintStyle, onSelect]);
 
     const onPressEnter = useCallback(
@@ -44,10 +44,10 @@ const GradientSwatch: React.FC<Props> = ({paintStyle, defaultPaint, isActive, sh
             console.log('ket', e.keyCode);
             //enter and space key code:
             if (e.key === 'Enter' || e.keyCode === 13 || e.keyCode === 32) {
-                onSelectStyle();
+                handleSelectStyle();
             }
         },
-        [onSelectStyle]
+        [handleSelectStyle]
     );
 
     return (
@@ -73,7 +73,7 @@ const GradientSwatch: React.FC<Props> = ({paintStyle, defaultPaint, isActive, sh
                             _focus={{
                                 boxShadow: 'outline',
                             }}
-                            onClick={onSelectStyle}
+                            onClick={handleSelectStyle}
                             {...rest}
                             {...checkbox}
                         />

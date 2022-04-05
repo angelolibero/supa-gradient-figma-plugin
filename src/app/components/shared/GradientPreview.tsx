@@ -4,7 +4,7 @@ import {Flex, Button, FlexProps, Text, Tooltip, SlideFade, Badge} from '@chakra-
 import {GradientPaintType, GradientStops} from '../../typings';
 import {useClipboard} from '@chakra-ui/react';
 import {MdCode} from 'react-icons/md';
-import {bgGradientColorsFromStops, bgGradientFromColors} from '../../lib/colors';
+import {bgColorsFromStops, bgGradientFromColors} from '../../lib/colors';
 import {checkredGradientProps} from '../../lib/constants';
 
 type Props = {
@@ -22,7 +22,7 @@ const GradientPreview: React.FC<Props> = ({name, angle, gradientStops, gradientT
     const isGradient = React.useMemo(() => !!gradientStops, [gradientStops]);
 
     const bgGradient = useMemo(() => {
-        const bgGradientColors = bgGradientColorsFromStops(gradientStops);
+        const bgGradientColors = bgColorsFromStops(gradientStops);
         return bgGradientFromColors(bgGradientColors, angle, gradientType);
     }, [gradientStops, gradientType, angle]);
 
@@ -38,7 +38,7 @@ const GradientPreview: React.FC<Props> = ({name, angle, gradientStops, gradientT
 
     return (
         isGradient && (
-            <Flex {...checkredGradientProps} w="100%" h="100%" overflow="hidden">
+            <Flex {...checkredGradientProps} w="100%" h="100%" overflow="hidden" minH="100px" {...rest}>
                 <Flex
                     w="100%"
                     h="inherit"
@@ -47,14 +47,15 @@ const GradientPreview: React.FC<Props> = ({name, angle, gradientStops, gradientT
                     justifyContent={isGradient ? 'flex-end' : 'center'}
                     p={2}
                     transition="all 0.25s"
-                    {...rest}
                 >
                     <Flex w="100%" alignItems="flex-start">
-                        <SlideFade in={!!name} offsetY={-2}>
+                        {/* <SlideFade in={!!name} offsetY={-2}> */}
+                        {name && (
                             <Badge size="sm" fontSize="xs" borderRadius="sm" maxW="150px" h={5} lineHeight={5}>
                                 <Text isTruncated>{name}</Text>
                             </Badge>
-                        </SlideFade>
+                        )}
+                        {/* </SlideFade> */}
                     </Flex>
 
                     <Tooltip label="Copy CSS">

@@ -32,15 +32,18 @@ const CreateStyleDrawerButton: React.FC<Props> = ({gradientPaint, paintStyle, on
     const {isOpen, onOpen, onClose} = useDisclosure();
     const btnRef = useRef<HTMLButtonElement>();
 
-    const handleCreate = (name: string) => {
-        if (!name || name.length == 0) return;
-        onCreate(name, gradientPaint);
-        onClose();
-    };
+    const handleOnCreate = React.useCallback(
+        (name: string) => {
+            if (!name || name.length == 0) return;
+            onCreate(name, gradientPaint);
+            onClose();
+        },
+        [onCreate, onClose, gradientPaint]
+    );
 
     return (
         <>
-            <Tooltip label="Create style" openDelay={300} hasArrow>
+            <Tooltip label="Create style" openDelay={300}>
                 <IconButton
                     icon={<MdAdd />}
                     aria-label="Create style"
@@ -64,7 +67,7 @@ const CreateStyleDrawerButton: React.FC<Props> = ({gradientPaint, paintStyle, on
                 isOpen={isOpen}
                 placement="bottom"
                 onClose={onClose}
-                onCreate={handleCreate}
+                onCreate={handleOnCreate}
                 btnRef={btnRef}
             />
         </>

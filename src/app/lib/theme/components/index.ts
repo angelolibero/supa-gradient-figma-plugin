@@ -17,12 +17,14 @@ import tooltip from './tooltip';
 //Custom
 import iconsSwitch from './custom/iconsSwitch';
 import buttonTabs from './custom/buttonTabs';
+import divider from './divider';
 
 export default {
     Accordion: accordion,
     Badge: badge,
     Button: button,
     Checkbox: checkbox,
+    Divider: divider,
     Drawer: drawer,
     Heading: heading,
     Input: input,
