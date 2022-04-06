@@ -1,7 +1,7 @@
-import {GradientStopType} from '../typings';
+import {GradientStop} from '../typings';
 import {HALF_STOP_WIDTH} from './constants';
 
-const compare = (stop1: GradientStopType, stop2: GradientStopType) => {
+const compare = (stop1: GradientStop, stop2: GradientStop) => {
     console.log(stop1);
     console.log('SOERTING', stop1.position - stop2.position, stop1, stop2);
     return stop1.position - stop2.position;

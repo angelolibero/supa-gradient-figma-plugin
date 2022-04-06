@@ -16,6 +16,10 @@ export const variantSolid = (props: Record<string, any>) => {
                 },
                 shadow: 'none',
             },
+            _focus: {
+                shadow: 'none',
+                bg: mode('gray.100', 'whiteAlpha.100')(props),
+            },
             _active: {bg: mode('gray.200', 'whiteAlpha.200')(props)},
         };
     }
@@ -30,6 +34,7 @@ export const variantSolid = (props: Record<string, any>) => {
         shadow: 'none',
         _focus: {
             shadow: 'none',
+            bg: mode('gray.100', 'whiteAlpha.100')(props),
         },
         _hover: {
             bg: mode(hoverBg, `${c}.300`)(props),

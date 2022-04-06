@@ -25,10 +25,17 @@ export type ColorPickerDrawerSwatchProps = {
     isActive?: boolean;
     onSelect?: (color: RGBA) => void;
     onChange?: (color: RGBA) => void;
+    isOpen?: boolean;
 } & Omit<ColorSwatchProps, 'onCreate' | 'onChange'>;
 
-const ColorPickerDrawerSwatch: React.FC<ColorPickerDrawerSwatchProps> = ({color, onSelect, onChange, ...rest}) => {
-    const {isOpen, onOpen, onClose} = useDisclosure();
+const ColorPickerDrawerSwatch: React.FC<ColorPickerDrawerSwatchProps> = ({
+    color,
+    isOpen: _isOpen,
+    onSelect,
+    onChange,
+    ...rest
+}) => {
+    const {isOpen, onOpen, onClose} = useDisclosure({defaultIsOpen: _isOpen});
     const swatchRef = useRef<HTMLInputElement>();
 
     const handleOnChange = useCallback(
@@ -116,7 +123,7 @@ export const ColorPickerDrawer: React.FC<ColorPickerDrawerProps> = ({
         >
             <DrawerOverlay />
             <DrawerContent textAlign="left">
-                <DrawerCloseButton />
+                <DrawerCloseButton boxSize={8} size="sm" rounded="sm" />
                 <DrawerHeader px={4} pt={4} fontSize="md">
                     <Stack direction="row" flex="1" spacing={2} alignItems="flex-start">
                         <ColorSwatch color={color} />

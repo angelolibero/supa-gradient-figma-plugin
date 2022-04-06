@@ -44,21 +44,22 @@ const ColorSwatch = forwardRef<ColorSwatchProps, 'input'>(
             <Box
                 as="label"
                 {...CHECKERED_GRADIENT_PROPS}
-                rounded="full"
+                rounded="sm"
                 pos="relative"
-                boxSize={rest.boxSize || size == 'lg' ? 10 : 6}
+                boxSize={rest.boxSize || size == 'lg' ? 8 : 5}
             >
                 <input {...input} onKeyDown={handleOnKeyDown} ref={ref} />
                 <Box
                     bgColor={`#${paintColor}`}
-                    boxSize={size == 'lg' ? 10 : 6}
+                    boxSize={size == 'lg' ? 8 : 5}
                     shadow={isActive ? 'outline' : 'sm'}
-                    rounded="full"
+                    rounded="xs"
                     outline="none"
                     border="2px solid"
                     borderColor="white"
                     p={0}
                     cursor="pointer"
+                    overflow="hidden"
                     _focus={{
                         boxShadow: 'outline',
                     }}

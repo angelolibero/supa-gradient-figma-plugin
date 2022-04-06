@@ -11,12 +11,20 @@ import '../../../styles/picker.css';
 export type GradientStopsListItemProps = {
     stop: ColorStop;
     activeColorId: number;
+    editColorId?: number;
     index: number;
     onChange: (stop: ColorStop, index: number) => void;
     onDelete: (stop: ColorStop) => void;
 };
 
-const GradientStopsListItem: FC<GradientStopsListItemProps> = ({stop, activeColorId, index, onChange, onDelete}) => {
+const GradientStopsListItem: FC<GradientStopsListItemProps> = ({
+    stop,
+    activeColorId,
+    editColorId,
+    index,
+    onChange,
+    onDelete,
+}) => {
     const hexColor = React.useMemo(() => {
         return stop.color && rgbaToHex(stop.color.r * 255, stop.color.g * 255, stop.color.b * 255, stop.color.a, false);
     }, [stop]);
@@ -60,9 +68,10 @@ const GradientStopsListItem: FC<GradientStopsListItemProps> = ({stop, activeColo
     }, [stop, onDelete]);
 
     return (
-        <Stack direction="row" alignItems="center" spacing={2} rounded="xs" py={1} px={3} key={index}>
+        <Stack direction="row" alignItems="center" spacing={2} rounded="xs" py={1} px={4} key={index}>
             <ColorPickerDrawerSwatch
                 isActive={activeColorId - 1 == index}
+                isOpen={editColorId - 1 == index}
                 color={stop.color}
                 onChange={(color: RGBA) => {
                     handleOnChangePickerColor(color);

@@ -4,10 +4,13 @@ import {sortPalette} from '../../../lib/palette';
 import {chakra} from '@chakra-ui/react';
 import {RGBAObjetToString} from '../../../lib/colors';
 import {CHECKERED_GRADIENT_PROPS} from '../../../lib/constants';
+import {Palette} from '../../../typings';
 
 const generateGradientId = () => '' + Math.random().toString(36).substr(2, 9);
 
-const GradientPalette = ({palette, width, height}) => {
+type Props = {palette: Palette; width: number; height: number};
+
+const GradientPalette = ({palette, width, height}: Props) => {
     const gradientId = useMemo(generateGradientId, [palette.length]);
     const sortedPalette = useMemo(() => sortPalette(palette), [palette]);
 

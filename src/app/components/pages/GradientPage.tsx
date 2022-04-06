@@ -2,7 +2,7 @@ import * as React from 'react';
 import {useState, useCallback, useEffect} from 'react';
 import {Stack, Badge, Button, Flex, Divider, Fade, Box} from '@chakra-ui/react';
 import RadianSlider from '../shared/Sliders/RadianSlider';
-import {GradientPaintType, GradientStopsType, Preferences} from '../../typings';
+import {GradientPaintType, GradientStops, Preferences} from '../../typings';
 import {gradientAngleFromTransform} from '../../lib/colors';
 import {DEFAULT_ANGLE, DEFAULT_PREFERENCES} from '../../lib/constants';
 import {filterGradientCompatibleNodes} from '../../lib/figma';
@@ -14,13 +14,12 @@ import {LINEAR_TRANFORMS} from '../../lib/constants';
 import ImportButton from '../shared/ImportButton';
 import Empty from '../shared/Empty';
 import GradientTypeTabs from '../shared/GradientTypeTabs';
-import useScrollPosition from '../../lib/hooks/useScrollPosition';
 import GradientPicker from '../shared/GradientPicker';
 
 const GradientPage = ({}) => {
     const [selection, setSelection] = useState<RectangleNode[]>();
     const [gradientAngle, setGradientAngle] = useState<number>(DEFAULT_ANGLE);
-    const [gradientStops, setGradientStops] = useState<GradientStopsType>(); //DEFAULT_GRADIENT_STOPS
+    const [gradientStops, setGradientStops] = useState<GradientStops>(); //DEFAULT_GRADIENT_STOPS
     const [gradientTransform, setGradientTransform] = useState<Transform>(); //DEFAULT_GRADIENT_TRANSFORM
     const [gradientType, setGradientType] = React.useState<GradientPaintType>('GRADIENT_LINEAR');
     const [currentPaintStyle, setCurrentPaintStyle] = useState<PaintStyle>();
@@ -28,7 +27,6 @@ const GradientPage = ({}) => {
     const [preferences, setPreferences] = useState<Preferences>(DEFAULT_PREFERENCES);
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const scrollElementRef = React.useRef();
-    const scrollPosition = useScrollPosition(scrollElementRef);
 
     const currentGradientPaint: GradientPaint = React.useMemo(() => {
         const paint = currentPaintStyle && (currentPaintStyle.paints[0] as GradientPaint);
@@ -133,7 +131,7 @@ const GradientPage = ({}) => {
     //Import a PaintGradient from current selection
     const importSelectionGradient = useCallback(() => {
         const gradientNode = selection && (selection[0] as RectangleNode);
-        const _gradientPaint = gradientNode.fills[0];
+        const _gradientPaint: GradientPaint = gradientNode.fills[0];
         selectGradientPaint(_gradientPaint);
         if (gradientNode.fillStyleId) {
             selectPaintStyle({
@@ -180,8 +178,8 @@ const GradientPage = ({}) => {
     );
 
     const onChangeStops = useCallback(
-        (_gradientStops: GradientStopsType) => {
-            const updatedGradientStops: GradientStopsType = _gradientStops;
+        (_gradientStops: GradientStops) => {
+            const updatedGradientStops: GradientStops = _gradientStops;
             if (JSON.stringify(gradientStops) != JSON.stringify(updatedGradientStops)) {
                 setGradientStops(updatedGradientStops);
             }
@@ -330,11 +328,11 @@ const GradientPage = ({}) => {
                                 onChange={onChangeType}
                                 transition="all 0.1s"
                                 h={'auto'}
-                                pt={2}
-                                px={3}
+                                pt={3}
+                                px={4}
                             />
                             <Stack h="100%" w="100%" pt={2} pb={0} spacing={3}>
-                                <Box px={3}>
+                                <Box px={4}>
                                     <RadianSlider
                                         onChange={onChangeAngle}
                                         defaultValue={180}
@@ -344,11 +342,7 @@ const GradientPage = ({}) => {
                                         value={gradientAngle}
                                     />
                                 </Box>
-                                <GradientPicker
-                                    onChange={onChangeStops}
-                                    gradientStops={gradientStops}
-                                    //onColorStopSelect={handleOnColorStopSelect}
-                                />
+                                <GradientPicker onChange={onChangeStops} gradientStops={gradientStops} />
                             </Stack>
                         </Flex>
                     ) : (

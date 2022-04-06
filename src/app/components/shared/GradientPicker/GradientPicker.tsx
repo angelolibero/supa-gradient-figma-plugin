@@ -6,30 +6,32 @@ import {Box} from '@chakra-ui/react';
 import {sortPalette, getPaletteColor, mapIdToPalette, mapPaletteToStops} from '../../../lib/palette';
 import GradientStopsList from './GradientStopsList';
 import {
-    DEFAULT_HEIGHT,
-    DEFAULT_WIDTH,
+    DEFAULT_PALETTE_HEIGHT,
+    DEFAULT_PALETTE_WIDTH,
     DEFAULT_STOP_REMOVAL_DROP,
     DEFAULT_MIN_STOPS,
     DEFAULT_MAX_STOPS,
     HALF_STOP_WIDTH,
 } from '../../../lib/constants';
+import {GradientStop} from '../../../typings';
 
 const nextColorId = (palette) => Math.max(...palette.map(({id}) => id)) + 1;
 
 const GradientPicker = ({
     gradientStops,
-    paletteHeight = DEFAULT_HEIGHT,
-    width = DEFAULT_WIDTH,
+    paletteHeight = DEFAULT_PALETTE_HEIGHT,
+    width = DEFAULT_PALETTE_WIDTH,
     stopRemovalDrop = DEFAULT_STOP_REMOVAL_DROP,
     minStops = DEFAULT_MIN_STOPS,
     maxStops = DEFAULT_MAX_STOPS,
     onChange,
-    onColorStopSelect = undefined,
+    onColorStopSelect = (stop: GradientStop) => {},
     ...rest
 }) => {
     const palette = useMemo(() => mapIdToPalette(gradientStops), [gradientStops]);
     const [defaultActiveColor] = palette;
     const [activeColorId, setActiveColorId] = useState(defaultActiveColor.id);
+    const [editColorId, setEditColorId] = useState(undefined);
 
     const limits = useMemo(() => {
         const min = -HALF_STOP_WIDTH;
@@ -92,12 +94,20 @@ const GradientPicker = ({
         handlePaletteChange(updatedPalette);
     };
 
+    const handleEditColor = React.useCallback(
+        (editStop) => {
+            console.log('Edit color');
+            setEditColorId(editStop.id);
+        },
+        [setEditColorId]
+    );
+
     const activePaletteColor = React.useMemo(() => {
         const {color, opacity} = getPaletteColor(palette, activeColorId);
         return {currentColor: color, opacity};
     }, [palette, activeColorId]);
 
-    const paletteWidth = width - HALF_STOP_WIDTH;
+    const paletteWidth = width;
     const stopsHolderDisabled = palette.length >= maxStops;
 
     return (
@@ -116,11 +126,13 @@ const GradientPicker = ({
                 onAddColor={handleColorAdd}
                 onDeleteColor={handleColorDelete}
                 onDragStart={onStopDragStart}
+                onEdit={handleEditColor}
             />
             <GradientStopsList
                 pt={3}
                 pb={2}
                 activeColorId={activeColorId}
+                editColorId={editColorId}
                 gradientStops={gradientStops}
                 onChange={onChange}
                 onSelect={handleColorSelect}

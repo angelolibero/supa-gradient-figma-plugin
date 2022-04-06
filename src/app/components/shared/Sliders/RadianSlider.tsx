@@ -16,6 +16,7 @@ import {
 import {MdArrowUpward, MdOutlineDragHandle} from 'react-icons/md';
 
 type Props = {
+    showHalfMarks?: boolean;
     onChange: (angle) => void;
 } & SliderProps;
 
@@ -24,8 +25,9 @@ const RadianSlider: React.FC<Props> = ({
     value,
     defaultValue = 180,
     min = 0,
-    max = 315,
+    max = 360,
     step = 45,
+    showHalfMarks = false,
     ...rest
 }) => {
     const [sliderValue, setSliderValue] = useControllableState({value, defaultValue});
@@ -73,6 +75,7 @@ const RadianSlider: React.FC<Props> = ({
                                     w="2px"
                                     top={0}
                                     key={index}
+                                    opacity={index % 2 != 0 && showHalfMarks ? 0 : 1}
                                 >
                                     <Circle size="2px" bgColor="gray.500" />
                                 </SliderMark>

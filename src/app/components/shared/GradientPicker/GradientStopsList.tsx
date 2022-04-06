@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {FC, useCallback} from 'react';
 import {StackProps, Stack} from '@chakra-ui/react';
-import {GradientStopsType} from '../../../typings';
+import {GradientStops} from '../../../typings';
 import GradientStopsListItem from './GradientStopsListItem';
 import '../../../styles/picker.css';
 
@@ -9,11 +9,20 @@ type Props = {
     gradientStops?: readonly ColorStop[];
     currentColor?: string;
     activeColorId?: number;
-    onChange?: (gradientStops: GradientStopsType) => void;
+    editColorId?: number;
+    onChange?: (gradientStops: GradientStops) => void;
     onSelect?: (stop: ColorStop) => void;
 } & Omit<StackProps, 'onSelect' | 'children' | 'onChange'>;
 
-const GradientStopsList: FC<Props> = ({gradientStops, currentColor, activeColorId, onChange, onSelect, ...rest}) => {
+const GradientStopsList: FC<Props> = ({
+    gradientStops,
+    currentColor,
+    activeColorId,
+    editColorId,
+    onChange,
+    onSelect,
+    ...rest
+}) => {
     const handleOnChange = useCallback(
         (stop: ColorStop, index: number) => {
             let stops = [...gradientStops];
@@ -44,6 +53,7 @@ const GradientStopsList: FC<Props> = ({gradientStops, currentColor, activeColorI
                             stop={stop}
                             index={index}
                             activeColorId={activeColorId}
+                            editColorId={editColorId}
                             onChange={handleOnChange}
                             onDelete={handleOnDelete}
                             key={index}

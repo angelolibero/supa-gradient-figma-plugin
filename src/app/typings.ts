@@ -1,5 +1,5 @@
-export type GradientStopType = ColorStop & {id?: number};
-export type GradientStopsType = ReadonlyArray<GradientStopType>;
+export type GradientStop = ColorStop & {id?: number};
+export type GradientStops = ReadonlyArray<GradientStop>;
 export type StopCoordiantes = {clientX: number; clientY: number};
 
 export type Palette = ColorStop[];

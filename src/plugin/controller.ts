@@ -1,8 +1,9 @@
 import {LINEAR_TRANFORMS, DEFAULT_WINDOW_SIZE} from '../app/lib/constants';
 import {updateSelection, updateGradientStyles, selectPaintStyleWithId} from '../app/lib/figma';
 import {isGradientCompatible, createGradientStyle} from '../app/lib/utils';
-import {GradientPaintType, GradientStopsType} from '../app/typings';
+import {GradientPaintType, GradientStops} from '../app/typings';
 import {DEFAULT_PREFERENCES, DEFAULT_POOLING_TIMEOUT} from '../app/lib/constants';
+import {gradientAngleFromTransform} from '../app/lib/colors';
 
 var poolingInterval;
 
@@ -15,20 +16,23 @@ figma.ui.onmessage = (msg) => {
         // only gradient compatible nodes
         case 'apply-gradient':
             const angle = msg.angle;
-            const gradientStops: GradientStopsType = msg.gradientStops;
+            const gradientStops: GradientStops = msg.gradientStops;
             const gradientType: GradientPaintType = msg.gradientType;
+            const gradientTransform: Transform = msg.gradientTransform;
             const paintStyleId: string = msg.paintStyleId;
             const style = paintStyleId && (figma.getStyleById(paintStyleId) as PaintStyle);
-            const updatedPaint = {
+
+            const updatedGradientPaint = {
+                //  id: paintStyleId,
                 type: gradientType,
-                gradientTransform: LINEAR_TRANFORMS[angle],
+                gradientTransform: LINEAR_TRANFORMS[angle], //gradientTransform
                 gradientStops,
             };
 
-            console.log('FILL SELECTION ');
+            console.log('COMPARE TRANFORM ', LINEAR_TRANFORMS[angle], gradientTransform);
             if (paintStyleId && style) {
                 console.log('UPDATE STYLE', gradientStops, gradientType, paintStyleId);
-                style.paints = [updatedPaint];
+                style.paints = [updatedGradientPaint];
             }
 
             figma.currentPage.selection &&
@@ -43,16 +47,17 @@ figma.ui.onmessage = (msg) => {
                             node.type == 'FRAME' ||
                             node.type == 'STAR')
                     ) {
-                        const paint = style && ((style as PaintStyle).paints[0] as GradientPaint);
+                        // const paint = style && ((style as PaintStyle).paints[0] as GradientPaint);
                         // const isChanged =
                         //     (style && JSON.stringify(gradientStops) != JSON.stringify(paint.gradientStops)) ||
                         //     (style && angle != gradientAngleFromTransform(paint.gradientTransform)) ||
                         //     (style && gradientType != paint.type);
-
                         if (style) node.fillStyleId = style.id;
-                        if (!style || (style && style.id != node.fillStyleId)) node.fills = [updatedPaint];
+                        if (!style || (style && style.id != node.fillStyleId)) node.fills = [updatedGradientPaint];
                     }
                 });
+            console.log('FILLSSSSS ', angle, gradientTransform);
+
             break;
         // Close plugin event
         case 'preferences-update':

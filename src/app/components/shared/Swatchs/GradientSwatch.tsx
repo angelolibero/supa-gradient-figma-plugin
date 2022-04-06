@@ -1,10 +1,9 @@
 import * as React from 'react';
 import {useMemo, useCallback} from 'react';
-import {Tooltip, Radio, Center, RadioProps, Box, useRadio} from '@chakra-ui/react';
+import {Tooltip, Center, RadioProps, Box, useRadio} from '@chakra-ui/react';
 import {bgColorsFromStops, bgGradientFromColors, gradientAngleFromTransform} from '../../../lib/colors';
-import {CHECKERED_GRADIENT_PROPS, DEFAULT_ANGLE} from '../../../lib/constants';
+import {CHECKERED_GRADIENT_PROPS} from '../../../lib/constants';
 import {MdRefresh} from 'react-icons/md';
-import {GradientPaintType} from '../../../typings';
 
 type Props = {
     paintStyle?: PaintStyle;

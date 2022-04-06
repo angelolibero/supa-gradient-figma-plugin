@@ -1,4 +1,4 @@
-import {GradientPaintType, GradientStopsType, Palette} from '../typings';
+import {GradientPaintType, GradientStops, Palette} from '../typings';
 import {LINEAR_TRANFORMS} from './constants';
 
 const hexRegex = /^#([0-9a-f]{3}){1,2}$/i;
@@ -76,7 +76,7 @@ const paletteToGradientStops = (palette: Palette, alpha: boolean = false) => {
     return rgbaObjects;
 };
 
-const paletteFromGradientStops = (gradientStops: GradientStopsType, alpha: boolean = true) => {
+const paletteFromGradientStops = (gradientStops: GradientStops, alpha: boolean = true) => {
     let palette = !gradientStops
         ? undefined
         : gradientStops.map((value, index) => {
@@ -94,22 +94,18 @@ const paletteFromGradientStops = (gradientStops: GradientStopsType, alpha: boole
     return palette;
 };
 
-const gradientAngleFromTransform = (transform: Transform) => {
-    for (let key in LINEAR_TRANFORMS) {
-        let angleTransform = LINEAR_TRANFORMS[key];
-        if (JSON.stringify(angleTransform) == JSON.stringify(transform)) {
-            return parseInt(key);
-        }
-    }
-    return 0;
+const gradientAngleFromTransform = (transform: Transform): number => {
+    const scale_factor = Math.sqrt(transform[0][0] * transform[1][1] - transform[1][0] * transform[0][1]);
+    const angleDeg = parseInt('' + (Math.acos(transform[0][0] / scale_factor) * 180) / Math.PI); // For degrees
+    return angleDeg;
 };
 
-const bgColorsFromStops = (gradientStops: GradientStopsType) => {
+const bgColorsFromStops = (gradientStops: GradientStops) => {
     if (gradientStops && gradientStops.length) {
         return gradientStops.map((value, index) => {
-            return `rgba(${value.color.r * 255},${value.color.g * 255},${value.color.b * 255},${value.color.a}) ${
-                parseFloat(new Number(value.position).toFixed(2)) * 100
-            }%`;
+            return `rgba(${parseInt('' + value.color.r * 255)},${parseInt('' + value.color.g * 255)},${parseInt(
+                '' + value.color.b * 255
+            )},${value.color.a}) ${parseFloat('' + value.position * 100)}%`;
         });
     }
     return [];

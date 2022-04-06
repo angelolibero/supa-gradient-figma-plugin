@@ -1,16 +1,16 @@
 import * as React from 'react';
 import {useEffect, useMemo} from 'react';
-import {Flex, Button, FlexProps, Text, Tooltip, Badge} from '@chakra-ui/react';
-import {GradientPaintType, GradientStopsType} from '../../typings';
+import {Flex, Button, FlexProps, Text, Tooltip, Badge, Box, Center} from '@chakra-ui/react';
+import {GradientPaintType, GradientStops} from '../../typings';
 import {useClipboard} from '@chakra-ui/react';
-import {MdCode} from 'react-icons/md';
+import {MdArrowUpward, MdCode} from 'react-icons/md';
 import {bgColorsFromStops, bgGradientFromColors} from '../../lib/colors';
 import {CHECKERED_GRADIENT_PROPS} from '../../lib/constants';
 
 type Props = {
     name?: string;
     angle: number;
-    gradientStops: GradientStopsType;
+    gradientStops: GradientStops;
     gradientTransform: Transform;
     gradientType: GradientPaintType;
 } & FlexProps;
@@ -51,23 +51,36 @@ const GradientPreview: React.FC<Props> = ({name, angle, gradientStops, gradientT
                     <Flex w="100%" alignItems="flex-start">
                         {/* <SlideFade in={!!name} offsetY={-2}> */}
                         {name && (
-                            <Badge size="sm" fontSize="xs" borderRadius="sm" maxW="150px" h={5} lineHeight={5}>
+                            <Badge
+                                size="sm"
+                                fontSize="xs"
+                                borderRadius="sm"
+                                bgColor="gray.900"
+                                color="gray.100"
+                                maxW="150px"
+                                h={5}
+                                lineHeight={5}
+                            >
                                 <Text isTruncated>{name}</Text>
                             </Badge>
                         )}
                         {/* </SlideFade> */}
                     </Flex>
 
-                    <Tooltip label="Copy CSS">
+                    <Tooltip label="Copy CSS" placement="auto-end">
                         <Button
                             h={5}
                             w={5}
                             minW={5}
                             px={0}
                             onClick={onCopy}
-                            colorScheme={hasCopied ? 'primary' : 'gray'}
                             size="sm"
                             fontSize="sm"
+                            bgColor={hasCopied ? 'primary.500' : 'gray.900'}
+                            color="gray.100"
+                            _hover={{
+                                bgColor: hasCopied ? 'primary.600' : 'gray.800',
+                            }}
                         >
                             <MdCode />
                         </Button>

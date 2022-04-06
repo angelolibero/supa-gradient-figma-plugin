@@ -30,7 +30,7 @@ const PaintPicker: FC<Props> = ({
     }, [paintStyles]);
 
     const newBgGradient = useMemo(() => {
-        if (!isChanged) return;
+        if (!isChanged || !gradientPaint) return;
         const bgGradientColors = bgColorsFromStops(gradientPaint.gradientStops);
         return bgGradientFromColors(bgGradientColors, gradientAngleFromTransform(gradientPaint.gradientTransform));
     }, [currentPaintStyle, gradientPaint, isChanged]);

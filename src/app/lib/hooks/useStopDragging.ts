@@ -1,5 +1,5 @@
 import {MutableRefObject, useState} from 'react';
-import {StopCoordiantes, GradientStopType} from '../../typings';
+import {StopCoordiantes, GradientStop} from '../../typings';
 import useDragging from './useDragging';
 
 /**
@@ -22,7 +22,7 @@ type useStopDraggingProps = {
     initialPos?: number;
     id?: number;
     colorStopRef?: MutableRefObject<any>;
-    onPosChange?: (stop: GradientStopType) => void;
+    onPosChange?: (stop: GradientStop) => void;
     onDragStart?: (id: number) => void;
     onDragEnd?: (id: number) => void;
     onDeleteColor?: (id: number) => void;
