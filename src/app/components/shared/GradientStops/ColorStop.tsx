@@ -1,8 +1,9 @@
 import {string} from 'prop-types';
 import * as React from 'react';
 import {useRef} from 'react';
+import {checkredGradientProps} from '../../../lib/constants';
 import useStopDragging from '../../../lib/hooks/useStopDragging';
-//import 'react-linear-gradient-picker/src/components/ColorStop/index.css';
+import {chakra} from '@chakra-ui/react';
 
 const ColorStop = ({
     stop,
@@ -10,8 +11,8 @@ const ColorStop = ({
     limits = undefined,
     onPosChange = undefined,
     onDeleteColor = undefined,
-    onDragStart = (clientX, clientY) => {},
-    onDragEnd = (clientX, clientY) => {},
+    onDragStart = (id: number) => {},
+    onDragEnd = (id: number) => {},
 }) => {
     const colorStopRef = useRef();
     const [drag] = useStopDragging({
@@ -34,7 +35,8 @@ const ColorStop = ({
             onMouseDown={drag}
             onTouchStart={drag}
         >
-            <div style={{backgroundColor: color, opacity}} />
+            <chakra.div {...checkredGradientProps} bgSize="6px 6px" bgPos="0px 0px, 3px 3px" pos="absolute" />
+            <div style={{backgroundColor: color}} />
         </div>
     );
 };

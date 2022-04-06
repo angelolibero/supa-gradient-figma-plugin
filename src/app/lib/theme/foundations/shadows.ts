@@ -15,7 +15,7 @@ const shadows = {
         '0px 1px 4px rgba(0, 0, 0, 0.05), 0px 6px 24px rgba(0, 0, 0, 0.04), inset 0px 1px 1px rgba(0, 0, 0, 0.04)',
     'depth-dark':
         '0px 4px 8px rgba(0, 0, 0, 0.05), 0px 0px 1px rgba(0, 0, 0, 0.2), inset 0px 1px 1px rgba(255, 255, 255, 0.05)',
-    outline: '0px 0px 0px 2px rgba(0, 0, 0, 0.15)',
+    outline: '0px 0px 0px 1px rgba(13, 153, 255, 1)',
 };
 
 export default shadows;

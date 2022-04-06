@@ -62,9 +62,6 @@ const updateSelection = () => {
 
 const updateGradientStyles = (postMessage = true): PaintStyle[] => {
     const gradientPaintStyles = getGradientsFromStyles(figma.getLocalPaintStyles());
-
-    // console.log('update gradientPaintStyles');
-
     if (gradientPaintStyles && gradientPaintStyles.length > 11) {
         figma.ui.resize(defaultWindowSize.width, 485);
     } else if (gradientPaintStyles && gradientPaintStyles.length > 5) {

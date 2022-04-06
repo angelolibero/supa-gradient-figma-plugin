@@ -2,13 +2,12 @@ import * as React from 'react';
 import {useState, useCallback, useEffect} from 'react';
 import {Stack, Badge, Button, Flex, Divider, Fade, Box} from '@chakra-ui/react';
 import RadianSlider from '../shared/Sliders/RadianSlider';
-import GradientStopsEditor from '../shared/GradientStopsEditor';
 import {GradientPaintType, GradientStopsType, Preferences} from '../../typings';
 import {gradientAngleFromTransform} from '../../lib/colors';
 import {defaultAngle, defaultPreferences} from '../../lib/constants';
 import {filterGradientCompatibleNodes} from '../../lib/figma';
 import GradientPreview from '../shared/GradientPreview';
-import PaintStyles from '../shared/PaintStyles';
+import PaintPicker from '../shared/PaintPicker';
 import PreferencesDrawerButton from '../shared/Drawers/PreferencesDrawerButton';
 import StylesSkeleton from '../shared/StylesSkeleton';
 import {linearTransforms} from '../../lib/constants';
@@ -305,14 +304,13 @@ const GradientPage = ({}) => {
                         flexDir={'column'}
                         w="100%"
                         bgGradient="linear(to-b, white, gray.100)"
-                        //boxShadow="inset 0 -1px 20px rgba(0,0,0,0.05)"
                         pos="sticky"
                         top={0}
                         zIndex="1"
                         transition="all 0.25s"
                     >
                         {!isLoading ? (
-                            <PaintStyles
+                            <PaintPicker
                                 paintStyles={paintStyles}
                                 currentPaintStyle={currentPaintStyle}
                                 isChanged={isChanged}
@@ -325,33 +323,19 @@ const GradientPage = ({}) => {
                         )}
                     </Flex>
                     {isGradient ? (
-                        <Flex
-                            direction="column"
-                            h="100%"
-                            w="100%"
-                            bgColor="white"
-                            transition="all 0.15s"
-                            //  shadow="0 -2px 20px rgba(0,0,0,0.03)"
-                        >
+                        <Flex direction="column" h="100%" w="100%" bgColor="white" transition="all 0.15s">
                             <GradientPreview
                                 gradientStops={gradientStops}
                                 gradientTransform={gradientTransform}
                                 gradientType={gradientType}
                                 angle={gradientAngle}
                                 name={currentPaintStyle && currentPaintStyle.id && currentPaintStyle.name}
-                                // pos="sticky"
-                                // top={0}
-                                // zIndex="modal"
-                                // transition="all 0.25s"
-                                // height={scrollPosition ? 50 : 100}
-                                // minH={scrollPosition ? 50 : 100}
                             />
                             <GradientTypeTabs
                                 gradientType={gradientType}
                                 onChange={onChangeType}
                                 transition="all 0.1s"
                                 h={'auto'}
-                                // opacity={scrollPosition ? 0 : 1}
                                 pt={2}
                                 px={3}
                             />

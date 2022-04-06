@@ -5,7 +5,6 @@ import GradientPalette from './GradientPalette';
 import {Box} from '@chakra-ui/react';
 import {sortPalette, getPaletteColor, mapIdToPalette, mapPaletteToStops} from '../../../lib/palette';
 import GradientStopsList from './GradientStopsList';
-import {paletteToGradientStops} from '../../../lib/colors';
 import {
     DEFAULT_HEIGHT,
     DEFAULT_WIDTH,
@@ -28,8 +27,7 @@ const GradientStops = ({
     onColorStopSelect = undefined,
     ...rest
 }) => {
-    const palette = mapIdToPalette(gradientStops);
-
+    const palette = useMemo(() => mapIdToPalette(gradientStops), [gradientStops]);
     const [defaultActiveColor] = palette;
     const [activeColorId, setActiveColorId] = useState(defaultActiveColor.id);
 
@@ -47,7 +45,6 @@ const GradientStops = ({
         const entry = {id: nextColorId(palette), position: position / width, color};
 
         const updatedPalette = [...palette, entry];
-
         setActiveColorId(entry.id);
         handlePaletteChange(updatedPalette);
     };
@@ -65,9 +62,8 @@ const GradientStops = ({
     const onStopDragStart = (id) => {
         if (id !== activeColorId) {
             setActiveColorId(id);
-
             const color = palette.find((color) => color.id === id);
-            onColorStopSelect(color);
+            onColorStopSelect && onColorStopSelect(color);
         }
     };
 
@@ -76,15 +72,16 @@ const GradientStops = ({
         handlePaletteChange(updatedPalette);
     };
 
-    const handlePaletteChange = (palette) => {
-        const sortedPalette = sortPalette(palette).map(({position, id, ...rest}) => ({
+    const handlePaletteChange = (updatedPalette) => {
+        const sortedPalette = sortPalette(updatedPalette).map(({position, id, ...rest}) => ({
             ...rest,
-            id,
-            position: Number(position).toFixed(3),
-            active: id === activeColorId,
+            //   id,
+            position: +Number(position).toFixed(2),
+            //   active: id === activeColorId,
         }));
+        console.log('sortedPalette', updatedPalette, sortedPalette);
 
-        onChange && onChange(paletteToGradientStops(sortedPalette));
+        onChange && onChange(sortedPalette);
     };
 
     const handleStopPosChange = ({id, position}) => {

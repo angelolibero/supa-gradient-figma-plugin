@@ -1,5 +1,6 @@
 import {useState, useEffect} from 'react';
-import {EVENTS} from './constants';
+import {StopCoordiantes} from '../../typings';
+import {EVENTS} from '../constants';
 
 const DRAG_HANDLERS = {
     MOUSE: {
@@ -25,9 +26,9 @@ const DRAG_HANDLERS = {
 const isTouch = (e) => e.type === EVENTS.TOUCHSTART;
 
 type useDraggingProps = {
-    onDragStart: (coordinates: {clientX: number; clientY: number}) => {};
-    onDrag: (coordinates: {clientX: number; clientY: number}) => {};
-    onDragEnd: (coordinates: {clientX: number; clientY: number}) => {};
+    onDragStart: (coordinates: StopCoordiantes) => {};
+    onDrag: (coordinates: StopCoordiantes) => {};
+    onDragEnd: (coordinates: StopCoordiantes) => {};
 };
 
 const useDragging = ({onDragStart, onDrag, onDragEnd}: useDraggingProps) => {

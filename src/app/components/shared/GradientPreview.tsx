@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {useEffect, useMemo} from 'react';
-import {Flex, Button, FlexProps, Text, Tooltip, SlideFade, Badge} from '@chakra-ui/react';
+import {Flex, Button, FlexProps, Text, Tooltip, Badge} from '@chakra-ui/react';
 import {GradientPaintType, GradientStopsType} from '../../typings';
 import {useClipboard} from '@chakra-ui/react';
 import {MdCode} from 'react-icons/md';

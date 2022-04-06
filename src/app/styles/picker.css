@@ -12,19 +12,26 @@
 
 /* ColorStop */
 .cs {
-    height: 17px;
+    height: 21px;
     position: absolute;
-    width: 11px;
+    width: 18px;
     cursor: pointer;
-    background: url(../assets/ColorStop.png) right center;
+    background: url(../assets/color-stop.png) right center;
+    background-size: cover;
+    transition: transform 0.1s;
+}
+
+.cs:hover {
+    transform: scale(1.15);
 }
 
 .cs div {
-    height: 7px;
-    left: 2px;
-    width: 7px;
+    height: 12px;
+    left: 3px;
+    width: 12px;
     position: absolute;
-    top: 8px;
+    top: 6px;
+    border-radius: 2px;
 }
 
 .active {

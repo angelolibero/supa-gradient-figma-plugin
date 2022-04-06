@@ -1,4 +1,5 @@
-import {useState} from 'react';
+import {MutableRefObject, useState} from 'react';
+import {StopCoordiantes, GradientStopType} from '../../typings';
 import useDragging from './useDragging';
 
 /**
@@ -15,19 +16,31 @@ const getColorStopRefTop = (ref) => {
     return ref.current.getBoundingClientRect().top;
 };
 
+type useStopDraggingProps = {
+    limits;
+    stop;
+    initialPos?: number;
+    id?: number;
+    colorStopRef?: MutableRefObject<any>;
+    onPosChange?: (stop: GradientStopType) => void;
+    onDragStart?: (id: number) => void;
+    onDragEnd?: (id: number) => void;
+    onDeleteColor?: (id: number) => void;
+};
+
 const useStopDragging = ({
-    limits,
-    stop,
     initialPos = 0,
-    colorStopRef = undefined,
-    onPosChange = undefined,
-    onDragStart = undefined,
-    onDragEnd = undefined,
-    onDeleteColor = undefined,
-}) => {
+    stop,
+    limits,
+    colorStopRef,
+    onPosChange,
+    onDragStart,
+    onDragEnd,
+    onDeleteColor,
+}: useStopDraggingProps) => {
     const [posStart, setPosStart] = useState(initialPos);
 
-    const handleDrag = ({clientX, clientY}) => {
+    const handleDrag = ({clientX, clientY}: StopCoordiantes): any => {
         const {id, position} = stop;
         const {min, max} = limits;
 
@@ -41,8 +54,7 @@ const useStopDragging = ({
         // Limit movements
         const dragOffset = position - posStart;
         const limitedPos = limitPos(dragOffset + clientX, min, max);
-
-        onPosChange({id, position: limitedPos});
+        onPosChange({...stop, id, position: limitedPos});
     };
 
     const [drag] = useDragging({

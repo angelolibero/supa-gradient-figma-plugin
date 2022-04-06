@@ -58,7 +58,15 @@ const GradientSwatch: React.FC<Props> = ({paintStyle, defaultPaint, isActive, sh
                 isDisabled={!paintStyle || !(paintStyle && paintStyle.id)}
             >
                 <Center>
-                    <Box as="label" {...checkredGradientProps} rounded="full" pos="relative">
+                    <Box
+                        as="label"
+                        {...checkredGradientProps}
+                        {...checkredGradientProps}
+                        bgSize="10px 10px"
+                        bgPos="0px 0px, 5px 5px"
+                        rounded="full"
+                        pos="relative"
+                    >
                         <input {...input} onKeyDown={onPressEnter} />
                         <Box
                             bgGradient={bgGradient}

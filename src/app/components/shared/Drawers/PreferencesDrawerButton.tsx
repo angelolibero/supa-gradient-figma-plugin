@@ -116,7 +116,7 @@ export const PreferencesDrawer: FC<PreferencesDrawerProps> = ({
                                     size="sm"
                                     colorScheme="green"
                                     id="live-mode"
-                                    onChange={(event) => onUpdate('liveUpdates', !preferences.liveUpdates)}
+                                    onChange={() => onUpdate('liveUpdates', !preferences.liveUpdates)}
                                 />
                             </FormControl>
                             {/* updateStyles */}
@@ -129,7 +129,7 @@ export const PreferencesDrawer: FC<PreferencesDrawerProps> = ({
                                     size="sm"
                                     colorScheme="green"
                                     id="update-styles"
-                                    onChange={(event) => onUpdate('updateStyles', !preferences.updateStyles)}
+                                    onChange={() => onUpdate('updateStyles', !preferences.updateStyles)}
                                 />
                             </FormControl>
                         </Stack>

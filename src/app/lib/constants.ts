@@ -1,14 +1,18 @@
 import {Preferences} from '../typings';
 
+//Styles pooling timeout
 export const poolingTimeout = 1000 * 3; //10 second
 
+//Window
 export const defaultWindowSize = {
     width: 240,
     height: 429,
 };
 
+//Preferences
 export const defaultPreferences: Preferences = {liveUpdates: true, updateStyles: true};
 
+//Gradient
 export const linearTransforms = {
     //Affine tranformations for common angles
     // custom: [
@@ -59,7 +63,6 @@ export const defaultGradientStops = [
     {position: 1.0, color: {r: 126 / 255, g: 32 / 255, b: 207 / 255, a: 1}},
 ];
 export const defaultGradientTransform = linearTransforms[defaultAngle] as Transform;
-
 export const checkredGradientProps = {
     backgroundColor: 'gray.200',
     bgGradient:
@@ -69,10 +72,10 @@ export const checkredGradientProps = {
 };
 
 //GradientStops
-const STOP_WIDTH = 10;
+const STOP_WIDTH = 18;
 export const HALF_STOP_WIDTH = STOP_WIDTH / 2;
 export const DEFAULT_STOP_REMOVAL_DROP = 50;
-export const DEFAULT_WIDTH = 220;
+export const DEFAULT_WIDTH = 221;
 export const DEFAULT_HEIGHT = 6; //Chakra size
 export const DEFAULT_MAX_STOPS = 5;
 export const DEFAULT_MIN_STOPS = 2;
@@ -96,3 +99,16 @@ export const COLORS = [
     {value: '#FF00FF', name: 'fuchsia'},
     {value: '#800080', name: 'purple'},
 ];
+
+/**
+ * The drag supported events
+ * Object<String>
+ */
+export const EVENTS = {
+    MOUSEDOWN: 'mousedown',
+    MOUSEMOVE: 'mousemove',
+    MOUSEUP: 'mouseup',
+    TOUCHSTART: 'touchstart',
+    TOUCHMOVE: 'touchmove',
+    TOUCHEND: 'touchend',
+};

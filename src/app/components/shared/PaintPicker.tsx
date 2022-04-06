@@ -14,7 +14,7 @@ type Props = {
     onCreate?: (name: string) => void;
 } & Omit<RadioGroupProps, 'onSelect' | 'children'>;
 
-const PaintStyles: FC<Props> = ({
+const PaintPicker: FC<Props> = ({
     gradientPaint,
     paintStyles,
     currentPaintStyle,
@@ -31,7 +31,6 @@ const PaintStyles: FC<Props> = ({
 
     const newBgGradient = useMemo(() => {
         if (!isChanged) return;
-        // const newPaint = newPaintStyle.paints[0] as GradientPaint;
         const bgGradientColors = bgColorsFromStops(gradientPaint.gradientStops);
         return bgGradientFromColors(bgGradientColors, gradientAngleFromTransform(gradientPaint.gradientTransform));
     }, [currentPaintStyle, gradientPaint, isChanged]);
@@ -96,4 +95,4 @@ const PaintStyles: FC<Props> = ({
     );
 };
 
-export default PaintStyles;
+export default PaintPicker;

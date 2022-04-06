@@ -1,6 +1,11 @@
+import {GradientStopType} from '../typings';
 import {HALF_STOP_WIDTH} from './constants';
 
-const compare = ({positon: offset1}, {positon: offset2}) => offset1 - offset2;
+const compare = (stop1: GradientStopType, stop2: GradientStopType) => {
+    console.log(stop1);
+    console.log('SOERTING', stop1.position - stop2.position, stop1, stop2);
+    return stop1.position - stop2.position;
+};
 
 export const sortPalette = (palette) => {
     return palette.sort(compare);
