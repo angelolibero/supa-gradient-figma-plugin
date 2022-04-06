@@ -1,7 +1,7 @@
 import {string} from 'prop-types';
 import * as React from 'react';
 import {useRef} from 'react';
-import {checkredGradientProps} from '../../../lib/constants';
+import {CHECKERED_GRADIENT_PROPS} from '../../../lib/constants';
 import useStopDragging from '../../../lib/hooks/useStopDragging';
 import {chakra} from '@chakra-ui/react';
 
@@ -35,7 +35,7 @@ const ColorStop = ({
             onMouseDown={drag}
             onTouchStart={drag}
         >
-            <chakra.div {...checkredGradientProps} bgSize="6px 6px" bgPos="0px 0px, 3px 3px" pos="absolute" />
+            <chakra.div {...CHECKERED_GRADIENT_PROPS} bgSize="6px 6px" bgPos="0px 0px, 3px 3px" pos="absolute" />
             <div style={{backgroundColor: color}} />
         </div>
     );

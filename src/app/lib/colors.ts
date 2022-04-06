@@ -1,5 +1,5 @@
 import {GradientPaintType, GradientStopsType, Palette} from '../typings';
-import {linearTransforms} from './constants';
+import {LINEAR_TRANFORMS} from './constants';
 
 const hexRegex = /^#([0-9a-f]{3}){1,2}$/i;
 const rgbRegex =
@@ -95,8 +95,8 @@ const paletteFromGradientStops = (gradientStops: GradientStopsType, alpha: boole
 };
 
 const gradientAngleFromTransform = (transform: Transform) => {
-    for (let key in linearTransforms) {
-        let angleTransform = linearTransforms[key];
+    for (let key in LINEAR_TRANFORMS) {
+        let angleTransform = LINEAR_TRANFORMS[key];
         if (JSON.stringify(angleTransform) == JSON.stringify(transform)) {
             return parseInt(key);
         }

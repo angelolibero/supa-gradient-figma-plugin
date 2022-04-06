@@ -1,19 +1,19 @@
 import {Preferences} from '../typings';
 
 //Styles pooling timeout
-export const poolingTimeout = 1000 * 3; //10 second
+export const DEFAULT_POOLING_TIMEOUT = 1000 * 3; //10 second
 
 //Window
-export const defaultWindowSize = {
+export const DEFAULT_WINDOW_SIZE = {
     width: 240,
     height: 429,
 };
 
 //Preferences
-export const defaultPreferences: Preferences = {liveUpdates: true, updateStyles: true};
+export const DEFAULT_PREFERENCES: Preferences = {liveUpdates: true, updateStyles: true};
 
 //Gradient
-export const linearTransforms = {
+export const LINEAR_TRANFORMS = {
     //Affine tranformations for common angles
     // custom: [
     //     [Math.cos(angle), Math.sin(angle), 0],
@@ -56,14 +56,14 @@ export const linearTransforms = {
         [1, 0, 0.5],
     ],
 };
-export const defaultAngle = 180;
-export const defaultGradientStops = [
+export const DEFAULT_ANGLE = 180;
+export const DEFAULT_GRADIENT_STOPS = [
     {position: 0.0, color: {r: 238 / 255, g: 241 / 255, b: 11 / 255, a: 1}},
     {position: 0.5, color: {r: 215 / 255, g: 128 / 255, b: 37 / 255, a: 1}},
     {position: 1.0, color: {r: 126 / 255, g: 32 / 255, b: 207 / 255, a: 1}},
 ];
-export const defaultGradientTransform = linearTransforms[defaultAngle] as Transform;
-export const checkredGradientProps = {
+export const DEFAULT_GRADIENT_TRANSFORM = LINEAR_TRANFORMS[DEFAULT_ANGLE] as Transform;
+export const CHECKERED_GRADIENT_PROPS = {
     backgroundColor: 'gray.200',
     bgGradient:
         'linear-gradient(45deg, #eee 25%, transparent 25%, transparent 75%, #eee 75%, #eee 100%),linear-gradient(45deg, #eee 25%, white 25%, white 75%, #eee 75%, #eee 100%)',

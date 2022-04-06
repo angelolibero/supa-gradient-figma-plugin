@@ -2,7 +2,7 @@ import * as React from 'react';
 import {useMemo, useCallback} from 'react';
 import {Tooltip, Radio, Center, RadioProps, Box, useRadio} from '@chakra-ui/react';
 import {bgColorsFromStops, bgGradientFromColors, gradientAngleFromTransform} from '../../../lib/colors';
-import {checkredGradientProps, defaultAngle} from '../../../lib/constants';
+import {CHECKERED_GRADIENT_PROPS, DEFAULT_ANGLE} from '../../../lib/constants';
 import {MdRefresh} from 'react-icons/md';
 import {GradientPaintType} from '../../../typings';
 
@@ -15,7 +15,7 @@ type Props = {
 } & Omit<RadioProps, 'onSelect'>;
 
 const GradientSwatch: React.FC<Props> = ({paintStyle, defaultPaint, isActive, showReset, size, onSelect, ...rest}) => {
-    // const angle = defaultAngle;
+    // const angle = DEFAULT_ANGLE;
 
     const {getInputProps, getCheckboxProps} = useRadio({
         value: paintStyle ? paintStyle.id : 'custom',
@@ -60,8 +60,8 @@ const GradientSwatch: React.FC<Props> = ({paintStyle, defaultPaint, isActive, sh
                 <Center>
                     <Box
                         as="label"
-                        {...checkredGradientProps}
-                        {...checkredGradientProps}
+                        {...CHECKERED_GRADIENT_PROPS}
+                        {...CHECKERED_GRADIENT_PROPS}
                         bgSize="10px 10px"
                         bgPos="0px 0px, 5px 5px"
                         rounded="full"

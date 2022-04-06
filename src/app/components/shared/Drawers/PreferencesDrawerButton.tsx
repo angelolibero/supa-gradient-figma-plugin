@@ -22,14 +22,14 @@ import {Preferences} from '../../../typings';
 import {MdMoreVert} from 'react-icons/md';
 
 type Props = {
-    defaultPreferences: Preferences;
+    DEFAULT_PREFERENCES: Preferences;
     onChange: (preferences: Preferences) => void;
 } & Omit<ButtonProps, 'onCreate'>;
 
-const PreferencesDrawerButton: FC<Props> = ({defaultPreferences, onChange, ...rest}) => {
+const PreferencesDrawerButton: FC<Props> = ({DEFAULT_PREFERENCES, onChange, ...rest}) => {
     const {isOpen, onOpen, onClose} = useDisclosure();
     const btnRef = React.useRef();
-    const [preferences, setPreferences] = useState<Preferences>(defaultPreferences);
+    const [preferences, setPreferences] = useState<Preferences>(DEFAULT_PREFERENCES);
 
     const handleOnUpdate = useCallback(
         (key: string, value: string | number | boolean) => {

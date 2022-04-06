@@ -1,5 +1,5 @@
 import {getGradientsFromStyles, isGradientCompatible} from './utils';
-import {defaultWindowSize} from './constants';
+import {DEFAULT_WINDOW_SIZE} from './constants';
 
 const filterGradientCompatibleNodes = (selection: any[]) => {
     console.log('filterGradientCompatibleNodes', selection);
@@ -63,11 +63,11 @@ const updateSelection = () => {
 const updateGradientStyles = (postMessage = true): PaintStyle[] => {
     const gradientPaintStyles = getGradientsFromStyles(figma.getLocalPaintStyles());
     if (gradientPaintStyles && gradientPaintStyles.length > 11) {
-        figma.ui.resize(defaultWindowSize.width, 485);
+        figma.ui.resize(DEFAULT_WINDOW_SIZE.width, 485);
     } else if (gradientPaintStyles && gradientPaintStyles.length > 5) {
-        figma.ui.resize(defaultWindowSize.width, 477);
+        figma.ui.resize(DEFAULT_WINDOW_SIZE.width, 477);
     } else {
-        figma.ui.resize(defaultWindowSize.width, defaultWindowSize.height);
+        figma.ui.resize(DEFAULT_WINDOW_SIZE.width, DEFAULT_WINDOW_SIZE.height);
     }
 
     //Gradient styles change event

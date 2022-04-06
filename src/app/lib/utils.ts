@@ -1,5 +1,5 @@
 import {GradientPaintType, GradientStops, Preferences} from '../typings';
-import {linearTransforms} from './constants';
+import {LINEAR_TRANFORMS} from './constants';
 
 const isGradientCompatible = (node: SceneNode): boolean =>
     node.type == 'RECTANGLE' ||

@@ -16,7 +16,7 @@ import {
 
 const nextColorId = (palette) => Math.max(...palette.map(({id}) => id)) + 1;
 
-const GradientStops = ({
+const GradientPicker = ({
     gradientStops,
     paletteHeight = DEFAULT_HEIGHT,
     width = DEFAULT_WIDTH,
@@ -130,4 +130,4 @@ const GradientStops = ({
     );
 };
 
-export default GradientStops;
+export default GradientPicker;

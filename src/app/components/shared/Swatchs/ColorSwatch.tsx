@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {useMemo, useCallback} from 'react';
 import {RadioProps, Box, useRadio, forwardRef} from '@chakra-ui/react';
-import {checkredGradientProps} from '../../../lib/constants';
+import {CHECKERED_GRADIENT_PROPS} from '../../../lib/constants';
 import {rgbToHex} from '@ctrl/tinycolor';
 
 export type ColorSwatchProps = {
@@ -43,7 +43,7 @@ const ColorSwatch = forwardRef<ColorSwatchProps, 'input'>(
         return (
             <Box
                 as="label"
-                {...checkredGradientProps}
+                {...CHECKERED_GRADIENT_PROPS}
                 rounded="full"
                 pos="relative"
                 boxSize={rest.boxSize || size == 'lg' ? 10 : 6}
