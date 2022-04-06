@@ -3,7 +3,6 @@ import {useRef, useCallback} from 'react';
 import {
     Tooltip,
     Stack,
-    Button,
     Drawer,
     DrawerBody,
     DrawerContent,

@@ -51,13 +51,8 @@ figma.ui.onmessage = (msg) => {
                             (style && angle != gradientAngleFromTransform(paint.gradientTransform)) ||
                             (style && gradientType != paint.type);
 
-                        if (style && !isChanged) {
-                            node.fillStyleId = style.id;
-                        } else {
-                            if (!paintStyleId) {
-                                node.fills = [updatedPaint];
-                            }
-                        }
+                        if (style) node.fillStyleId = style.id;
+                        if (!style || (style && style.id != node.fillStyleId)) node.fills = [updatedPaint];
                     }
                     //else {
                     //     figma.notify(`Can't apply gradient to node ${node.name}`, {timeout: 3000});

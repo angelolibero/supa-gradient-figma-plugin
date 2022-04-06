@@ -2,7 +2,7 @@ import * as React from 'react';
 import {useState, useCallback, useEffect} from 'react';
 import {Stack, Badge, Button, Flex, Divider, Fade, Box, Tab, TabList, TabPanels, TabPanel} from '@chakra-ui/react';
 import RadianSlider from '../shared/Sliders/RadianSlider';
-import GradientStopsPicker from '../shared/GradientStopsPicker';
+import GradientStopsEditor from '../shared/GradientStopsEditor';
 import {GradientPaintType, GradientStops, Preferences} from '../../typings';
 import {gradientAngleFromTransform} from '../../lib/colors';
 import {defaultGradientStops, defaultAngle, defaultPreferences} from '../../lib/constants';
@@ -366,10 +366,16 @@ const GradientPage = ({}) => {
                                         value={gradientAngle}
                                     />
                                 </Box>
-                                <GradientStopsPicker
+                                <GradientStopsEditor
                                     onChange={onChangeStops}
                                     value={gradientStops}
                                     defaultValue={gradientStops}
+                                />
+                                <GradientStops
+                                    onChange={onChangeStops}
+                                    gradientStops={gradientStops}
+                                    palette={palette}
+                                    // onColorStopSelect={handleOnColorStopSelect}
                                 />
                             </Stack>
                         </Flex>

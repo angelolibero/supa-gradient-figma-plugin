@@ -2,10 +2,10 @@ import * as React from 'react';
 import {FC} from 'react';
 import {StackProps, Stack, IconButton, Input} from '@chakra-ui/react';
 import {rgbaToHex} from '@ctrl/tinycolor';
-import {GradientStopsType} from '../../typings';
-import SegmentedSlider from './Sliders/SegmentedSlider';
-import {hexToRGBAObject} from '../../lib/colors';
-import ColorPickerDrawerSwatch from './Drawers/ColorPickerDrawerSwatch';
+import {GradientStopsType} from '../../../typings';
+import SegmentedSlider from '../Sliders/SegmentedSlider';
+import {hexToRGBAObject} from '../../../lib/colors';
+import ColorPickerDrawerSwatch from '../Drawers/ColorPickerDrawerSwatch';
 import {AiOutlineMinus} from 'react-icons/ai';
 
 type Props = {
@@ -14,7 +14,7 @@ type Props = {
     activeColorId?: number;
     onChange?: (gradientStops: GradientStopsType) => void;
     onSelect?: (stop: ColorStop) => void;
-} & Omit<StackProps, 'onSelect' | 'children'>;
+} & Omit<StackProps, 'onSelect' | 'children' | 'onChange'>;
 
 const GradientStopsList: FC<Props> = ({gradientStops, currentColor, activeColorId, onChange, onSelect, ...rest}) => {
     const handleOnChange = React.useCallback(
@@ -49,6 +49,7 @@ const GradientStopsList: FC<Props> = ({gradientStops, currentColor, activeColorI
                             activeColorId={activeColorId}
                             onChange={handleOnChange}
                             onDelete={handleOnDelete}
+                            key={index}
                         />
                     );
                 })}

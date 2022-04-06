@@ -2,8 +2,8 @@ import * as React from 'react';
 import {useState, useMemo, useEffect} from 'react';
 import ColorStopsHolder from './ColorStopsHolder';
 import GradientPalette from './GradientPalette';
+import {Box} from '@chakra-ui/react';
 import {sortPalette, getPaletteColor, mapIdToPalette, mapPaletteToStops} from '../../../lib/palette';
-import '../../../styles/picker.css';
 import {
     DEFAULT_HEIGHT,
     DEFAULT_WIDTH,
@@ -12,20 +12,23 @@ import {
     DEFAULT_MAX_STOPS,
     HALF_STOP_WIDTH,
 } from '../../../lib/constants';
+import GradientStopsList from './GradientStopsList';
+import '../../../styles/picker.css';
+import {paletteToGradientStops} from '../../../lib/colors';
 
 const nextColorId = (palette) => Math.max(...palette.map(({id}) => id)) + 1;
 
 const GradientStops = ({
+    gradientStops,
     palette,
     paletteHeight = DEFAULT_HEIGHT,
     width = DEFAULT_WIDTH,
     stopRemovalDrop = DEFAULT_STOP_REMOVAL_DROP,
     minStops = DEFAULT_MIN_STOPS,
     maxStops = DEFAULT_MAX_STOPS,
-    // children,
-    // flatStyle = false,
-    onPaletteChange,
+    onChange,
     onColorStopSelect,
+    ...rest
 }) => {
     palette = mapIdToPalette(palette);
 
@@ -70,11 +73,10 @@ const GradientStops = ({
         }
     };
 
-    // const handleColorSelect = (color, opacity = 1) => {
-    //     palette = palette.map((c) => (activeColorId === c.id ? {...c, color, opacity} : c));
-
-    //     handlePaletteChange(palette);
-    // };
+    const handleColorSelect = (color, opacity = 1) => {
+        palette = palette.map((c) => (activeColorId === c.id ? {...c, color, opacity} : c));
+        handlePaletteChange(palette);
+    };
 
     const handlePaletteChange = (palette) => {
         const sortedPalette = sortPalette(palette).map(({offset, id, ...rest}) => ({
@@ -84,7 +86,7 @@ const GradientStops = ({
             active: id === activeColorId,
         }));
 
-        onPaletteChange(sortedPalette);
+        onChange && onChange(paletteToGradientStops(sortedPalette));
     };
 
     const handleStopPosChange = ({id, offset}) => {
@@ -95,33 +97,16 @@ const GradientStops = ({
         handlePaletteChange(updatedPalette);
     };
 
-    // const colorPicker = () => {
-    //     const {color, opacity} = getPaletteColor(palette, activeColorId);
-
-    //     const props = {
-    //         color,
-    //         opacity,
-    //         ...(flatStyle && {
-    //             width,
-    //             className: 'gp-flat',
-    //         }),
-    //         onSelect: handleColorSelect,
-    //         activeColorId,
-    //     };
-
-    //     if (!children) {
-    //         return <ColorPicker {...props} />;
-    //     }
-
-    //     const child = React.Children.only(children);
-    //     return React.cloneElement(child, props);
-    // };
+    const activePaletteColor = React.useMemo(() => {
+        const {color, opacity} = getPaletteColor(palette, activeColorId);
+        return {currentColor: color, opacity};
+    }, [palette, activeColorId]);
 
     const paletteWidth = width - HALF_STOP_WIDTH;
     const stopsHolderDisabled = palette.length >= maxStops;
 
     return (
-        <div className="gp">
+        <Box d="flex" flexDirection="column" alignItems="center" width={220} {...rest}>
             <GradientPalette width={paletteWidth} height={paletteHeight} palette={palette} />
             <ColorStopsHolder
                 width={paletteWidth}
@@ -137,8 +122,16 @@ const GradientStops = ({
                 onDeleteColor={handleColorDelete}
                 onDragStart={onStopDragStart}
             />
-            {/* {colorPicker()} */}
-        </div>
+            <GradientStopsList
+                pt={3}
+                pb={2}
+                activeColorId={activeColorId}
+                gradientStops={gradientStops}
+                onChange={onChange}
+                onSelect={handleColorSelect}
+                {...activePaletteColor}
+            />
+        </Box>
     );
 };
 

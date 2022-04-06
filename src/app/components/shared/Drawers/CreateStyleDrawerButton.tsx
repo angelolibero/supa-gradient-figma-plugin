@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {useRef, useMemo} from 'react';
+import {useRef} from 'react';
 import {
     IconButton,
     Tooltip,
@@ -15,7 +15,6 @@ import {
     useDisclosure,
     ButtonProps,
     chakra,
-    InputLeftAddon,
     Badge,
     Text,
 } from '@chakra-ui/react';

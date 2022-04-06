@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {FC} from 'react';
 import {IconButton, Tooltip, ButtonProps} from '@chakra-ui/react';
-import {CgColorPicker, CgImport} from 'react-icons/cg';
+import {CgColorPicker} from 'react-icons/cg';
 
 type Props = {
     onImport?: () => void;
