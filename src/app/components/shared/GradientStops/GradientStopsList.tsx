@@ -7,6 +7,7 @@ import SegmentedSlider from '../Sliders/SegmentedSlider';
 import {hexToRGBAObject} from '../../../lib/colors';
 import ColorPickerDrawerSwatch from '../Drawers/ColorPickerDrawerSwatch';
 import {AiOutlineMinus} from 'react-icons/ai';
+import '../../../styles/picker.css';
 
 type Props = {
     gradientStops?: readonly ColorStop[];

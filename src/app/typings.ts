@@ -1,9 +1,6 @@
 export type GradientStopsType = ReadonlyArray<ColorStop>;
 
-export type Palette = {
-    offset: number;
-    color: string;
-}[];
+export type Palette = ColorStop[];
 
 export type Preferences = {
     liveUpdates?: boolean;

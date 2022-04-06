@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {useEffect, useMemo} from 'react';
 import {Flex, Button, FlexProps, Text, Tooltip, SlideFade, Badge} from '@chakra-ui/react';
-import {GradientPaintType, GradientStops} from '../../typings';
+import {GradientPaintType, GradientStopsType} from '../../typings';
 import {useClipboard} from '@chakra-ui/react';
 import {MdCode} from 'react-icons/md';
 import {bgColorsFromStops, bgGradientFromColors} from '../../lib/colors';
@@ -10,7 +10,7 @@ import {checkredGradientProps} from '../../lib/constants';
 type Props = {
     name?: string;
     angle: number;
-    gradientStops: GradientStops;
+    gradientStops: GradientStopsType;
     gradientTransform: Transform;
     gradientType: GradientPaintType;
 } & FlexProps;

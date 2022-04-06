@@ -1,4 +1,4 @@
-import {GradientPaintType, GradientStops, Palette} from '../typings';
+import {GradientPaintType, GradientStopsType, Palette} from '../typings';
 import {linearTransforms} from './constants';
 
 const hexRegex = /^#([0-9a-f]{3}){1,2}$/i;
@@ -51,12 +51,7 @@ const RGBAObjetToString = (color: RGBA) => {
 };
 
 const paletteToRgbArray = (palette: Palette, alpha?: boolean) => {
-    return (
-        palette &&
-        palette.map((value) =>
-            checkIsHex(value.color) ? hexToRgb(value.color, alpha).match(/\d+/g) : value.color.match(/\d+/g)
-        )
-    );
+    return palette && palette.map((value) => RGBAObjetToString(value.color));
 };
 
 const paletteToGradientStops = (palette: Palette, alpha: boolean = false) => {
@@ -69,7 +64,7 @@ const paletteToGradientStops = (palette: Palette, alpha: boolean = false) => {
             let b = parseFloat(new Number(value[2]).toFixed(2)) / 255;
             let a = value[3] && alpha ? parseFloat(new Number(value[3]).toFixed(2)) : 1;
             return {
-                position: parseFloat(new Number(palette[index].offset).toFixed(2)),
+                position: parseFloat(new Number(palette[index].position).toFixed(2)),
                 color: {
                     r,
                     g,
@@ -81,12 +76,12 @@ const paletteToGradientStops = (palette: Palette, alpha: boolean = false) => {
     return rgbaObjects;
 };
 
-const paletteFromGradientStops = (gradientStops: GradientStops, alpha: boolean = true) => {
+const paletteFromGradientStops = (gradientStops: GradientStopsType, alpha: boolean = true) => {
     let palette = !gradientStops
         ? undefined
         : gradientStops.map((value, index) => {
               return {
-                  offset: parseFloat(new Number(value.position).toFixed(2)),
+                  position: parseFloat(new Number(value.position).toFixed(2)),
                   color: !alpha
                       ? `rgb(${(value.color.r * 255).toFixed(0)}, ${(value.color.g * 255).toFixed(0)}, ${(
                             value.color.b * 255
@@ -109,7 +104,7 @@ const gradientAngleFromTransform = (transform: Transform) => {
     return 0;
 };
 
-const bgColorsFromStops = (gradientStops: GradientStops) => {
+const bgColorsFromStops = (gradientStops: GradientStopsType) => {
     if (gradientStops && gradientStops.length) {
         return gradientStops.map((value, index) => {
             return `rgba(${value.color.r * 255},${value.color.g * 255},${value.color.b * 255},${value.color.a}) ${

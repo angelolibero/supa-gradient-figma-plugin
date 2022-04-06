@@ -1,3 +1,4 @@
+import {string} from 'prop-types';
 import * as React from 'react';
 import {useRef} from 'react';
 import useStopDragging from '../../../lib/hooks/useStopDragging';
@@ -5,6 +6,7 @@ import useStopDragging from '../../../lib/hooks/useStopDragging';
 
 const ColorStop = ({
     stop,
+    color,
     limits = undefined,
     onPosChange = undefined,
     onDeleteColor = undefined,
@@ -22,13 +24,13 @@ const ColorStop = ({
         colorStopRef,
     });
 
-    const {offset, color, isActive, opacity} = stop;
+    const {position, isActive, opacity} = stop;
 
     return (
         <div
             className={isActive ? 'cs active' : 'cs'}
             ref={colorStopRef}
-            style={{left: offset}}
+            style={{left: position}}
             onMouseDown={drag}
             onTouchStart={drag}
         >

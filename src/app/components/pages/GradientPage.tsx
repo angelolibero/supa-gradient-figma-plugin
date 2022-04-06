@@ -1,11 +1,11 @@
 import * as React from 'react';
 import {useState, useCallback, useEffect} from 'react';
-import {Stack, Badge, Button, Flex, Divider, Fade, Box, Tab, TabList, TabPanels, TabPanel} from '@chakra-ui/react';
+import {Stack, Badge, Button, Flex, Divider, Fade, Box} from '@chakra-ui/react';
 import RadianSlider from '../shared/Sliders/RadianSlider';
 import GradientStopsEditor from '../shared/GradientStopsEditor';
-import {GradientPaintType, GradientStops, Preferences} from '../../typings';
+import {GradientPaintType, GradientStopsType, Preferences} from '../../typings';
 import {gradientAngleFromTransform} from '../../lib/colors';
-import {defaultGradientStops, defaultAngle, defaultPreferences} from '../../lib/constants';
+import {defaultAngle, defaultPreferences} from '../../lib/constants';
 import {filterGradientCompatibleNodes} from '../../lib/figma';
 import GradientPreview from '../shared/GradientPreview';
 import PaintStyles from '../shared/PaintStyles';
@@ -16,11 +16,12 @@ import ImportButton from '../shared/ImportButton';
 import Empty from '../shared/Empty';
 import GradientTypeTabs from '../shared/GradientTypeTabs';
 import useScrollPosition from '../../lib/hooks/useScrollPosition';
+import GradientStops from '../shared/GradientStops';
 
 const GradientPage = ({}) => {
     const [selection, setSelection] = useState<RectangleNode[]>();
     const [gradientAngle, setGradientAngle] = useState<number>(defaultAngle);
-    const [gradientStops, setGradientStops] = useState<GradientStops>(); //defaultGradientStops
+    const [gradientStops, setGradientStops] = useState<GradientStopsType>(); //defaultGradientStops
     const [gradientTransform, setGradientTransform] = useState<Transform>(); //defaultGradientTransform
     const [gradientType, setGradientType] = React.useState<GradientPaintType>('GRADIENT_LINEAR');
     const [currentPaintStyle, setCurrentPaintStyle] = useState<PaintStyle>();
@@ -76,7 +77,6 @@ const GradientPage = ({}) => {
                 //Current style is a global style without changes, we assign the global style to currentpaintstyle
                 setCurrentPaintStyle(currentPaintStyle);
             }
-
             //if (!selection || (!selection.length && !forceUpdate)) return;
 
             parent.postMessage(
@@ -184,8 +184,8 @@ const GradientPage = ({}) => {
     );
 
     const onChangeStops = useCallback(
-        (_gradientStops: GradientStops) => {
-            const updatedGradientStops: GradientStops = _gradientStops;
+        (_gradientStops: GradientStopsType) => {
+            const updatedGradientStops: GradientStopsType = _gradientStops;
             console.log('SSSSSDDDDDD', _gradientStops);
             if (JSON.stringify(gradientStops) != JSON.stringify(updatedGradientStops)) {
                 setGradientStops(updatedGradientStops);
@@ -366,16 +366,10 @@ const GradientPage = ({}) => {
                                         value={gradientAngle}
                                     />
                                 </Box>
-                                <GradientStopsEditor
-                                    onChange={onChangeStops}
-                                    value={gradientStops}
-                                    defaultValue={gradientStops}
-                                />
                                 <GradientStops
                                     onChange={onChangeStops}
                                     gradientStops={gradientStops}
-                                    palette={palette}
-                                    // onColorStopSelect={handleOnColorStopSelect}
+                                    //onColorStopSelect={handleOnColorStopSelect}
                                 />
                             </Stack>
                         </Flex>
