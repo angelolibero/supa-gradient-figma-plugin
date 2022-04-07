@@ -40,7 +40,6 @@ const GradientSwatch: React.FC<Props> = ({paintStyle, defaultPaint, isActive, sh
 
     const onPressEnter = useCallback(
         (e) => {
-            console.log('ket', e.keyCode);
             //enter and space key code:
             if (e.key === 'Enter' || e.keyCode === 13 || e.keyCode === 32) {
                 handleSelectStyle();

@@ -1,21 +1,17 @@
 import * as React from 'react';
-import {FC} from 'react';
-import {Stack, IconButton, Input} from '@chakra-ui/react';
-import {rgbaToHex} from '@ctrl/tinycolor';
-import SegmentedSlider from '../Sliders/SegmentedSlider';
-import {hexToRGBAObject} from '../../../lib/colors';
+import {FC, useCallback} from 'react';
+import {Stack, IconButton, BoxProps} from '@chakra-ui/react';
 import ColorPickerDrawerSwatch from '../Drawers/ColorPickerDrawerSwatch';
 import {AiOutlineMinus} from 'react-icons/ai';
-import '../../../styles/picker.css';
 
 export type GradientStopsListItemProps = {
     stop: ColorStop;
-    activeColorId: number;
+    activeColorId?: number;
     editColorId?: number;
     index: number;
     onChange: (stop: ColorStop, index: number) => void;
     onDelete: (stop: ColorStop) => void;
-};
+} & Omit<BoxProps, 'onChange'>;
 
 const GradientStopsListItem: FC<GradientStopsListItemProps> = ({
     stop,
@@ -24,23 +20,9 @@ const GradientStopsListItem: FC<GradientStopsListItemProps> = ({
     index,
     onChange,
     onDelete,
+    ...rest
 }) => {
-    const hexColor = React.useMemo(() => {
-        return stop.color && rgbaToHex(stop.color.r * 255, stop.color.g * 255, stop.color.b * 255, stop.color.a, false);
-    }, [stop]);
-
-    const handleOnChangeInputColor = React.useCallback(
-        (color: string) => {
-            const updatedStop: ColorStop = {
-                ...stop,
-                color: hexToRGBAObject(color),
-            };
-            onChange && onChange(updatedStop, index);
-        },
-        [onChange, stop, index]
-    );
-
-    const handleOnChangePickerColor = React.useCallback(
+    const handleOnChangePickerColor = useCallback(
         (color: RGBA) => {
             const updatedStop: ColorStop = {
                 ...stop,
@@ -51,19 +33,19 @@ const GradientStopsListItem: FC<GradientStopsListItemProps> = ({
         [onChange, stop, index]
     );
 
-    const handleOnChangeAlpha = React.useCallback(
-        (alpha: number) => {
-            const updatedStop: ColorStop = {
-                ...stop,
-                color: {...stop.color, a: alpha},
-            };
+    // const handleOnChangeAlpha = React.useCallback(
+    //     (alpha: number) => {
+    //         const updatedStop: ColorStop = {
+    //             ...stop,
+    //             color: {...stop.color, a: alpha},
+    //         };
 
-            onChange && onChange(updatedStop, index);
-        },
-        [onChange, stop, index]
-    );
+    //         onChange && onChange(updatedStop, index);
+    //     },
+    //     [onChange, stop, index]
+    // );
 
-    const handleOnDelete = React.useCallback(() => {
+    const handleOnDelete = useCallback(() => {
         onDelete && onDelete(stop);
     }, [stop, onDelete]);
 
@@ -71,23 +53,12 @@ const GradientStopsListItem: FC<GradientStopsListItemProps> = ({
         <Stack direction="row" alignItems="center" spacing={2} rounded="xs" py={1} px={4} key={index}>
             <ColorPickerDrawerSwatch
                 isActive={activeColorId - 1 == index}
-                isOpen={editColorId - 1 == index}
                 color={stop.color}
-                onChange={(color: RGBA) => {
-                    handleOnChangePickerColor(color);
-                }}
+                onChange={handleOnChangePickerColor}
+                showInput
+                showOpacity
             />
-            <Input
-                value={hexColor}
-                onChange={(event) => {
-                    handleOnChangeInputColor(event.target.value);
-                }}
-                borderRadius="sm"
-                flex="1"
-                bgColor="white"
-                size="sm"
-            />
-            <SegmentedSlider
+            {/* <SegmentedSlider
                 title={stop.color.a.toString()}
                 min={0}
                 max={1}
@@ -96,7 +67,7 @@ const GradientStopsListItem: FC<GradientStopsListItemProps> = ({
                 //  value={stop.color.a}
                 defaultValue={stop.color.a}
                 onChange={(alpha) => handleOnChangeAlpha(alpha)}
-            />
+            /> */}
             <IconButton
                 icon={<AiOutlineMinus />}
                 onClick={handleOnDelete}

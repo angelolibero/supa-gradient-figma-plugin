@@ -81,8 +81,6 @@ const GradientPicker = ({
             position: +Number(position).toFixed(2),
             //   active: id === activeColorId,
         }));
-        console.log('sortedPalette', updatedPalette, sortedPalette);
-
         onChange && onChange(sortedPalette);
     };
 
@@ -96,7 +94,6 @@ const GradientPicker = ({
 
     const handleEditColor = React.useCallback(
         (editStop) => {
-            console.log('Edit color');
             setEditColorId(editStop.id);
         },
         [setEditColorId]

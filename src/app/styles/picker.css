@@ -56,3 +56,18 @@
     border-radius: 2px;
     overflow: hidden;
 }
+
+/* React Colorful picker */
+
+.chakra-portal .react-colorful {
+    width: 208px;
+}
+.chakra-portal .react-colorful__saturation {
+    border-radius: 4px 4px 0 0;
+}
+.chakra-portal .react-colorful__hue {
+    border-radius: 0px;
+}
+.chakra-portal .react-colorful__alpha-gradient {
+    border-radius: 0 0 4px 4px;
+}

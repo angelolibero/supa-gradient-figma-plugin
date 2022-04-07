@@ -46,6 +46,7 @@ const useDragging = ({onDragStart, onDrag, onDragEnd}: useDraggingProps) => {
     const activate = (e, handler) => {
         setDragging(true);
         context.handler = handler;
+        e.stopPropagation();
         onDragStart(handler.coordinates(e));
     };
 

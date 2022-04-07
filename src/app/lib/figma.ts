@@ -2,14 +2,11 @@ import {getGradientsFromStyles, isGradientCompatible} from './utils';
 import {DEFAULT_WINDOW_SIZE} from './constants';
 
 const filterGradientCompatibleNodes = (selection: any[]) => {
-    console.log('filterGradientCompatibleNodes', selection);
-
     const gradientCompatibleNodes =
         selection &&
         selection.map((node, index) => {
             if (node && isGradientCompatible(node) && node.fills[0] && node.fills[0].gradientStops) {
                 const gradientNode = node;
-                console.log('COMPATIBLE', gradientNode, node);
                 return {
                     id: node.id,
                     fillStyleId: gradientNode.fillStyleId,
@@ -25,11 +22,9 @@ const filterGradientCompatibleNodes = (selection: any[]) => {
 const updateSelection = () => {
     if (figma.currentPage.selection && figma.currentPage.selection.length) {
         const selection = [...figma.currentPage.selection];
-        console.log('SELECTION', selection);
+        console.log('updateSelection', selection);
         const gradientCompatibleNodes = filterGradientCompatibleNodes(selection);
         if (gradientCompatibleNodes && gradientCompatibleNodes.length > 0 && gradientCompatibleNodes[0]) {
-            console.log('11111');
-
             figma.ui.postMessage({
                 type: 'figma:selectionchange',
                 message: JSON.stringify({
@@ -37,10 +32,7 @@ const updateSelection = () => {
                     selectionFills: gradientCompatibleNodes[0] && gradientCompatibleNodes[0].fills,
                 }),
             });
-            console.log('11111');
         } else {
-            console.log('2222');
-
             figma.ui.postMessage({
                 type: 'figma:selectionchange',
                 message: JSON.stringify({
@@ -49,8 +41,6 @@ const updateSelection = () => {
             });
         }
     } else {
-        console.log('333');
-
         figma.ui.postMessage({
             type: 'figma:selectionchange',
             message: JSON.stringify({

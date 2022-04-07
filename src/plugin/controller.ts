@@ -25,13 +25,12 @@ figma.ui.onmessage = (msg) => {
             const updatedGradientPaint = {
                 //  id: paintStyleId,
                 type: gradientType,
-                gradientTransform: LINEAR_TRANFORMS[angle], //gradientTransform
+                gradientTransform: LINEAR_TRANFORMS[angle], //gradientTransform //FIX angoli custom
                 gradientStops,
             };
 
-            console.log('COMPARE TRANFORM ', LINEAR_TRANFORMS[angle], gradientTransform);
             if (paintStyleId && style) {
-                console.log('UPDATE STYLE', gradientStops, gradientType, paintStyleId);
+                console.log('apply-gradient', gradientStops, gradientType, paintStyleId);
                 style.paints = [updatedGradientPaint];
             }
 
@@ -56,7 +55,6 @@ figma.ui.onmessage = (msg) => {
                         if (!style || (style && style.id != node.fillStyleId)) node.fills = [updatedGradientPaint];
                     }
                 });
-            console.log('FILLSSSSS ', angle, gradientTransform);
 
             break;
         // Close plugin event

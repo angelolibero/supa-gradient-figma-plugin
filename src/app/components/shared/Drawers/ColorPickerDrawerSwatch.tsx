@@ -15,7 +15,7 @@ import {
     useControllableState,
     Text,
 } from '@chakra-ui/react';
-import ColorSwatch, {ColorSwatchProps} from '../Swatchs/ColorSwatch';
+import ColorStopSwatch, {ColorStopSwatchProps} from '../Swatchs/ColorStopSwatch';
 import {FocusableElement} from '@chakra-ui/utils';
 import {RgbaColorPicker} from 'react-colorful';
 
@@ -23,46 +23,52 @@ export type ColorPickerDrawerSwatchProps = {
     color: RGBA;
     id?: string;
     isActive?: boolean;
+    defaultIsOpen?: boolean;
     onSelect?: (color: RGBA) => void;
-    onChange?: (color: RGBA) => void;
-    isOpen?: boolean;
-} & Omit<ColorSwatchProps, 'onCreate' | 'onChange'>;
+    onChange?: (color: RGBA, id?: number) => void;
+    onClose?: () => void;
+} & Omit<ColorStopSwatchProps, 'onCreate' | 'onChange'>;
 
 const ColorPickerDrawerSwatch: React.FC<ColorPickerDrawerSwatchProps> = ({
     color,
-    isOpen: _isOpen,
+    id,
+    defaultIsOpen,
     onSelect,
     onChange,
+    onClose: _onClose,
     ...rest
 }) => {
-    const {isOpen, onOpen, onClose} = useDisclosure({defaultIsOpen: _isOpen});
+    const {isOpen, onOpen, onClose} = useDisclosure({defaultIsOpen});
     const swatchRef = useRef<HTMLInputElement>();
 
     const handleOnChange = useCallback(
-        (newColor: RGBA) => {
-            if (!newColor) return;
-            onChange(newColor);
+        (updatedColor: RGBA) => {
+            if (!updatedColor) return;
+            onChange && onChange({...updatedColor, a: +updatedColor.a.toFixed(2)}, id);
         },
         [onChange]
     );
 
-    const handleOnSelect = useCallback(
-        (event) => {
-            onSelect(color);
-        },
-        [onChange, color]
-    );
+    const handleOnClose = useCallback(() => {
+        _onClose && _onClose();
+        onClose();
+    }, [_onClose, onClose]);
 
     return (
         <>
-            <Tooltip label="Create style" openDelay={300} hasArrow>
-                <ColorSwatch color={color} onClick={onOpen} ref={swatchRef} {...rest} />
-            </Tooltip>
+            <ColorStopSwatch
+                color={color}
+                onClick={onOpen}
+                onChange={handleOnChange}
+                id={id}
+                ref={swatchRef}
+                {...rest}
+            />
             <ColorPickerDrawer
                 color={color}
                 isOpen={isOpen}
                 placement="bottom"
-                onClose={onClose}
+                onClose={handleOnClose}
                 onChange={handleOnChange}
                 swatchRef={swatchRef}
             />
@@ -74,7 +80,7 @@ type ColorPickerDrawerProps = {
     color?: RGBA;
     defaultColor?: RGBA;
     swatchRef: React.RefObject<FocusableElement>;
-    onChange: (newColor: RGBA) => void;
+    onChange: (updatedColor: RGBA, id?: number) => void;
 } & Omit<DrawerProps, 'children'>;
 
 export const ColorPickerDrawer: React.FC<ColorPickerDrawerProps> = ({
@@ -90,15 +96,15 @@ export const ColorPickerDrawer: React.FC<ColorPickerDrawerProps> = ({
     const inputRef = useRef<HTMLInputElement>();
 
     const handleOnChange = React.useCallback(
-        (pickerColor) => {
-            const newColor = {
-                r: +(pickerColor.r / 255).toFixed(2),
-                g: +(pickerColor.g / 255).toFixed(2),
-                b: +(pickerColor.b / 255).toFixed(2),
-                a: +(pickerColor.a / 100).toFixed(2),
+        (updatedColor: RGBA) => {
+            const rgbaColor = {
+                r: +(updatedColor.r / 255).toFixed(2),
+                g: +(updatedColor.g / 255).toFixed(2),
+                b: +(updatedColor.b / 255).toFixed(2),
+                a: updatedColor.a,
             };
-            setColor(newColor);
-            onChange(newColor);
+            setColor(rgbaColor);
+            onChange(rgbaColor);
         },
         [color]
     );
@@ -108,7 +114,7 @@ export const ColorPickerDrawer: React.FC<ColorPickerDrawerProps> = ({
             r: parseInt((color.r * 255).toString()),
             g: parseInt((color.g * 255).toString()),
             b: parseInt((color.b * 255).toString()),
-            a: color.a * 100,
+            a: color.a,
         };
     }, [color]);
 
@@ -123,14 +129,13 @@ export const ColorPickerDrawer: React.FC<ColorPickerDrawerProps> = ({
         >
             <DrawerOverlay />
             <DrawerContent textAlign="left">
-                <DrawerCloseButton boxSize={8} size="sm" rounded="sm" />
-                <DrawerHeader px={4} pt={4} fontSize="md">
+                <DrawerCloseButton boxSize={8} size="sm" rounded="sm" _focus={{boxShadow: 'none'}} />
+                <DrawerHeader px={4} pt={4} pb={0} fontSize="md">
                     <Stack direction="row" flex="1" spacing={2} alignItems="flex-start">
-                        <ColorSwatch color={color} />
                         <Text>Edit color</Text>
                     </Stack>
                 </DrawerHeader>
-                <DrawerBody px={4} py={4} pt={0}>
+                <DrawerBody px={4} py={4}>
                     <chakra.form
                         m={0}
                         pb={4}
@@ -142,11 +147,12 @@ export const ColorPickerDrawer: React.FC<ColorPickerDrawerProps> = ({
                     >
                         <RgbaColorPicker color={pickerColor} onChange={handleOnChange} />
                     </chakra.form>
-                    {/* <Stack direction="row" w="full">
-                        <Button onClick={onClose} w="100%" size="sm">
+                    <Stack direction="row" w="full">
+                        <ColorStopSwatch color={color} showInput showOpacity />
+                        {/* <Button onClick={onClose} w="100%" size="sm">
                             Close
-                        </Button>
-                    </Stack> */}
+                        </Button> */}
+                    </Stack>
                 </DrawerBody>
             </DrawerContent>
         </Drawer>
