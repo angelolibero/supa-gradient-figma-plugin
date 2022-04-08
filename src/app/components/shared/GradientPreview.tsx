@@ -55,7 +55,7 @@ const GradientPreview: React.FC<Props> = ({name, angle, gradientStops, gradientT
                                 size="sm"
                                 fontSize="xs"
                                 borderRadius="sm"
-                                bgColor="gray.900"
+                                bgColor={'blackAlpha.500'}
                                 color="gray.100"
                                 maxW="150px"
                                 h={5}
@@ -76,7 +76,7 @@ const GradientPreview: React.FC<Props> = ({name, angle, gradientStops, gradientT
                             onClick={onCopy}
                             size="sm"
                             fontSize="sm"
-                            bgColor={hasCopied ? 'primary.500' : 'gray.900'}
+                            bgColor={hasCopied ? 'primary.500' : 'blackAlpha.500'}
                             color="gray.100"
                             _hover={{
                                 bgColor: hasCopied ? 'primary.600' : 'gray.800',

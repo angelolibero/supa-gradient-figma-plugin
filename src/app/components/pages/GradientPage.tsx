@@ -1,20 +1,19 @@
 import * as React from 'react';
 import {useState, useCallback, useEffect} from 'react';
-import {Stack, Badge, Button, Flex, Divider, Fade, Box} from '@chakra-ui/react';
+import {Stack, Badge, Button, Flex, Divider, Box} from '@chakra-ui/react';
 import RadianSlider from '../shared/Sliders/RadianSlider';
 import {GradientPaintType, GradientStops, Preferences} from '../../typings';
-import {gradientAngleFromTransform} from '../../lib/colors';
+import {gradientAngleFromTransform, gradientAngleToTransform} from '../../lib/colors';
 import {DEFAULT_ANGLE, DEFAULT_PREFERENCES} from '../../lib/constants';
 import {filterGradientCompatibleNodes} from '../../lib/figma';
 import GradientPreview from '../shared/GradientPreview';
-import PaintPicker from '../shared/PaintPicker';
+import GradientStylesPicker from '../shared/GradientStylesPicker/GradientStylesPicker';
 import PreferencesDrawerButton from '../shared/Drawers/PreferencesDrawerButton';
-import StylesSkeleton from '../shared/StylesSkeleton';
-import {LINEAR_TRANFORMS} from '../../lib/constants';
 import ImportButton from '../shared/ImportButton';
 import Empty from '../shared/Empty';
 import GradientTypeTabs from '../shared/GradientTypeTabs';
 import GradientPicker from '../shared/GradientPicker';
+import {degreesFromTransform, rotateTransform} from '../../lib/matrix';
 
 const GradientPage = ({}) => {
     const [selection, setSelection] = useState<RectangleNode[]>();
@@ -23,15 +22,10 @@ const GradientPage = ({}) => {
     const [gradientTransform, setGradientTransform] = useState<Transform>(); //DEFAULT_GRADIENT_TRANSFORM
     const [gradientType, setGradientType] = React.useState<GradientPaintType>('GRADIENT_LINEAR');
     const [currentPaintStyle, setCurrentPaintStyle] = useState<PaintStyle>();
-    const [paintStyles, setPaintStyles] = useState<PaintStyle[]>([]);
+    const [paintStyles, setPaintStyles] = useState<PaintStyle[]>();
     const [preferences, setPreferences] = useState<Preferences>(DEFAULT_PREFERENCES);
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const scrollElementRef = React.useRef();
-
-    const currentGradientPaint: GradientPaint = React.useMemo(() => {
-        const paint = currentPaintStyle && (currentPaintStyle.paints[0] as GradientPaint);
-        return gradientStops && gradientTransform ? {...paint, gradientStops, gradientTransform} : undefined;
-    }, [gradientTransform, gradientStops, currentPaintStyle]);
 
     const isSelection = React.useMemo(() => selection && selection.length > 0, [selection]);
 
@@ -51,36 +45,31 @@ const GradientPage = ({}) => {
         );
     }, [currentPaintStyle, gradientAngle, gradientStops, gradientType]);
 
-    const paintStyle: PaintStyle = React.useMemo(() => {
-        //check if current style is similar to one existing style and return it
-        if (currentPaintStyle && currentPaintStyle.paints && currentPaintStyle.paints.length) {
-            for (const index in paintStyles) {
-                const paintStyle = paintStyles[index];
-                //bisogna fare un compare tra tutti i paintStyle.paints locali e il currentPaintStyle.paints
-                if (JSON.stringify(paintStyle.paints) == JSON.stringify(currentPaintStyle.paints)) {
-                    return paintStyle;
-                }
-            }
-        }
-        return undefined;
-    }, [currentPaintStyle]);
+    const editingPaint = React.useMemo(() => {
+        return {gradientTransform, gradientStops, type: gradientType};
+    }, [gradientStops, gradientTransform, gradientType]);
 
     const applyGradient = useCallback(
         (updateSelection = true) => {
-            if (isChanged && currentPaintStyle && currentPaintStyle.id) {
-                //current style changed
-                setCurrentPaintStyle(currentPaintStyle);
-            } else if (!(paintStyle && currentPaintStyle && !currentPaintStyle.id)) {
-                //Current style is a global style without changes, we assign the global style to currentpaintstyle
-                setCurrentPaintStyle(currentPaintStyle);
+            // if (isChanged && currentPaintStyle && currentPaintStyle.id) {
+            //     //current style changed
+            //     setCurrentPaintStyle(currentPaintStyle);
+            // } else if (!(paintStyle && currentPaintStyle && !currentPaintStyle.id)) {
+            //     //Current style is a global style without changes, we assign the global style to currentpaintstyle
+            //     setCurrentPaintStyle(currentPaintStyle);
+            // }
+
+            if (isChanged && currentPaintStyle) {
+                updateCurrentPaintStyle();
             }
+
             //if (!selection || (!selection.length && !forceUpdate)) return;
-            if (!updateSelection) return;
+            if (!updateSelection || !gradientTransform) return;
             parent.postMessage(
                 {
                     pluginMessage: {
                         type: 'apply-gradient',
-                        angle: gradientAngle,
+                        angle: gradientAngle, //gradientAngle,
                         gradientStops,
                         gradientTransform,
                         gradientType,
@@ -102,6 +91,24 @@ const GradientPage = ({}) => {
         ]
     );
 
+    const updateCurrentPaintStyle = useCallback(() => {
+        let currentPaints = currentPaintStyle.paints as GradientPaint[];
+        const _originalPaintStyle = paintStyles.filter((paint) => {
+            if (paint.id == currentPaintStyle.id) return paint;
+        })[0];
+        const originalPaintStyleIndex = paintStyles.indexOf(_originalPaintStyle);
+        console.log('updateCurrentPaintStyle');
+        const updatedGradientPaint: GradientPaint = {
+            ...currentPaints[0],
+            gradientStops,
+            gradientTransform: rotateTransform(gradientAngle),
+            type: gradientType,
+        };
+        currentPaints.splice(originalPaintStyleIndex, 1, updatedGradientPaint);
+        const updatedStyle = {...currentPaintStyle, paints: currentPaints};
+        setCurrentPaintStyle(updatedStyle);
+    }, [currentPaintStyle, gradientTransform, gradientStops, gradientType, gradientAngle, paintStyles]);
+
     //Select PaintGradient from a global PaintStyle
     const selectPaintStyle = useCallback(
         (paintStyle: PaintStyle) => {
@@ -112,6 +119,7 @@ const GradientPage = ({}) => {
             setGradientTransform(gradientPaint.gradientTransform);
             setGradientType(gradientPaint.type);
             setGradientAngle(gradientAngleFromTransform(gradientPaint.gradientTransform));
+            console.log('SELECTED ANGLE', gradientAngleFromTransform(gradientPaint.gradientTransform));
         },
         [paintStyles]
     );
@@ -170,11 +178,12 @@ const GradientPage = ({}) => {
     const onChangeAngle = useCallback(
         (angle) => {
             if (angle != gradientAngle) {
+                const rotatedTransform = rotateTransform(angle);
+                setGradientTransform(rotatedTransform);
                 setGradientAngle(angle);
-                setGradientTransform(LINEAR_TRANFORMS[angle]);
             }
         },
-        [gradientAngle, gradientStops]
+        [gradientAngle, gradientTransform]
     );
 
     const onChangeStops = useCallback(
@@ -205,19 +214,16 @@ const GradientPage = ({}) => {
     }, [preferences]);
 
     useEffect(() => {
-        if (selection && selection.length) {
+        if (selection && selection.length && !currentPaintStyle) {
             const selectionGradientPaint = selection[0];
-
-            if (!currentGradientPaint) {
-                if (selectionGradientPaint.fillStyleId) {
-                    selectPaintStyle({
-                        ...selectionGradientPaint,
-                        paints: selectionGradientPaint.fills,
-                        id: selectionGradientPaint.fillStyleId,
-                    } as any);
-                } else {
-                    selectGradientPaint(selectionGradientPaint.fills[0]);
-                }
+            if (selectionGradientPaint.fillStyleId) {
+                selectPaintStyle({
+                    ...selectionGradientPaint,
+                    paints: selectionGradientPaint.fills,
+                    id: selectionGradientPaint.fillStyleId,
+                } as any);
+            } else {
+                selectGradientPaint(selectionGradientPaint.fills[0]);
             }
         }
     }, [selection]);
@@ -225,16 +231,31 @@ const GradientPage = ({}) => {
     useEffect(() => {
         const selectionGradientPaint = selection && selection.length && selection[0].fills[0];
 
-        if (
-            paintStyles &&
-            paintStyles.length &&
-            !currentPaintStyle &&
-            !selectionGradientPaint &&
-            !currentGradientPaint
-        ) {
+        //- !currentGradientPaint
+        if (paintStyles && paintStyles.length && !currentPaintStyle && !selectionGradientPaint) {
             selectPaintStyle(paintStyles[0]);
         }
-        setIsLoading(false);
+
+        if (paintStyles && paintStyles.length && currentPaintStyle && currentPaintStyle.id) {
+            const _originalPaintStyle = paintStyles.filter((paint) => {
+                if (paint.id == currentPaintStyle.id) return paint;
+            })[0];
+            console.log('entering');
+            if (_originalPaintStyle && JSON.stringify(_originalPaintStyle) != JSON.stringify(currentPaintStyle)) {
+                //  setCurrentPaintStyle(_originalPaintStyle);
+                const paint = _originalPaintStyle
+                    ? (_originalPaintStyle.paints[0] as GradientPaint)
+                    : (currentPaintStyle.paints[0] as GradientPaint);
+
+                setGradientStops(paint.gradientStops);
+                setGradientTransform(paint.gradientTransform);
+                setGradientType(paint.type);
+                console.log('DECOMPOSED ANGLE', degreesFromTransform(paint.gradientTransform));
+                setGradientAngle(degreesFromTransform(paint.gradientTransform));
+            }
+        }
+
+        isLoading && paintStyles && setIsLoading(false);
     }, [paintStyles]);
 
     useEffect(() => {
@@ -277,43 +298,29 @@ const GradientPage = ({}) => {
     }, []);
 
     return (
-        <Fade in={!isLoading}>
+        <>
+            {/* <Fade in={!isLoading}> */}
             <Flex direction="column" h="100%" w="100%" overflow="hidden">
                 <Stack
-                    direction="column"
                     alignItems="center"
                     spacing={0}
-                    w="100%"
-                    h="100%"
-                    minW="100%"
-                    maxW="100%"
+                    boxSize="100%"
                     overflow="scroll"
-                    pb={2}
+                    pb={currentPaintStyle || gradientTransform ? 2 : 0}
                     boxSizing="content-box"
                     ref={scrollElementRef}
                 >
-                    <Flex
-                        flexDir={'column'}
-                        w="100%"
-                        bgGradient="linear(to-b, white, gray.100)"
+                    <GradientStylesPicker
+                        paintStyles={paintStyles}
+                        currentPaintStyle={currentPaintStyle}
+                        isChanged={isChanged}
+                        editingPaint={editingPaint}
+                        onSelect={selectPaintStyle}
+                        onCreate={onCreateStyle}
                         pos="sticky"
                         top={0}
                         zIndex="1"
-                        transition="all 0.25s"
-                    >
-                        {!isLoading ? (
-                            <PaintPicker
-                                paintStyles={paintStyles}
-                                currentPaintStyle={currentPaintStyle}
-                                isChanged={isChanged}
-                                gradientPaint={currentGradientPaint}
-                                onSelect={selectPaintStyle}
-                                onCreate={onCreateStyle}
-                            />
-                        ) : (
-                            <StylesSkeleton />
-                        )}
-                    </Flex>
+                    />
                     {isGradient ? (
                         <Flex direction="column" h="100%" w="100%" bgColor="white" transition="all 0.15s">
                             <GradientPreview
@@ -346,20 +353,13 @@ const GradientPage = ({}) => {
                             </Stack>
                         </Flex>
                     ) : (
-                        <Empty />
+                        !isLoading && <Empty />
                     )}
                 </Stack>
 
                 {isGradient && (
                     <>
                         <Divider borderColor="blackAlpha.100" />
-                        {/* <Stack direction="row" fontSize="xx-small" spacing="2px">
-                    <span>{hasGradientInSelection ? 'hasGradientInSelection' : ''}</span>
-                    <span>{isChanged ? 'isChanged' : ''}</span>
-                    <span>{isSelection ? 'isSelection' : ''}</span>
-                    <span>{isGradient ? 'isGradient' : ''}</span>
-                    <span>{currentGradientPaint ? 'currentGradientPaint' : ''}</span>
-                </Stack> */}
                         <Stack direction="row" spacing={2} py={3} px={3}>
                             {isSelection && hasGradientInSelection && (
                                 <ImportButton onImport={importSelectionGradient} />
@@ -392,7 +392,8 @@ const GradientPage = ({}) => {
                     </>
                 )}
             </Flex>
-        </Fade>
+            {/* </Fade> */}
+        </>
     );
 };
 

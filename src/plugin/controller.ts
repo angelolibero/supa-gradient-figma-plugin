@@ -1,14 +1,16 @@
-import {LINEAR_TRANFORMS, DEFAULT_WINDOW_SIZE} from '../app/lib/constants';
+import {DEFAULT_WINDOW_SIZE} from '../app/lib/constants';
 import {updateSelection, updateGradientStyles, selectPaintStyleWithId} from '../app/lib/figma';
 import {isGradientCompatible, createGradientStyle} from '../app/lib/utils';
 import {GradientPaintType, GradientStops} from '../app/typings';
 import {DEFAULT_PREFERENCES, DEFAULT_POOLING_TIMEOUT} from '../app/lib/constants';
-import {gradientAngleFromTransform} from '../app/lib/colors';
+import {gradientAngleToTransform} from '../app/lib/colors';
+import {decomposeTSR} from 'transformation-matrix';
+import {transformToMatrix} from '../app/lib/matrix';
 
 var poolingInterval;
 
 figma.showUI(__html__);
-figma.ui.resize(240, DEFAULT_WINDOW_SIZE.width);
+figma.ui.resize(240, 429);
 
 figma.ui.onmessage = (msg) => {
     switch (msg.type) {
@@ -25,9 +27,10 @@ figma.ui.onmessage = (msg) => {
             const updatedGradientPaint = {
                 //  id: paintStyleId,
                 type: gradientType,
-                gradientTransform: LINEAR_TRANFORMS[angle], //gradientTransform //FIX angoli custom
+                gradientTransform, //gradientTransform //FIX angoli custom
                 gradientStops,
             };
+            console.log(decomposeTSR(transformToMatrix(gradientTransform)));
 
             if (paintStyleId && style) {
                 console.log('apply-gradient', gradientStops, gradientType, paintStyleId);
@@ -46,11 +49,9 @@ figma.ui.onmessage = (msg) => {
                             node.type == 'FRAME' ||
                             node.type == 'STAR')
                     ) {
-                        // const paint = style && ((style as PaintStyle).paints[0] as GradientPaint);
-                        // const isChanged =
-                        //     (style && JSON.stringify(gradientStops) != JSON.stringify(paint.gradientStops)) ||
-                        //     (style && angle != gradientAngleFromTransform(paint.gradientTransform)) ||
-                        //     (style && gradientType != paint.type);
+                        //is external, can't fill it
+                        if ((node.fillStyleId as string).split(',')[1]) return;
+                        //is local
                         if (style) node.fillStyleId = style.id;
                         if (!style || (style && style.id != node.fillStyleId)) node.fills = [updatedGradientPaint];
                     }
@@ -106,7 +107,7 @@ figma.ui.onmessage = (msg) => {
 };
 
 figma.on('selectionchange', () => {
-    console.log('selectionchange');
+    console.log('selectionchange', figma.currentPage.selection[0]);
     updateSelection();
 });
 
@@ -126,6 +127,7 @@ figma.on('run' as any, () => {
 
     //Load preferences
     figma.clientStorage.getAsync('preferences').then((preferences) => {
+        console.log('PREF', JSON.parse(preferences));
         figma.ui.postMessage({
             type: 'figma:preferencesupdate',
             message: {preferences: JSON.parse(preferences) || DEFAULT_PREFERENCES},

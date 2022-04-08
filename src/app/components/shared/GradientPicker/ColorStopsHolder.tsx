@@ -23,15 +23,13 @@ const ColorStopsHolder = ({width, stops, disabled = false, onAddColor, onEdit, .
     return (
         <div className="csh" style={getStopsHolderStyle(width, disabled) as any} onMouseDown={handleColorAdd}>
             {stops.map((stop, index) => (
-                <>
-                    <ColorStop
-                        key={stop.id || index}
-                        stop={stop}
-                        color={RGBAObjetToString(stop.color)}
-                        {...rest}
-                        onEdit={onEdit}
-                    />
-                </>
+                <ColorStop
+                    key={stop.id || index}
+                    stop={stop}
+                    color={RGBAObjetToString(stop.color)}
+                    {...rest}
+                    onEdit={onEdit}
+                />
             ))}
         </div>
     );

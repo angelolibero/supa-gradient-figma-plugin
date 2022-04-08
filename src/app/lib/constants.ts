@@ -1,7 +1,7 @@
 import {Preferences} from '../typings';
 
 //Styles pooling timeout
-export const DEFAULT_POOLING_TIMEOUT = 1000 * 3; //10 second
+export const DEFAULT_POOLING_TIMEOUT = 1000 * 5; //10 second
 
 //Window
 export const DEFAULT_WINDOW_SIZE = {

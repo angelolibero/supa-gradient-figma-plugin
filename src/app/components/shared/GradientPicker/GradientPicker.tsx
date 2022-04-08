@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {useState, useMemo} from 'react';
+import {FC, useState, useMemo} from 'react';
 import ColorStopsHolder from './ColorStopsHolder';
 import GradientPalette from './GradientPalette';
 import {Box} from '@chakra-ui/react';
@@ -17,7 +17,18 @@ import {GradientStop} from '../../../typings';
 
 const nextColorId = (palette) => Math.max(...palette.map(({id}) => id)) + 1;
 
-const GradientPicker = ({
+type Props = {
+    gradientStops: GradientStop[];
+    paletteHeight: number;
+    width: number;
+    stopRemovalDrop: number;
+    minStops: number;
+    maxStops: number;
+    onChange: (gradientStops: GradientStop[]) => void;
+    onColorStopSelect: (stop: GradientStop) => void;
+};
+
+const GradientPicker: FC<Props> = ({
     gradientStops,
     paletteHeight = DEFAULT_PALETTE_HEIGHT,
     width = DEFAULT_PALETTE_WIDTH,
@@ -25,7 +36,7 @@ const GradientPicker = ({
     minStops = DEFAULT_MIN_STOPS,
     maxStops = DEFAULT_MAX_STOPS,
     onChange,
-    onColorStopSelect = (stop: GradientStop) => {},
+    onColorStopSelect,
     ...rest
 }) => {
     const palette = useMemo(() => mapIdToPalette(gradientStops), [gradientStops]);

@@ -6,7 +6,7 @@ const baseStyle: SystemStyleObject = {
     fontSize: 'xs',
     textTransform: 'none',
     borderRadius: 'sm',
-    fontWeight: 'semibold',
+    fontWeight: 'medium',
 };
 
 const variantSolid: SystemStyleFunction = (props) => {

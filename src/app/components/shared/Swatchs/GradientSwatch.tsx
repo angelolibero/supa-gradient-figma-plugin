@@ -14,8 +14,6 @@ type Props = {
 } & Omit<RadioProps, 'onSelect'>;
 
 const GradientSwatch: React.FC<Props> = ({paintStyle, defaultPaint, isActive, showReset, size, onSelect, ...rest}) => {
-    // const angle = DEFAULT_ANGLE;
-
     const {getInputProps, getCheckboxProps} = useRadio({
         value: paintStyle ? paintStyle.id : 'custom',
         name: paintStyle && paintStyle.name,
@@ -35,6 +33,7 @@ const GradientSwatch: React.FC<Props> = ({paintStyle, defaultPaint, isActive, sh
     }, [currentPaint]);
 
     const handleSelectStyle = useCallback(() => {
+        console.log('handleSelectStyle', paintStyle.paints[0]);
         onSelect && onSelect(paintStyle);
     }, [paintStyle, onSelect]);
 
@@ -54,11 +53,11 @@ const GradientSwatch: React.FC<Props> = ({paintStyle, defaultPaint, isActive, sh
                 label={paintStyle && paintStyle.name}
                 openDelay={300}
                 isDisabled={!paintStyle || !(paintStyle && paintStyle.id)}
+                offset={[0, -1]}
             >
                 <Center>
                     <Box
                         as="label"
-                        {...CHECKERED_GRADIENT_PROPS}
                         {...CHECKERED_GRADIENT_PROPS}
                         bgSize="10px 10px"
                         bgPos="0px 0px, 5px 5px"

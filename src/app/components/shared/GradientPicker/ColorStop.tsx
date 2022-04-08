@@ -1,20 +1,22 @@
 import * as React from 'react';
-import {useRef} from 'react';
+import {FC, useRef} from 'react';
 import {CHECKERED_GRADIENT_PROPS} from '../../../lib/constants';
 import useStopDragging from '../../../lib/hooks/useStopDragging';
-import {chakra} from '@chakra-ui/react';
+import {chakra, BoxProps} from '@chakra-ui/react';
 import {GradientStop} from '../../../typings';
 
-const ColorStop = ({
-    stop,
-    color,
-    limits = undefined,
-    onPosChange = undefined,
-    onDeleteColor = undefined,
-    onDragStart = (id: number) => {},
-    onDragEnd = (id: number) => {},
-    onEdit = (stop: GradientStop) => {},
-}) => {
+type Props = {
+    stop: GradientStop;
+    color: string;
+    limits: any;
+    onPosChange: () => {};
+    onDeleteColor: (id: number) => {};
+    onDragStart: (id: number) => {};
+    onDragEnd: (id: number) => {};
+    onEdit: (stop: GradientStop) => {};
+} & BoxProps;
+
+const ColorStop: FC<Props> = ({stop, color, limits, onPosChange, onDeleteColor, onDragStart, onDragEnd, onEdit}) => {
     const colorStopRef = useRef();
     const [drag] = useStopDragging({
         stop,
@@ -26,7 +28,7 @@ const ColorStop = ({
         colorStopRef,
     });
 
-    const {position, isActive, opacity} = stop;
+    const {position, isActive} = stop;
 
     return (
         <div

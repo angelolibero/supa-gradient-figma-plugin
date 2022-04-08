@@ -15,23 +15,17 @@ type Props = {
     isLoading: boolean;
 } & SkeletonProps;
 
-const PageSkeleton: React.FC<Props> = ({isLoading = false, ...rest}) => {
+const PageSkeleton: React.FC<Props> = ({isLoading = true, ...rest}) => {
     return (
-        <Flex direction="column" h="100%">
-            <Box w="100%" h="72px" p={4} overflow="hidden">
-                <SimpleGrid columns={6} w="100%" height="auto" alignItems="center" spacing={3}>
-                    <SkeletonCircle boxSize={9} isLoaded={!isLoading} />
-                    <SkeletonCircle boxSize={9} isLoaded={!isLoading} />
-                    <SkeletonCircle boxSize={9} isLoaded={!isLoading} />
-                    <SkeletonCircle boxSize={9} isLoaded={!isLoading} />
-                    <SkeletonCircle boxSize={9} isLoaded={!isLoading} />
-                    <SkeletonCircle boxSize={9} isLoaded={!isLoading} />
-                    <SkeletonCircle boxSize={9} isLoaded={!isLoading} />
-                    <SkeletonCircle boxSize={9} isLoaded={!isLoading} />
-                    <SkeletonCircle boxSize={9} isLoaded={!isLoading} />
-                    <SkeletonCircle boxSize={9} isLoaded={!isLoading} />
-                    <SkeletonCircle boxSize={9} isLoaded={!isLoading} />
-                    <SkeletonCircle boxSize={9} isLoaded={!isLoading} />
+        <Flex direction="column" h="100%" bgColor="white" {...rest}>
+            <Box w="100%" h="48px" p={4} overflow="hidden">
+                <SimpleGrid columns={6} w="100%" height="auto" alignItems="center" spacing={2}>
+                    <SkeletonCircle boxSize={6} isLoaded={!isLoading} />
+                    <SkeletonCircle boxSize={6} isLoaded={!isLoading} />
+                    <SkeletonCircle boxSize={6} isLoaded={!isLoading} />
+                    <SkeletonCircle boxSize={6} isLoaded={!isLoading} />
+                    <SkeletonCircle boxSize={6} isLoaded={!isLoading} />
+                    <SkeletonCircle boxSize={6} isLoaded={!isLoading} />
                 </SimpleGrid>
             </Box>
             <Divider />
