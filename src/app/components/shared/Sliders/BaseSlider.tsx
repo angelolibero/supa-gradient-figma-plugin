@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {useCallback} from 'react';
 import {
-    Text,
+    Flex,
     Slider,
     SliderTrack,
     SliderProps,
@@ -12,58 +12,99 @@ import {
     Circle,
     Center,
     useControllableState,
+    useMultiStyleConfig,
+    Input,
+    As,
 } from '@chakra-ui/react';
 import {MdArrowUpward, MdOutlineDragHandle} from 'react-icons/md';
+import {DEFAULT_DEBOUNCE_TIMEOUT} from '../../../lib/constants';
+import useDebouncedCallback from '../../../lib/hooks/useDebounceCallback';
 
 type Props = {
     showHalfMarks?: boolean;
     markDivisionCount?: number;
-    onChange: (angle) => void;
+    icon?: React.ReactElement;
+    symbol?: string;
+    onChange: (angle: number) => void;
 } & SliderProps;
 
-const RadianSlider: React.FC<Props> = ({
-    onChange,
+const BaseSlider: React.FC<Props> = ({
     value,
     defaultValue = 180,
     min = 0,
     max = 345,
     step = 45,
     markDivisionCount = 2,
+    icon: iconComponent,
+    symbol,
+    onChange,
     ...rest
 }) => {
     const [sliderValue, setSliderValue] = useControllableState({value, defaultValue});
+    const styles = useMultiStyleConfig('BaseSlider', rest);
+
+    const debouncedOnChange = useDebouncedCallback((value: number) => {
+        if (value >= 0 && value <= 360) {
+            onChange(value);
+        } else {
+            if (value < 0) {
+                onChange(0);
+                return;
+            }
+            onChange(360);
+        }
+    }, DEFAULT_DEBOUNCE_TIMEOUT);
 
     const handleOnChange = useCallback(
         (angle) => {
             onChange(angle);
             setSliderValue(angle);
         },
-        [sliderValue]
+        [onChange]
+    );
+
+    const handleInputOnChange = useCallback(
+        (e) => {
+            if (e.target.value >= 0 && e.target.value <= 360) {
+                debouncedOnChange(e.target.value);
+                setSliderValue(e.target.value);
+            } else {
+                if (e.target.value < 0) {
+                    debouncedOnChange(0);
+                    setSliderValue(0);
+                    return;
+                }
+                debouncedOnChange(360);
+                setSliderValue(360);
+            }
+        },
+        [onChange]
     );
 
     const stopMarks = new Array(max / step + 1).fill(0);
 
     return (
-        <Stack
-            direction="row"
-            borderRadius="sm"
-            bgColor="gray.100"
-            spacing={1}
-            py={2}
-            pl={2}
-            pr={4}
-            alignItems="center"
-            h={8}
-        >
-            <Box transform={`rotate(${sliderValue}deg)`} transition="all 0.25s" fontSize="10px">
-                <MdArrowUpward />
+        <Stack sx={styles.container} direction="row" spacing="0">
+            <Box sx={styles.inputWrap}>
+                {iconComponent && (
+                    <Flex alignItems="center" alignSelf="center" mr={1}>
+                        {React.cloneElement(iconComponent, {sx: styles.inputIcon})}
+                    </Flex>
+                )}
+                <Input
+                    value={sliderValue}
+                    onChange={handleInputOnChange}
+                    placeholder="Hex code"
+                    size="sm"
+                    type="number"
+                    variant="unstyled"
+                    sx={styles.input}
+                />
+                {symbol && <Box>{symbol}</Box>}
             </Box>
-            <Text fontWeight="semibold" fontSize="xs" maxW={8} minW={8} pos="relative" textAlign="left">
-                {sliderValue}°
-            </Text>
 
-            <Box w="100%">
-                <Slider value={sliderValue} min={min} max={max} step={step} onChange={handleOnChange} h={8} {...rest}>
+            <Stack w="100%" spacing={0}>
+                <Slider value={sliderValue} min={min} max={max} step={step} onChange={handleOnChange} h={9} {...rest}>
                     {stopMarks &&
                         stopMarks.map((value, index) => {
                             return (
@@ -85,7 +126,7 @@ const RadianSlider: React.FC<Props> = ({
                     <SliderTrack bgColor="transparent">
                         <Box position="relative" right={10} />
                     </SliderTrack>
-                    <SliderThumb w={4} h={5} borderRadius="sm" _active={{w: 4}} position="relative">
+                    <SliderThumb sx={styles.thumb}>
                         <Center
                             pos="absolute"
                             top={0}
@@ -99,9 +140,9 @@ const RadianSlider: React.FC<Props> = ({
                         </Center>
                     </SliderThumb>
                 </Slider>
-            </Box>
+            </Stack>
         </Stack>
     );
 };
 
-export default RadianSlider;
+export default BaseSlider;

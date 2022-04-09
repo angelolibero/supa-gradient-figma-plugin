@@ -4,7 +4,6 @@ import {
     IconButton,
     Text,
     Stack,
-    Button,
     Drawer,
     DrawerBody,
     DrawerContent,
@@ -12,6 +11,7 @@ import {
     DrawerHeader,
     DrawerOverlay,
     DrawerProps,
+    DrawerCloseButton,
     useDisclosure,
     ButtonProps,
     FormControl,
@@ -19,7 +19,7 @@ import {
     Switch,
 } from '@chakra-ui/react';
 import {Preferences} from '../../../typings';
-import {MdMoreVert} from 'react-icons/md';
+import {MdArrowDownward, MdMoreVert} from 'react-icons/md';
 
 type Props = {
     DEFAULT_PREFERENCES: Preferences;
@@ -96,9 +96,10 @@ export const PreferencesDrawer: FC<PreferencesDrawerProps> = ({
             <DrawerOverlay />
             <DrawerContent textAlign="left">
                 <DrawerHeader p={4} fontSize="md">
+                    <DrawerCloseButton boxSize={8} size="sm" rounded="sm" _focus={{boxShadow: 'none'}} />
                     Preferences
                 </DrawerHeader>
-                <DrawerBody w="full" px={4}>
+                <DrawerBody w="full" px={4} pb={6}>
                     <Stack direction="row" boxSize="100%" flex="1">
                         <Stack w="full" spacing={3}>
                             {/* liveUpdates */}
@@ -135,13 +136,13 @@ export const PreferencesDrawer: FC<PreferencesDrawerProps> = ({
                         </Stack>
                     </Stack>
                 </DrawerBody>
-                <DrawerFooter p={4}>
+                {/* <DrawerFooter p={4}>
                     <Stack direction="row" w="full" spacing={2}>
                         <Button w="full" size="sm" onClick={onClose}>
                             Close
                         </Button>
                     </Stack>
-                </DrawerFooter>
+                </DrawerFooter> */}
             </DrawerContent>
         </Drawer>
     );

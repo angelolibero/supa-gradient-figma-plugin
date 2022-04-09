@@ -150,12 +150,7 @@ export const ColorPickerDrawer: React.FC<ColorPickerDrawerProps> = ({
                     >
                         <RgbaColorPicker color={pickerColor} onChange={handleOnChange} />
                     </chakra.form>
-                    <Stack direction="row" w="full">
-                        <ColorStopSwatch color={debouncedColor} showInput showOpacity />
-                        {/* <Button onClick={onClose} w="100%" size="sm">
-                            Close
-                        </Button> */}
-                    </Stack>
+                    <ColorStopSwatch color={debouncedColor} showInput showOpacity onChange={handleOnChange} />
                 </DrawerBody>
             </DrawerContent>
         </Drawer>

@@ -1,7 +1,8 @@
 import * as React from 'react';
 import {FC, useCallback} from 'react';
-import {Stack, IconButton, BoxProps} from '@chakra-ui/react';
+import {Stack, IconButton, BoxProps, Circle, Box} from '@chakra-ui/react';
 import ColorPickerDrawerSwatch from '../Drawers/ColorPickerDrawerSwatch';
+import StylesPickerDrawerButton from '../Drawers/StylesPickerDrawerButton';
 import {AiOutlineMinus} from 'react-icons/ai';
 
 export type GradientStopsListItemProps = {
@@ -33,41 +34,37 @@ const GradientStopsListItem: FC<GradientStopsListItemProps> = ({
         [onChange, stop, index]
     );
 
-    // const handleOnChangeAlpha = React.useCallback(
-    //     (alpha: number) => {
-    //         const updatedStop: ColorStop = {
-    //             ...stop,
-    //             color: {...stop.color, a: alpha},
-    //         };
-
-    //         onChange && onChange(updatedStop, index);
-    //     },
-    //     [onChange, stop, index]
-    // );
+    const isActive = React.useMemo(() => {
+        return activeColorId - 1 == index;
+    }, [activeColorId, index]);
 
     const handleOnDelete = useCallback(() => {
         onDelete && onDelete(stop);
     }, [stop, onDelete]);
 
     return (
-        <Stack direction="row" alignItems="center" spacing={2} rounded="xs" py={1} px={4} key={index}>
-            <ColorPickerDrawerSwatch
-                isActive={activeColorId - 1 == index}
-                color={stop.color}
-                onChange={handleOnChangePickerColor}
-                showInput
-                showOpacity
-            />
-            {/* <SegmentedSlider
-                title={stop.color.a.toString()}
-                min={0}
-                max={1}
-                step={0.1}
-                flex="1"
-                //  value={stop.color.a}
-                defaultValue={stop.color.a}
-                onChange={(alpha) => handleOnChangeAlpha(alpha)}
-            /> */}
+        <Stack
+            direction="row"
+            position="relative"
+            alignItems="center"
+            spacing={'1px'}
+            rounded="xs"
+            py={1}
+            px={4}
+            key={index}
+        >
+            <Box
+                pos="absolute"
+                left={isActive ? 0 : -2}
+                opacity={isActive ? 1 : 0}
+                bg="primary.500"
+                transition="all 0.1s"
+                minH={6}
+            >
+                <Box rounded="sm" w="3px" minH={6} />
+            </Box>
+            <ColorPickerDrawerSwatch color={stop.color} onChange={handleOnChangePickerColor} showInput showOpacity />
+            <StylesPickerDrawerButton onSelect={(paint) => {}} />
             <IconButton
                 icon={<AiOutlineMinus />}
                 onClick={handleOnDelete}

@@ -9,12 +9,16 @@ export const variantSolid = (props: Record<string, any>) => {
             bg,
             color: 'gray.700',
             _hover: {
-                bg: mode('gray.100', 'whiteAlpha.100')(props),
+                bg: [mode('gray.100', 'whiteAlpha.100')(props), '!important'],
                 textDecor: 'none',
                 _disabled: {
                     bg,
                 },
                 shadow: 'none',
+            },
+            '&:hover, &:[data-focus], &:[data-hover]': {
+                shadow: 'none',
+                bgColor: mode('gray.100', 'whiteAlpha.100')(props),
             },
             _focus: {
                 shadow: 'none',
@@ -36,12 +40,12 @@ export const variantSolid = (props: Record<string, any>) => {
             shadow: 'none',
             bg: mode(`${c}.600`, `${c}.300`)(props),
         },
-        '&[data-focus]': {
+        '&:hover, &:[data-focus]': {
             shadow: 'none',
-            bg: mode('gray.100', 'whiteAlpha.100')(props),
+            bg: mode(`${c}.600`, `${c}.300`)(props),
         },
         _hover: {
-            bg: mode(hoverBg, `${c}.300`)(props),
+            bgColor: mode(`${c}.600`, `${c}.300`)(props),
             shadow: 'none',
             textDecor: 'none',
             _disabled: {

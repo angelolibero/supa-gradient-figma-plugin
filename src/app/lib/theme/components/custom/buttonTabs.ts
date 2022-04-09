@@ -8,12 +8,12 @@ const baseStyle: PartsStyleFunction = (props) => ({
         alignItems: 'flex-start',
     },
     tab: {
-        fontWeight: 'medium',
         color: mode('gray.400', 'gray.500')(props),
         bgColor: 'transparent',
         h: '1.25rem',
         p: 0,
         borderRadius: 'sm',
+        fontWeight: 'medium',
         _focus: {
             boxShadow: 'none',
         },
@@ -22,7 +22,6 @@ const baseStyle: PartsStyleFunction = (props) => ({
             color: mode('gray.700', 'gray.500')(props),
         },
         _active: {
-            fontWeight: 'semibold',
             color: mode('gray.700', 'gray.500')(props),
             //  bgColor: mode('gray.200', 'gray.700')(props),
         },

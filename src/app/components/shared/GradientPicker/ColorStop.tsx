@@ -8,12 +8,12 @@ import {GradientStop} from '../../../typings';
 type Props = {
     stop: GradientStop;
     color: string;
-    limits: any;
-    onPosChange: () => {};
-    onDeleteColor: (id: number) => {};
-    onDragStart: (id: number) => {};
-    onDragEnd: (id: number) => {};
-    onEdit: (stop: GradientStop) => {};
+    limits?: any;
+    onPosChange?: () => {};
+    onDeleteColor?: (id: number) => {};
+    onDragStart?: (id: number) => {};
+    onDragEnd?: (id: number) => {};
+    onEdit?: (stop: GradientStop) => {};
 } & BoxProps;
 
 const ColorStop: FC<Props> = ({stop, color, limits, onPosChange, onDeleteColor, onDragStart, onDragEnd, onEdit}) => {

@@ -1,19 +1,20 @@
 import * as React from 'react';
 import {useMemo, useCallback} from 'react';
 import {Tooltip, Center, RadioProps, Box, useRadio} from '@chakra-ui/react';
-import {bgColorsFromStops, bgGradientFromColors, gradientAngleFromTransform} from '../../../lib/colors';
+import {bgColorsFromStops, bgGradientFromColors} from '../../../lib/colors';
 import {CHECKERED_GRADIENT_PROPS} from '../../../lib/constants';
-import {MdRefresh} from 'react-icons/md';
+//import {MdRefresh} from 'react-icons/md';
+import {degreesFromTransform} from '../../../lib/matrix';
 
 type Props = {
     paintStyle?: PaintStyle;
     defaultPaint?: GradientPaint;
     isActive?: boolean;
-    showReset?: boolean;
+    // showReset?: boolean;
     onSelect?: (paintStyle: PaintStyle) => void;
 } & Omit<RadioProps, 'onSelect'>;
 
-const GradientSwatch: React.FC<Props> = ({paintStyle, defaultPaint, isActive, showReset, size, onSelect, ...rest}) => {
+const GradientSwatch: React.FC<Props> = ({paintStyle, defaultPaint, isActive, size, onSelect, ...rest}) => {
     const {getInputProps, getCheckboxProps} = useRadio({
         value: paintStyle ? paintStyle.id : 'custom',
         name: paintStyle && paintStyle.name,
@@ -28,7 +29,7 @@ const GradientSwatch: React.FC<Props> = ({paintStyle, defaultPaint, isActive, sh
 
     const bgGradient = useMemo(() => {
         const bgGradientColors = bgColorsFromStops(currentPaint.gradientStops);
-        const angle = gradientAngleFromTransform(currentPaint.gradientTransform);
+        const angle = degreesFromTransform(currentPaint.gradientTransform);
         return bgGradientFromColors(bgGradientColors, angle, currentPaint.type);
     }, [currentPaint]);
 
@@ -71,7 +72,7 @@ const GradientSwatch: React.FC<Props> = ({paintStyle, defaultPaint, isActive, sh
                             shadow={isActive ? 'outline' : 'sm'}
                             rounded="full"
                             outline="none"
-                            border="2px solid"
+                            border={size == 'lg' ? '4px solid' : '2px solid'}
                             borderColor="white"
                             p={0}
                             cursor="pointer"
@@ -84,7 +85,7 @@ const GradientSwatch: React.FC<Props> = ({paintStyle, defaultPaint, isActive, sh
                         />
                         {/* // show reset original style  */}
                         {/* {isActive ? 'si' : 'no'} */}
-                        {showReset && (
+                        {/* {showReset && (
                             <Center
                                 boxSize={3}
                                 pos="absolute"
@@ -101,7 +102,7 @@ const GradientSwatch: React.FC<Props> = ({paintStyle, defaultPaint, isActive, sh
                             >
                                 <MdRefresh />
                             </Center>
-                        )}
+                        )} */}
                     </Box>
                 </Center>
             </Tooltip>

@@ -1,12 +1,12 @@
 import {updateSelection, updateGradientStyles, selectPaintStyleWithId, isExternalStyleId} from '../app/lib/figma';
 import {isNodeGradientCompatible, createGradientStyle} from '../app/lib/utils';
 import {GradientPaintType, GradientStops} from '../app/typings';
-import {DEFAULT_PREFERENCES, DEFAULT_POOLING_TIMEOUT} from '../app/lib/constants';
+import {DEFAULT_PREFERENCES, DEFAULT_POOLING_TIMEOUT, DEFAULT_FIGMA_NOTIFICATION_TIMEOUT} from '../app/lib/constants';
 
 var poolingInterval;
 
 figma.showUI(__html__);
-figma.ui.resize(240, 429); //initial window size
+figma.ui.resize(240, 437); //initial window size
 
 figma.ui.onmessage = (msg) => {
     switch (msg.type) {
@@ -28,7 +28,7 @@ figma.ui.onmessage = (msg) => {
 
             if (style && isExternalStyleId(style.id)) {
                 // Selected style is external, cannot edit it
-                figma.notify('Cannot update external styles', {timeout: 1000});
+                figma.notify('Cannot update external styles', {timeout: DEFAULT_FIGMA_NOTIFICATION_TIMEOUT});
             } else if (paintStyleId && style) {
                 // Selected style is local, updated it and
                 console.log('apply-gradient', gradientStops, gradientType, paintStyleId);
@@ -53,7 +53,7 @@ figma.ui.onmessage = (msg) => {
                 type: 'figma:preferencesupdate',
                 message: {preferences: msg.preferences},
             });
-            figma.notify('Plugin preferences updated', {timeout: 1000});
+            figma.notify('Plugin preferences updated', {timeout: DEFAULT_FIGMA_NOTIFICATION_TIMEOUT});
             break;
         /*-------------------*/
         // Reset preferences
@@ -64,7 +64,7 @@ figma.ui.onmessage = (msg) => {
                 type: 'figma:preferencesupdate',
                 message: {preferences: newPreferencesValue},
             });
-            figma.notify('Cleared preferences', {timeout: 1000});
+            figma.notify('Cleared preferences', {timeout: DEFAULT_FIGMA_NOTIFICATION_TIMEOUT});
             break;
         /*-------------------*/
         // Create new paint style and updates styles
@@ -74,7 +74,7 @@ figma.ui.onmessage = (msg) => {
                 gradientTransform: msg.gradientTransform,
                 type: msg.gradientType,
             });
-            figma.notify('New gradient style created', {timeout: msg.timeout || 1000});
+            figma.notify('New gradient style created', {timeout: msg.timeout || DEFAULT_FIGMA_NOTIFICATION_TIMEOUT});
             figma.currentPage.selection.map((node) => {
                 if (node && isNodeGradientCompatible(node)) {
                     (node as RectangleNode).fillStyleId = newStyle.id;
@@ -86,7 +86,7 @@ figma.ui.onmessage = (msg) => {
         /*-------------------*/
         // Basic figma notification event
         case 'notify':
-            figma.notify(msg.title, {timeout: msg.timeout || 1000});
+            figma.notify(msg.title, {timeout: msg.timeout || DEFAULT_FIGMA_NOTIFICATION_TIMEOUT});
             break;
         /*-------------------*/
         // Resize event
@@ -121,7 +121,7 @@ figma.on('run' as any, () => {
 
     //Load preferences and send to UI
     figma.clientStorage.getAsync('preferences').then((preferences) => {
-        console.log('PREFERENCES:', JSON.parse(preferences));
+        console.log('preferences:', JSON.parse(preferences));
         figma.ui.postMessage({
             type: 'figma:preferencesupdate',
             message: {preferences: JSON.parse(preferences) || DEFAULT_PREFERENCES},

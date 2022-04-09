@@ -9,7 +9,7 @@ export const sortPalette = (palette) => {
     return palette.sort(compare);
 };
 
-export const mapIdToPalette = (palette) =>
+export const mapPalette = (palette) =>
     palette.map((color, index) => ({
         ...color,
         id: color.id || index + 1,

@@ -52,7 +52,7 @@ const GradientStopsList: FC<Props> = ({
                         <GradientStopsListItem
                             stop={stop}
                             index={index}
-                            // activeColorId={activeColorId}
+                            activeColorId={activeColorId}
                             editColorId={editColorId}
                             onChange={handleOnChange}
                             onDelete={handleOnDelete}

@@ -6,7 +6,7 @@ export const DEFAULT_POOLING_TIMEOUT = 1000 * 5; //10 second
 //Window
 export const DEFAULT_WINDOW_SIZE = {
     width: 240,
-    height: 429,
+    height: 437,
 };
 
 //Preferences
@@ -113,6 +113,8 @@ export const EVENTS = {
     TOUCHEND: 'touchend',
 };
 
-//Debounce options
+//Figma
+export const DEFAULT_FIGMA_NOTIFICATION_TIMEOUT = 1000;
 
-export const DEFAULT_DEBOUNCE_TIMEOUT = 300;
+//Debounce options
+export const DEFAULT_DEBOUNCE_TIMEOUT = 150;

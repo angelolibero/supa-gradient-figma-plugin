@@ -94,22 +94,22 @@ const paletteFromGradientStops = (gradientStops: GradientStops, alpha: boolean =
     return palette;
 };
 
-const gradientAngleFromTransform = (transform: Transform): number => {
-    if (!transform) return undefined;
-    const scale_factor = Math.sqrt(transform[0][0] * transform[1][1] - transform[1][0] * transform[0][1]);
-    const angleDeg = parseInt('' + (Math.acos(transform[0][0] / scale_factor) * 180) / Math.PI); // For degrees
+// const gradientAngleFromTransform = (transform: Transform): number => {
+//     if (!transform) return undefined;
+//     const scale_factor = Math.sqrt(transform[0][0] * transform[1][1] - transform[1][0] * transform[0][1]);
+//     const angleDeg = parseInt('' + (Math.acos(transform[0][0] / scale_factor) * 180) / Math.PI); // For degrees
 
-    for (const angle in LINEAR_TRANFORMS) {
-        if (LINEAR_TRANFORMS[angle] && JSON.stringify(transform) == JSON.stringify(LINEAR_TRANFORMS[angle])) {
-            return parseInt(angle);
-        }
-    }
-    return angleDeg;
-};
+//     for (const angle in LINEAR_TRANFORMS) {
+//         if (LINEAR_TRANFORMS[angle] && JSON.stringify(transform) == JSON.stringify(LINEAR_TRANFORMS[angle])) {
+//             return parseInt(angle);
+//         }
+//     }
+//     return angleDeg;
+// };
 
-const gradientAngleToTransform = (angle: number): Transform => {
-    return LINEAR_TRANFORMS[angle];
-};
+// const gradientAngleToTransform = (angle: number): Transform => {
+//     return LINEAR_TRANFORMS[angle];
+// };
 
 const bgColorsFromStops = (gradientStops: GradientStops) => {
     if (gradientStops && gradientStops.length) {
@@ -154,8 +154,8 @@ export {
     RGBAObjetToString,
     paletteToGradientStops,
     paletteFromGradientStops,
-    gradientAngleFromTransform,
-    gradientAngleToTransform,
+    // gradientAngleFromTransform,
+    //gradientAngleToTransform,
     bgColorsFromStops,
     bgGradientFromColors,
     colorStringToRGBAObject,

@@ -14,10 +14,12 @@ import _switch from './switch';
 import tabs from './tabs';
 import textarea from './textarea';
 import tooltip from './tooltip';
-//Custom
-import iconsSwitch from './custom/iconsSwitch';
-import buttonTabs from './custom/buttonTabs';
 import divider from './divider';
+
+//Custom
+import buttonTabs from './custom/buttonTabs';
+import baseSlider from './custom/baseSlider';
+import iconsSwitch from './custom/iconsSwitch';
 
 export default {
     Accordion: accordion,
@@ -39,5 +41,6 @@ export default {
     Textarea: textarea,
     //CUSTOM components
     ButtonTabs: buttonTabs,
+    BaseSlider: baseSlider,
     IconsSwitch: iconsSwitch,
 };

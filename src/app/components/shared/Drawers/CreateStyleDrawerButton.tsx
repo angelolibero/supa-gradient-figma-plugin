@@ -12,6 +12,7 @@ import {
     DrawerProps,
     DrawerHeader,
     DrawerOverlay,
+    DrawerCloseButton,
     useDisclosure,
     ButtonProps,
     chakra,
@@ -42,7 +43,7 @@ const CreateStyleDrawerButton: React.FC<Props> = ({gradientPaint, paintStyle, on
 
     return (
         <>
-            <Tooltip label="Create style" openDelay={300} placement="bottom">
+            <Tooltip label="Create style" openDelay={300} placement="bottom-start">
                 <IconButton
                     icon={<MdAdd />}
                     aria-label="Create style"
@@ -108,6 +109,7 @@ export const CreateStyleDrawer: React.FC<CreateStyleDrawerProps> = ({
             <DrawerOverlay />
             <DrawerContent textAlign="left">
                 <DrawerHeader p={4} fontSize="md">
+                    <DrawerCloseButton boxSize={8} size="sm" rounded="sm" _focus={{boxShadow: 'none'}} />
                     <Stack flex="1" spacing={2} alignItems="flex-start">
                         <GradientSwatch
                             defaultPaint={gradientPaint}
@@ -137,22 +139,24 @@ export const CreateStyleDrawer: React.FC<CreateStyleDrawerProps> = ({
                             placeholder="Insert style name"
                             onChange={handleChange}
                             w="100%"
-                            type="text"
                             size="sm"
                             variant="filled"
-                            mb={2}
+                            mb={4}
                         />
-                        <Text fontSize="xs" color="gray.400">
-                            <Badge colorScheme="green" size="sm" fontSize="xs">
+                        <chakra.div>
+                            <Badge colorScheme="green" size="sm" fontSize="xs" mb={1}>
                                 Tip
-                            </Badge>{' '}
-                            Use slash naming convention to name and organize gradient styles (E.g. Gradients/Primary).
-                        </Text>
+                            </Badge>
+                            <Text fontSize="xs" color="gray.400">
+                                Use slash naming convention to name and organize gradient styles (E.g.
+                                Gradients/Primary).
+                            </Text>
+                        </chakra.div>
                     </chakra.form>
                     <Stack direction="row" w="full">
-                        <Button onClick={onClose} w="100%" size="sm">
+                        {/* <Button onClick={onClose} w="100%" size="sm">
                             Cancel
-                        </Button>
+                        </Button> */}
                         <Button
                             colorScheme="primary"
                             onClick={handleCreate}

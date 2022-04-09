@@ -3,7 +3,7 @@ import {FC, useState, useMemo} from 'react';
 import ColorStopsHolder from './ColorStopsHolder';
 import GradientPalette from './GradientPalette';
 import {Box} from '@chakra-ui/react';
-import {sortPalette, getPaletteColor, mapIdToPalette, mapPaletteToStops} from '../../../lib/palette';
+import {sortPalette, getPaletteColor, mapPalette, mapPaletteToStops} from '../../../lib/palette';
 import GradientStopsList from './GradientStopsList';
 import {
     DEFAULT_PALETTE_HEIGHT,
@@ -39,7 +39,8 @@ const GradientPicker: FC<Props> = ({
     onColorStopSelect,
     ...rest
 }) => {
-    const palette = useMemo(() => mapIdToPalette(gradientStops), [gradientStops]);
+    const palette = useMemo(() => mapPalette(gradientStops), [gradientStops]);
+
     const [defaultActiveColor] = palette;
     const [activeColorId, setActiveColorId] = useState(defaultActiveColor.id);
     const [editColorId, setEditColorId] = useState(undefined);
@@ -51,57 +52,75 @@ const GradientPicker: FC<Props> = ({
         return {min, max, drop: stopRemovalDrop};
     }, [width]);
 
-    const handleColorAdd = ({position}) => {
-        if (palette.length >= maxStops) return;
+    const handleColorAdd = React.useCallback(
+        ({position}) => {
+            if (palette.length >= maxStops) return;
 
-        const {color} = getPaletteColor(palette, activeColorId);
-        const entry = {id: nextColorId(palette), position: position / width, color};
+            const {color} = getPaletteColor(palette, activeColorId);
+            const entry = {id: nextColorId(palette), position: position / width, color};
 
-        const updatedPalette = [...palette, entry];
-        setActiveColorId(entry.id);
-        handlePaletteChange(updatedPalette);
-    };
+            const updatedPalette = [...palette, entry];
+            setActiveColorId(entry.id);
+            handlePaletteChange(updatedPalette);
+        },
+        [palette, activeColorId]
+    );
 
-    const handleColorDelete = (id) => {
-        if (palette.length <= minStops) return;
+    const handleColorDelete = React.useCallback(
+        (id) => {
+            if (palette.length <= minStops) return;
 
-        const updatedPalette = palette.filter((c) => c.id !== id);
-        const activeId = updatedPalette.reduce((a, x) => (x.position < a.position ? x : a), updatedPalette[0]).id;
+            const updatedPalette = palette.filter((c) => c.id !== id);
+            const activeId = updatedPalette.reduce((a, x) => (x.position < a.position ? x : a), updatedPalette[0]).id;
 
-        setActiveColorId(activeId);
-        handlePaletteChange(updatedPalette);
-    };
+            setActiveColorId(activeId);
+            handlePaletteChange(updatedPalette);
+        },
+        [palette]
+    );
 
-    const onStopDragStart = (id) => {
-        if (id !== activeColorId) {
-            setActiveColorId(id);
-            const color = palette.find((color) => color.id === id);
-            onColorStopSelect && onColorStopSelect(color);
-        }
-    };
+    const onStopDragStart = React.useCallback(
+        (id) => {
+            if (id !== activeColorId) {
+                setActiveColorId(id);
+                const color = palette.find((color) => color.id === id);
+                onColorStopSelect && onColorStopSelect(color);
+            }
+        },
+        [activeColorId, palette, onColorStopSelect]
+    );
 
-    const handleColorSelect = (color, opacity = 1) => {
-        const updatedPalette = palette.map((c) => (activeColorId === c.id ? {...c, color, opacity} : c));
-        handlePaletteChange(updatedPalette);
-    };
+    const handleColorSelect = React.useCallback(
+        (color, opacity = 1) => {
+            const updatedPalette = palette.map((c) => (activeColorId === c.id ? {...c, color, opacity} : c));
+            handlePaletteChange(updatedPalette);
+        },
+        [palette, activeColorId]
+    );
 
-    const handlePaletteChange = (updatedPalette) => {
-        const sortedPalette = sortPalette(updatedPalette).map(({position, id, ...rest}) => ({
-            ...rest,
-            //   id,
-            position: +Number(position).toFixed(2),
-            //   active: id === activeColorId,
-        }));
-        onChange && onChange(sortedPalette);
-    };
+    const handlePaletteChange = React.useCallback(
+        (updatedPalette) => {
+            const sortedPalette = sortPalette(updatedPalette).map(({position, id, ...rest}) => ({
+                ...rest,
+                //   id,
+                position: +Number(position).toFixed(2),
+                //   active: id === activeColorId,
+            }));
+            onChange && onChange(sortedPalette);
+        },
+        [onChange]
+    );
 
-    const handleStopPosChange = ({id, position}) => {
-        const updatedPalette = palette.map((c) =>
-            id === c.id ? {...c, position: (position + HALF_STOP_WIDTH) / width} : c
-        );
+    const handleStopPosChange = React.useCallback(
+        ({id, position}) => {
+            const updatedPalette = palette.map((c) =>
+                id === c.id ? {...c, position: (position + HALF_STOP_WIDTH) / width} : c
+            );
 
-        handlePaletteChange(updatedPalette);
-    };
+            handlePaletteChange(updatedPalette);
+        },
+        [palette]
+    );
 
     const handleEditColor = React.useCallback(
         (editStop) => {
@@ -125,7 +144,7 @@ const GradientPicker: FC<Props> = ({
                 width={paletteWidth}
                 disabled={stopsHolderDisabled}
                 stops={mapPaletteToStops({
-                    palette,
+                    palette: palette,
                     width: paletteWidth,
                     activeId: activeColorId,
                 })}

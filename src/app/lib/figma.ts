@@ -57,9 +57,9 @@ const updateSelection = () => {
 const updateGradientStyles = (postMessage = true): PaintStyle[] => {
     const gradientPaintStyles = getGradientsFromStyles(figma.getLocalPaintStyles());
     if (gradientPaintStyles && gradientPaintStyles.length > 11) {
-        figma.ui.resize(DEFAULT_WINDOW_SIZE.width, 485);
+        figma.ui.resize(DEFAULT_WINDOW_SIZE.width, 493);
     } else if (gradientPaintStyles && gradientPaintStyles.length > 5) {
-        figma.ui.resize(DEFAULT_WINDOW_SIZE.width, 477);
+        figma.ui.resize(DEFAULT_WINDOW_SIZE.width, 485);
     } else {
         figma.ui.resize(DEFAULT_WINDOW_SIZE.width, DEFAULT_WINDOW_SIZE.height);
     }

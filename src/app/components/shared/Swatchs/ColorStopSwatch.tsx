@@ -66,7 +66,7 @@ const ColorStopSwatch = forwardRef<ColorStopSwatchProps, 'input'>(
             borderColor: 'white',
             pl: 0,
             _hover: {
-                borderColor: 'gray.300',
+                borderColor: 'gray.200',
                 rounded: 'sm',
             },
         };

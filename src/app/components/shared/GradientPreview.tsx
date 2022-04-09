@@ -5,7 +5,7 @@ import {GradientPaintType, GradientStops} from '../../typings';
 import {useClipboard} from '@chakra-ui/react';
 import {MdCode} from 'react-icons/md';
 import {bgColorsFromStops, bgGradientFromColors} from '../../lib/colors';
-import {CHECKERED_GRADIENT_PROPS} from '../../lib/constants';
+import {CHECKERED_GRADIENT_PROPS, DEFAULT_FIGMA_NOTIFICATION_TIMEOUT} from '../../lib/constants';
 
 type Props = {
     name?: string;
@@ -37,19 +37,15 @@ const GradientPreview: React.FC<Props> = ({
     }, [gradientStops, gradientType, gradientScale, angle]);
 
     const bgSize = useMemo(() => {
-        return (
-            gradientType == 'GRADIENT_RADIAL' &&
-            gradientScale > 0 &&
-            `cover ${gradientScale * 100}% ${gradientScale * 100}%;`
-        );
+        return gradientType == 'GRADIENT_RADIAL' && `${100 / gradientScale}% ${100 / gradientScale}%;`;
     }, [gradientScale, gradientType]);
 
     useEffect(() => {
         bgGradient &&
             setValue(
                 `background-image: ${bgGradient};` +
-                    (gradientType == 'GRADIENT_RADIAL' && gradientScale > 0
-                        ? `background-size: cover;` //${gradientScale * 100}% ${gradientScale * 100}%
+                    (gradientType == 'GRADIENT_RADIAL'
+                        ? `background-size: ${100 / gradientScale}% ${100 / gradientScale}%`
                         : '') +
                     'background-position: center center;'
             );
@@ -57,7 +53,16 @@ const GradientPreview: React.FC<Props> = ({
 
     useEffect(() => {
         if (hasCopied) {
-            parent.postMessage({pluginMessage: {type: 'notify', title: 'CSS code copied!', timeout: 1000}}, '*');
+            parent.postMessage(
+                {
+                    pluginMessage: {
+                        type: 'notify',
+                        title: 'CSS code copied!',
+                        timeout: DEFAULT_FIGMA_NOTIFICATION_TIMEOUT,
+                    },
+                },
+                '*'
+            );
         }
     }, [hasCopied]);
 

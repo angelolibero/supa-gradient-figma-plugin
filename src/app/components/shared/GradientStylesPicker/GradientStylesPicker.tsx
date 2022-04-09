@@ -3,8 +3,9 @@ import {FC, useMemo, useCallback} from 'react';
 import {RadioGroup, Center, BoxProps, SimpleGrid, Box, Text, GridItem} from '@chakra-ui/react';
 import GradientSwatch from '../Swatchs/GradientSwatch';
 import CreateStyleDrawerButton from '../Drawers/CreateStyleDrawerButton';
-import {bgColorsFromStops, bgGradientFromColors, gradientAngleFromTransform} from '../../../lib/colors';
+import {bgColorsFromStops, bgGradientFromColors} from '../../../lib/colors';
 import PaintStylesSkeleton from './GradientStylesSkeleton';
+import {degreesFromTransform} from '../../../lib/matrix';
 
 type Props = {
     paintStyles: PaintStyle[];
@@ -35,18 +36,16 @@ const GradientStylesPicker: FC<Props> = ({
     }, [currentPaintStyle, paintStyles]);
 
     const newBgGradient = useMemo(() => {
-        if (!isChanged || !currentGradientPaint) return;
-        const bgGradientColors = bgColorsFromStops(currentGradientPaint.gradientStops);
-        return bgGradientFromColors(
-            bgGradientColors,
-            gradientAngleFromTransform(currentGradientPaint.gradientTransform)
-        );
-    }, [currentPaintStyle, currentGradientPaint, isChanged]);
+        if (currentGradientPaint && currentGradientPaint.gradientTransform) {
+            const bgGradientColors = bgColorsFromStops(currentGradientPaint.gradientStops);
+            return bgGradientFromColors(bgGradientColors, degreesFromTransform(currentGradientPaint.gradientTransform));
+        }
+    }, [currentPaintStyle, currentGradientPaint]);
 
     //Select PaintGradient from a global PaintStyle
     const handleOnSelect = useCallback(
         (paintStyle: PaintStyle) => {
-            if (currentPaintStyle.id == paintStyle.id) return;
+            if (currentPaintStyle && currentPaintStyle.id == paintStyle.id) return;
             onSelect(paintStyle);
         },
         [onSelect, currentPaintStyle, paintStyles]
@@ -83,7 +82,7 @@ const GradientStylesPicker: FC<Props> = ({
                                 minW={6}
                                 maxW={6}
                             />
-                            {isChanged && (
+                            {currentGradientPaint && (
                                 <Box
                                     boxSize="14px"
                                     pos="absolute"
@@ -111,7 +110,7 @@ const GradientStylesPicker: FC<Props> = ({
                                     key={index}
                                     onSelect={handleOnSelect}
                                     isActive={currentPaintStyle && paintStyle.id == currentPaintStyle.id}
-                                    showReset={isChanged && currentPaintStyle && paintStyle.id == currentPaintStyle.id}
+                                    //    showReset={isChanged && currentPaintStyle && paintStyle.id == currentPaintStyle.id}
                                 />
                             );
                         })}

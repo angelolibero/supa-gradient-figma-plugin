@@ -27,7 +27,7 @@ const isTouch = (e) => e.type === EVENTS.TOUCHSTART;
 
 type useDraggingProps = {
     onDragStart: (coordinates: StopCoordiantes) => void;
-    onDrag: (coordinates: StopCoordiantes) => void;
+    onDrag: (coordinates: StopCoordiantes) => any;
     onDragEnd: (coordinates: StopCoordiantes) => void;
 };
 
