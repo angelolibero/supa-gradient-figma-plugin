@@ -1,17 +1,21 @@
-import {getGradientsFromStyles, isGradientCompatible} from './utils';
+import {getGradientsFromStyles, isNodeGradientCompatible} from './utils';
 import {DEFAULT_WINDOW_SIZE} from './constants';
+
+const isExternalStyleId = (styleId: string | PluginAPI['mixed']) => {
+    return styleId && (styleId as string).split(',')[1] ? true : false;
+};
 
 const filterGradientCompatibleNodes = (selection: any[]) => {
     const gradientCompatibleNodes =
         selection &&
         selection.map((node, index) => {
-            if (node && isGradientCompatible(node) && node.fills[0] && node.fills[0].gradientStops) {
+            if (node && isNodeGradientCompatible(node) && node.fills[0] && node.fills[0].gradientStops) {
                 const gradientNode = node;
                 return {
                     id: node.id,
                     fillStyleId: gradientNode.fillStyleId,
                     fills: gradientNode.fills,
-                    type: 'RECTANGLE',
+                    type: node.type,
                 };
             }
         });
@@ -80,4 +84,10 @@ const selectPaintStyleWithId = (id: string) => {
     });
 };
 
-export {filterGradientCompatibleNodes, updateSelection, updateGradientStyles, selectPaintStyleWithId};
+export {
+    isExternalStyleId,
+    filterGradientCompatibleNodes,
+    updateSelection,
+    updateGradientStyles,
+    selectPaintStyleWithId,
+};

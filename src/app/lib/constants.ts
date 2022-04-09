@@ -74,7 +74,7 @@ export const CHECKERED_GRADIENT_PROPS = {
 //GradientStops
 const STOP_WIDTH = 18;
 export const HALF_STOP_WIDTH = STOP_WIDTH / 2;
-export const DEFAULT_STOP_REMOVAL_DROP = 50;
+export const DEFAULT_STOP_REMOVAL_DROP = 25;
 export const DEFAULT_PALETTE_WIDTH = 208;
 export const DEFAULT_PALETTE_HEIGHT = 4; //Chakra size
 export const DEFAULT_MAX_STOPS = 5;

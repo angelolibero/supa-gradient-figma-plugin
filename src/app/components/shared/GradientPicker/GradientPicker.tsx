@@ -13,19 +13,19 @@ import {
     DEFAULT_MAX_STOPS,
     HALF_STOP_WIDTH,
 } from '../../../lib/constants';
-import {GradientStop} from '../../../typings';
+import {GradientStop, GradientStops} from '../../../typings';
 
 const nextColorId = (palette) => Math.max(...palette.map(({id}) => id)) + 1;
 
 type Props = {
-    gradientStops: GradientStop[];
-    paletteHeight: number;
-    width: number;
-    stopRemovalDrop: number;
-    minStops: number;
-    maxStops: number;
+    gradientStops: GradientStops;
+    paletteHeight?: number;
+    width?: number;
+    stopRemovalDrop?: number;
+    minStops?: number;
+    maxStops?: number;
     onChange: (gradientStops: GradientStop[]) => void;
-    onColorStopSelect: (stop: GradientStop) => void;
+    onColorStopSelect?: (stop: GradientStop) => void;
 };
 
 const GradientPicker: FC<Props> = ({

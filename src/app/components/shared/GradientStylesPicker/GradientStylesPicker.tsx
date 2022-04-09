@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {useMemo, FC} from 'react';
+import {FC, useMemo, useCallback} from 'react';
 import {RadioGroup, Center, BoxProps, SimpleGrid, Box, Text, GridItem} from '@chakra-ui/react';
 import GradientSwatch from '../Swatchs/GradientSwatch';
 import CreateStyleDrawerButton from '../Drawers/CreateStyleDrawerButton';
@@ -42,6 +42,15 @@ const GradientStylesPicker: FC<Props> = ({
             gradientAngleFromTransform(currentGradientPaint.gradientTransform)
         );
     }, [currentPaintStyle, currentGradientPaint, isChanged]);
+
+    //Select PaintGradient from a global PaintStyle
+    const handleOnSelect = useCallback(
+        (paintStyle: PaintStyle) => {
+            if (currentPaintStyle.id == paintStyle.id) return;
+            onSelect(paintStyle);
+        },
+        [onSelect, currentPaintStyle, paintStyles]
+    );
 
     return !paintStyles ? (
         <PaintStylesSkeleton />
@@ -90,8 +99,8 @@ const GradientStylesPicker: FC<Props> = ({
                         </Center>
                     )}
                     {editingPaint && editingPaint.gradientTransform && paintStyles.length == 0 && (
-                        <GridItem colSpan={5}>
-                            <Text>Create your first gradient style</Text>
+                        <GridItem colSpan={5} textAlign="left">
+                            <Text fontSize="xs">Create first gradient style</Text>
                         </GridItem>
                     )}
                     {paintStyles &&
@@ -100,7 +109,7 @@ const GradientStylesPicker: FC<Props> = ({
                                 <GradientSwatch
                                     paintStyle={paintStyle}
                                     key={index}
-                                    onSelect={onSelect}
+                                    onSelect={handleOnSelect}
                                     isActive={currentPaintStyle && paintStyle.id == currentPaintStyle.id}
                                     showReset={isChanged && currentPaintStyle && paintStyle.id == currentPaintStyle.id}
                                 />

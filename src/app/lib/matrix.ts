@@ -2,16 +2,20 @@ import {decomposeTSR, rotateDEG} from 'transformation-matrix';
 
 export const figmaDegreesOffset = 90;
 
-export const rotateTransform = (degrees: number): Transform => {
+export const rotateTransform = (degrees: number, degreeOffset: number = figmaDegreesOffset): Transform => {
     //    const matrix = transformToMatrix(transform);
-    const rotated = rotateDEG(figmaDegreesOffset - degrees, 0.5, 0.5);
+    const rotated = rotateDEG(
+        Math.round(degrees <= 360 - degreeOffset ? degreeOffset - degrees : 360 - degrees + degreeOffset),
+        0.5,
+        0.5
+    );
     const transform = [
         [rotated.a, rotated.c, rotated.e],
         [rotated.b, rotated.d, rotated.f],
     ] as Transform;
 
     const decomposed = decomposeTSR(rotated);
-    console.log('decomposed', decomposed, degreesFromTransform(transform));
+    // console.log('decomposed', decomposed, degreesFromTransform(transform));
     return transform;
 };
 
@@ -20,9 +24,17 @@ export const decomposeTransform = (transform: Transform) => {
     return decomposed;
 };
 
-export const degreesFromTransform = (transform: Transform): number => {
+export const degreesFromTransform = (transform: Transform, degreeOffset: number = figmaDegreesOffset): number => {
     const decomposed = decomposeTransform(transform);
-    return Math.round(figmaDegreesOffset - decomposed.rotation.angle * (180 / Math.PI));
+    const degrees = decomposed.rotation.angle * (180 / Math.PI);
+    console.log('degrees:', degrees, '| offset:', degreeOffset);
+    console.log('SSSSSS', degrees + degreeOffset);
+    if (degrees == degreeOffset) {
+        console.log('SIUUUUU');
+        return 360;
+    } else if (degrees >= -degreeOffset) {
+        return Math.round(degreeOffset + degrees);
+    } else return Math.round(360 - (Math.abs(degrees) - degreeOffset));
 };
 
 export const transformToMatrix = (transform: Transform) => {

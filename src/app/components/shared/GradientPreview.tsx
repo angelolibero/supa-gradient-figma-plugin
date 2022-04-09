@@ -38,7 +38,7 @@ const GradientPreview: React.FC<Props> = ({name, angle, gradientStops, gradientT
 
     return (
         isGradient && (
-            <Flex {...CHECKERED_GRADIENT_PROPS} w="100%" h="100%" overflow="hidden" minH="100px" {...rest}>
+            <Flex {...CHECKERED_GRADIENT_PROPS} w="100%" overflow="hidden" minH="100px" maxH="100px" {...rest}>
                 <Flex
                     w="100%"
                     h="inherit"

@@ -5,7 +5,7 @@ import RadianSlider from '../shared/Sliders/RadianSlider';
 import {GradientPaintType, GradientStops, Preferences} from '../../typings';
 import {gradientAngleFromTransform, gradientAngleToTransform} from '../../lib/colors';
 import {DEFAULT_ANGLE, DEFAULT_PREFERENCES} from '../../lib/constants';
-import {filterGradientCompatibleNodes} from '../../lib/figma';
+import {filterGradientCompatibleNodes, isExternalStyleId} from '../../lib/figma';
 import GradientPreview from '../shared/GradientPreview';
 import GradientStylesPicker from '../shared/GradientStylesPicker/GradientStylesPicker';
 import PreferencesDrawerButton from '../shared/Drawers/PreferencesDrawerButton';
@@ -28,6 +28,9 @@ const GradientPage = ({}) => {
     const scrollElementRef = React.useRef();
 
     const isSelection = React.useMemo(() => selection && selection.length > 0, [selection]);
+    const hasExternalStyle = React.useMemo(() => {
+        return currentPaintStyle && isExternalStyleId(currentPaintStyle.id);
+    }, [currentPaintStyle, paintStyles]);
 
     const hasGradientInSelection = React.useMemo(() => {
         const gradientNodes = filterGradientCompatibleNodes(selection);
@@ -64,7 +67,13 @@ const GradientPage = ({}) => {
             }
 
             //if (!selection || (!selection.length && !forceUpdate)) return;
-            if (!updateSelection || !gradientTransform) return;
+
+            if (!updateSelection || !gradientTransform || hasExternalStyle) {
+                console.log('EXTERNALSSSSS or invalid');
+                return;
+            }
+            currentPaintStyle && console.log('updateCurrentPaintStyleAAAa', hasExternalStyle);
+
             parent.postMessage(
                 {
                     pluginMessage: {
@@ -118,8 +127,7 @@ const GradientPage = ({}) => {
             setGradientStops(gradientPaint.gradientStops);
             setGradientTransform(gradientPaint.gradientTransform);
             setGradientType(gradientPaint.type);
-            setGradientAngle(gradientAngleFromTransform(gradientPaint.gradientTransform));
-            console.log('SELECTED ANGLE', gradientAngleFromTransform(gradientPaint.gradientTransform));
+            setGradientAngle(degreesFromTransform(gradientPaint.gradientTransform));
         },
         [paintStyles]
     );
@@ -145,7 +153,7 @@ const GradientPage = ({}) => {
             selectPaintStyle({
                 ...gradientNode,
                 paints: gradientNode.fills,
-                id: gradientNode.fillStyleId,
+                id: !isExternalStyleId(gradientNode.fillStyleId) ? gradientNode.fillStyleId : undefined,
             } as any);
         }
     }, [selection]);
@@ -250,7 +258,6 @@ const GradientPage = ({}) => {
                 setGradientStops(paint.gradientStops);
                 setGradientTransform(paint.gradientTransform);
                 setGradientType(paint.type);
-                console.log('DECOMPOSED ANGLE', degreesFromTransform(paint.gradientTransform));
                 setGradientAngle(degreesFromTransform(paint.gradientTransform));
             }
         }
@@ -345,7 +352,7 @@ const GradientPage = ({}) => {
                                         defaultValue={180}
                                         min={0}
                                         max={360}
-                                        step={45}
+                                        step={15}
                                         value={gradientAngle}
                                     />
                                 </Box>
@@ -361,17 +368,21 @@ const GradientPage = ({}) => {
                     <>
                         <Divider borderColor="blackAlpha.100" />
                         <Stack direction="row" spacing={2} py={3} px={3}>
-                            {isSelection && hasGradientInSelection && (
-                                <ImportButton onImport={importSelectionGradient} />
-                            )}
+                            {isSelection &&
+                                hasGradientInSelection &&
+                                currentPaintStyle &&
+                                selection[0].fillStyleId != currentPaintStyle.id && (
+                                    <ImportButton onImport={importSelectionGradient} />
+                                )}
                             <Button
                                 size="sm"
                                 colorScheme={'primary'}
                                 w="full"
                                 onClick={() => applyGradient()}
-                                isDisabled={!isSelection}
+                                isDisabled={!isSelection || hasExternalStyle}
                             >
                                 {!isSelection ? 'No selection' : 'Apply'}
+                                {hasExternalStyle && 'external'}
                                 {selection && isSelection && isGradient ? (
                                     <Badge
                                         ml={2}

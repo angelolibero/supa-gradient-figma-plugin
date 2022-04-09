@@ -60,11 +60,11 @@ const useStopDragging = ({
     const [drag] = useDragging({
         onDragStart: ({clientX, clientY}) => {
             setPosStart(clientX);
-            onDragStart(stop.id);
+            onDragStart && onDragStart(stop.id);
             return {clientX, clientY};
         },
         onDrag: handleDrag,
-        onDragEnd: () => onDragEnd(stop.id),
+        onDragEnd: () => onDragEnd && onDragEnd(stop.id),
     });
 
     return [drag];

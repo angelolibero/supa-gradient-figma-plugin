@@ -1,10 +1,13 @@
-const isGradientCompatible = (node: SceneNode): boolean =>
+const isNodeGradientCompatible = (node: SceneNode): boolean =>
     node.type == 'RECTANGLE' ||
     node.type == 'ELLIPSE' ||
     node.type == 'POLYGON' ||
     node.type == 'VECTOR' ||
     node.type == 'FRAME' ||
-    node.type == 'STAR';
+    node.type == 'STAR' ||
+    node.type == 'TEXT' ||
+    node.type == 'COMPONENT' ||
+    node.type == 'INSTANCE';
 
 const getGradientsFromStyles = (paintStyles: PaintStyle[]): any => {
     return paintStyles
@@ -40,4 +43,4 @@ const createGradientStyle = (colorName: string, gradient: GradientPaint) => {
     return style;
 };
 
-export {isGradientCompatible, getGradientsFromStyles, createGradientStyle};
+export {isNodeGradientCompatible, getGradientsFromStyles, createGradientStyle};
