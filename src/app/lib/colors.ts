@@ -133,7 +133,7 @@ const bgGradientFromColors = (gradientColors, angle = 0, type: GradientPaintType
             return `${gradientTypeMethod}(from ${angle}deg, ${gradientColors})`;
         case 'GRADIENT_RADIAL':
             gradientTypeMethod = 'radial-gradient';
-            return `${gradientTypeMethod}(from ${angle}deg, ${gradientColors})`;
+            return `${gradientTypeMethod}(${gradientColors})`;
         case 'GRADIENT_DIAMOND':
             gradientTypeMethod = 'radial-gradient';
             break;

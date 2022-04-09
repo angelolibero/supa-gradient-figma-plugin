@@ -18,6 +18,8 @@ import {
 import ColorStopSwatch, {ColorStopSwatchProps} from '../Swatchs/ColorStopSwatch';
 import {FocusableElement} from '@chakra-ui/utils';
 import {RgbaColorPicker} from 'react-colorful';
+import useDebounce from '../../../lib/hooks/useDebounce';
+import {DEFAULT_DEBOUNCE_TIMEOUT} from '../../../lib/constants';
 
 export type ColorPickerDrawerSwatchProps = {
     color: RGBA;
@@ -93,6 +95,7 @@ export const ColorPickerDrawer: React.FC<ColorPickerDrawerProps> = ({
     ...rest
 }) => {
     const [color, setColor] = useControllableState({value, defaultValue});
+    const debouncedColor = useDebounce(color, DEFAULT_DEBOUNCE_TIMEOUT);
     const inputRef = useRef<HTMLInputElement>();
 
     const handleOnChange = React.useCallback(
@@ -106,17 +109,17 @@ export const ColorPickerDrawer: React.FC<ColorPickerDrawerProps> = ({
             setColor(rgbaColor);
             onChange(rgbaColor);
         },
-        [color]
+        [onChange]
     );
 
     const pickerColor = React.useMemo(() => {
         return {
-            r: parseInt((color.r * 255).toString()),
-            g: parseInt((color.g * 255).toString()),
-            b: parseInt((color.b * 255).toString()),
-            a: color.a,
+            r: parseInt((debouncedColor.r * 255).toString()),
+            g: parseInt((debouncedColor.g * 255).toString()),
+            b: parseInt((debouncedColor.b * 255).toString()),
+            a: debouncedColor.a,
         };
-    }, [color]);
+    }, [debouncedColor]);
 
     return (
         <Drawer
@@ -148,7 +151,7 @@ export const ColorPickerDrawer: React.FC<ColorPickerDrawerProps> = ({
                         <RgbaColorPicker color={pickerColor} onChange={handleOnChange} />
                     </chakra.form>
                     <Stack direction="row" w="full">
-                        <ColorStopSwatch color={color} showInput showOpacity />
+                        <ColorStopSwatch color={debouncedColor} showInput showOpacity />
                         {/* <Button onClick={onClose} w="100%" size="sm">
                             Close
                         </Button> */}

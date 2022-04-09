@@ -12,9 +12,14 @@ const baseStyle: PartsStyleFunction = (props) => ({
         color: mode('gray.400', 'gray.500')(props),
         bgColor: 'transparent',
         h: '1.25rem',
+        p: 0,
         borderRadius: 'sm',
         _focus: {
             boxShadow: 'none',
+        },
+        _hover: {
+            bgColor: 'transparent',
+            color: mode('gray.700', 'gray.500')(props),
         },
         _active: {
             fontWeight: 'semibold',

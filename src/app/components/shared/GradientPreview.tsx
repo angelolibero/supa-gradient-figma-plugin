@@ -1,9 +1,9 @@
 import * as React from 'react';
 import {useEffect, useMemo} from 'react';
-import {Flex, Button, FlexProps, Text, Tooltip, Badge, Box, Center} from '@chakra-ui/react';
+import {Flex, Button, FlexProps, Text, Tooltip, Badge} from '@chakra-ui/react';
 import {GradientPaintType, GradientStops} from '../../typings';
 import {useClipboard} from '@chakra-ui/react';
-import {MdArrowUpward, MdCode} from 'react-icons/md';
+import {MdCode} from 'react-icons/md';
 import {bgColorsFromStops, bgGradientFromColors} from '../../lib/colors';
 import {CHECKERED_GRADIENT_PROPS} from '../../lib/constants';
 
@@ -13,9 +13,18 @@ type Props = {
     gradientStops: GradientStops;
     gradientTransform: Transform;
     gradientType: GradientPaintType;
+    gradientScale: number;
 } & FlexProps;
 
-const GradientPreview: React.FC<Props> = ({name, angle, gradientStops, gradientTransform, gradientType, ...rest}) => {
+const GradientPreview: React.FC<Props> = ({
+    name,
+    angle,
+    gradientStops,
+    gradientTransform,
+    gradientType,
+    gradientScale,
+    ...rest
+}) => {
     const [value, setValue] = React.useState('');
     const {hasCopied, onCopy} = useClipboard(value);
 
@@ -23,12 +32,28 @@ const GradientPreview: React.FC<Props> = ({name, angle, gradientStops, gradientT
 
     const bgGradient = useMemo(() => {
         const bgGradientColors = bgColorsFromStops(gradientStops);
+
         return bgGradientFromColors(bgGradientColors, angle, gradientType);
-    }, [gradientStops, gradientType, angle]);
+    }, [gradientStops, gradientType, gradientScale, angle]);
+
+    const bgSize = useMemo(() => {
+        return (
+            gradientType == 'GRADIENT_RADIAL' &&
+            gradientScale > 0 &&
+            `cover ${gradientScale * 100}% ${gradientScale * 100}%;`
+        );
+    }, [gradientScale, gradientType]);
 
     useEffect(() => {
-        bgGradient && setValue(`background-image: ${bgGradient};`);
-    }, [bgGradient]);
+        bgGradient &&
+            setValue(
+                `background-image: ${bgGradient};` +
+                    (gradientType == 'GRADIENT_RADIAL' && gradientScale > 0
+                        ? `background-size: cover;` //${gradientScale * 100}% ${gradientScale * 100}%
+                        : '') +
+                    'background-position: center center;'
+            );
+    }, [bgGradient, gradientType, gradientScale]);
 
     useEffect(() => {
         if (hasCopied) {
@@ -43,6 +68,9 @@ const GradientPreview: React.FC<Props> = ({name, angle, gradientStops, gradientT
                     w="100%"
                     h="inherit"
                     bgGradient={bgGradient}
+                    bgSize={bgSize}
+                    bgRepeat="no-repeat"
+                    bgPos="center center"
                     alignItems={isGradient ? 'flex-start' : 'center'}
                     justifyContent={isGradient ? 'flex-end' : 'center'}
                     p={2}

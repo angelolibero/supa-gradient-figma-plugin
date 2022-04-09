@@ -9,17 +9,16 @@ const isNodeGradientCompatible = (node: SceneNode): boolean =>
     node.type == 'COMPONENT' ||
     node.type == 'INSTANCE';
 
+const isGradientPaint = (paint: GradientPaint): boolean =>
+    paint.type == 'GRADIENT_LINEAR' || paint.type == 'GRADIENT_RADIAL' || paint.type == 'GRADIENT_ANGULAR';
+//|| paint.type == 'GRADIENT_DIAMOND';
+
 const getGradientsFromStyles = (paintStyles: PaintStyle[]): any => {
     return paintStyles
         .map((style) => {
             let stylePaints: GradientPaint[] = [];
-            style.paints.forEach((paint) => {
-                if (
-                    paint.type == 'GRADIENT_LINEAR' ||
-                    paint.type == 'GRADIENT_RADIAL' ||
-                    paint.type == 'GRADIENT_ANGULAR' ||
-                    paint.type == 'GRADIENT_DIAMOND'
-                ) {
+            style.paints.forEach((paint: GradientPaint) => {
+                if (isGradientPaint(paint)) {
                     stylePaints.push({
                         ...paint,
                         gradientStops: paint.gradientStops,

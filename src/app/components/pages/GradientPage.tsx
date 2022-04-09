@@ -13,13 +13,16 @@ import ImportButton from '../shared/ImportButton';
 import Empty from '../shared/Empty';
 import GradientTypeTabs from '../shared/GradientTypeTabs';
 import GradientPicker from '../shared/GradientPicker';
-import {degreesFromTransform, rotateTransform} from '../../lib/matrix';
+import {degreesFromTransform, rotateTransform, scaleTransform, transformToMatrix} from '../../lib/matrix';
+import ScaleSlider from '../shared/Sliders/ScaleSlider';
+import {decomposeTSR} from 'transformation-matrix';
 
 const GradientPage = ({}) => {
     const [selection, setSelection] = useState<RectangleNode[]>();
     const [gradientAngle, setGradientAngle] = useState<number>(DEFAULT_ANGLE);
     const [gradientStops, setGradientStops] = useState<GradientStops>(); //DEFAULT_GRADIENT_STOPS
     const [gradientTransform, setGradientTransform] = useState<Transform>(); //DEFAULT_GRADIENT_TRANSFORM
+    const [gradientScale, setGradientScale] = useState<number>(1);
     const [gradientType, setGradientType] = React.useState<GradientPaintType>('GRADIENT_LINEAR');
     const [currentPaintStyle, setCurrentPaintStyle] = useState<PaintStyle>();
     const [paintStyles, setPaintStyles] = useState<PaintStyle[]>();
@@ -123,9 +126,11 @@ const GradientPage = ({}) => {
         (paintStyle: PaintStyle) => {
             if (!paintStyle || !paintStyle.paints) return;
             const gradientPaint = paintStyle.paints[0] as GradientPaint;
+            const decomposed = decomposeTSR(transformToMatrix(gradientPaint.gradientTransform));
             setCurrentPaintStyle(paintStyle);
             setGradientStops(gradientPaint.gradientStops);
             setGradientTransform(gradientPaint.gradientTransform);
+            setGradientScale(+(decomposed.scale.sx || decomposed.scale.sy).toFixed(2));
             setGradientType(gradientPaint.type);
             setGradientAngle(degreesFromTransform(gradientPaint.gradientTransform));
         },
@@ -194,6 +199,17 @@ const GradientPage = ({}) => {
         [gradientAngle, gradientTransform]
     );
 
+    const onChangeScale = useCallback(
+        (scale) => {
+            if (scale != gradientScale) {
+                const scaledTransform = scaleTransform(scale, scale);
+                setGradientTransform(scaledTransform);
+                setGradientScale(scale);
+            }
+        },
+        [gradientAngle, gradientTransform, gradientScale]
+    );
+
     const onChangeStops = useCallback(
         (_gradientStops: GradientStops) => {
             const updatedGradientStops: GradientStops = _gradientStops;
@@ -213,7 +229,7 @@ const GradientPage = ({}) => {
 
     useEffect(() => {
         preferences && preferences.liveUpdates && applyGradient();
-    }, [gradientStops, gradientAngle, gradientType]);
+    }, [gradientStops, gradientAngle, gradientType, gradientScale]);
 
     useEffect(() => {
         if (isLoading && preferences) {
@@ -334,6 +350,7 @@ const GradientPage = ({}) => {
                                 gradientStops={gradientStops}
                                 gradientTransform={gradientTransform}
                                 gradientType={gradientType}
+                                gradientScale={gradientScale}
                                 angle={gradientAngle}
                                 name={currentPaintStyle && currentPaintStyle.id && currentPaintStyle.name}
                             />
@@ -346,16 +363,13 @@ const GradientPage = ({}) => {
                                 px={4}
                             />
                             <Stack h="100%" w="100%" pt={2} pb={0} spacing={3}>
-                                <Box px={4}>
-                                    <RadianSlider
-                                        onChange={onChangeAngle}
-                                        defaultValue={180}
-                                        min={0}
-                                        max={360}
-                                        step={15}
-                                        value={gradientAngle}
-                                    />
-                                </Box>
+                                <Stack px={4}>
+                                    {gradientType != 'GRADIENT_RADIAL' ? (
+                                        <RadianSlider onChange={onChangeAngle} step={15} value={gradientAngle} />
+                                    ) : (
+                                        <ScaleSlider onChange={onChangeScale} value={gradientScale} />
+                                    )}
+                                </Stack>
                                 <GradientPicker onChange={onChangeStops} gradientStops={gradientStops} />
                             </Stack>
                         </Flex>
@@ -367,7 +381,7 @@ const GradientPage = ({}) => {
                 {isGradient && (
                     <>
                         <Divider borderColor="blackAlpha.100" />
-                        <Stack direction="row" spacing={2} py={3} px={3}>
+                        <Stack direction="row" spacing={3} py={3} px={3}>
                             {isSelection &&
                                 hasGradientInSelection &&
                                 currentPaintStyle &&

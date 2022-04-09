@@ -112,3 +112,7 @@ export const EVENTS = {
     TOUCHMOVE: 'touchmove',
     TOUCHEND: 'touchend',
 };
+
+//Debounce options
+
+export const DEFAULT_DEBOUNCE_TIMEOUT = 300;

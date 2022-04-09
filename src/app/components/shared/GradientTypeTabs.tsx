@@ -12,7 +12,7 @@ const GradientTypeTabs: FC<Props> = ({gradientType, onChange, ...rest}) => {
     const styles = useMultiStyleConfig('ButtonTabs', rest);
 
     return (
-        <Stack direction="row" sx={styles.tabs} {...rest}>
+        <Stack direction="row" sx={styles.tabs} spacing={4} {...rest}>
             <Button
                 size="xs"
                 onClick={() => onChange('GRADIENT_LINEAR')}
@@ -37,14 +37,14 @@ const GradientTypeTabs: FC<Props> = ({gradientType, onChange, ...rest}) => {
             >
                 Angular
             </Button>
-            <Button
+            {/* <Button
                 size="xs"
                 onClick={() => onChange('GRADIENT_DIAMOND')}
                 isActive={gradientType == 'GRADIENT_DIAMOND'}
                 sx={styles.tab}
             >
                 Diamond
-            </Button>
+            </Button> */}
         </Stack>
     );
 };

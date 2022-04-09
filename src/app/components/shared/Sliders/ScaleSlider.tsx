@@ -21,22 +21,23 @@ type Props = {
     onChange: (angle) => void;
 } & SliderProps;
 
-const RadianSlider: React.FC<Props> = ({
+const ScaleSlider: React.FC<Props> = ({
     onChange,
     value,
-    defaultValue = 180,
+    defaultValue = 1,
     min = 0,
-    max = 345,
-    step = 45,
+    max = 2,
+    step = 0.1,
     markDivisionCount = 2,
     ...rest
 }) => {
     const [sliderValue, setSliderValue] = useControllableState({value, defaultValue});
 
     const handleOnChange = useCallback(
-        (angle) => {
-            onChange(angle);
-            setSliderValue(angle);
+        (scale: number) => {
+            const fixedScale = +scale.toFixed(2);
+            onChange(fixedScale);
+            setSliderValue(fixedScale);
         },
         [sliderValue]
     );
@@ -59,7 +60,7 @@ const RadianSlider: React.FC<Props> = ({
                 <MdArrowUpward />
             </Box>
             <Text fontWeight="semibold" fontSize="xs" maxW={8} minW={8} pos="relative" textAlign="left">
-                {sliderValue}°
+                {sliderValue * 100}%
             </Text>
 
             <Box w="100%">
@@ -104,4 +105,4 @@ const RadianSlider: React.FC<Props> = ({
     );
 };
 
-export default RadianSlider;
+export default ScaleSlider;
