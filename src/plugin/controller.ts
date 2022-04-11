@@ -1,11 +1,11 @@
-import {updateSelection, updateGradientStyles, selectPaintStyleWithId, isExternalStyleId} from '../app/lib/figma';
+import {updateSelection, updatePaintStyles, selectPaintStyleWithId, isExternalStyleId} from '../app/lib/figma';
 import {isNodeGradientCompatible, createGradientStyle} from '../app/lib/utils';
 import {GradientPaintType, GradientStops} from '../app/typings';
 import {
     DEFAULT_PREFERENCES,
     DEFAULT_POOLING_TIMEOUT,
     DEFAULT_FIGMA_NOTIFICATION_TIMEOUT,
-    LINEAR_TRANFORMS,
+    DEFAULT_AFFINE_TRANSFORMS,
     DEFAULT_GRADIENT_STOPS,
 } from '../app/lib/constants';
 
@@ -77,18 +77,22 @@ figma.ui.onmessage = (msg) => {
         /*-------------------*/
         // Create new paint style and updates styles
         case 'create-style':
-            const newStyle = createGradientStyle(msg.name, {
-                gradientStops: msg.gradientStops || DEFAULT_GRADIENT_STOPS,
-                gradientTransform: msg.gradientTransform || LINEAR_TRANFORMS[0],
-                type: msg.gradientType,
+            const gradientPaint = msg.gradientPaint;
+            const gradientName = msg.name;
+            const newStyle = createGradientStyle(gradientName, {
+                gradientStops: gradientPaint.gradientStops || DEFAULT_GRADIENT_STOPS,
+                gradientTransform: gradientPaint.gradientTransform || DEFAULT_AFFINE_TRANSFORMS[0],
+                type: gradientPaint.type,
             });
-            figma.notify('New gradient style created', {timeout: msg.timeout || DEFAULT_FIGMA_NOTIFICATION_TIMEOUT});
+            figma.notify('New gradient style created! ⚡️', {
+                timeout: gradientPaint.timeout || DEFAULT_FIGMA_NOTIFICATION_TIMEOUT,
+            });
             figma.currentPage.selection.map((node) => {
                 if (node && isNodeGradientCompatible(node)) {
                     (node as RectangleNode).fillStyleId = newStyle.id;
                 }
             });
-            updateGradientStyles();
+            updatePaintStyles();
             selectPaintStyleWithId(newStyle.id);
             break;
         /*-------------------*/
@@ -123,11 +127,11 @@ figma.on('run' as any, () => {
 
     //Initialization
     updateSelection();
-    updateGradientStyles();
+    updatePaintStyles();
 
     //Starting polling interval
     poolingInterval = setInterval(() => {
-        updateGradientStyles();
+        updatePaintStyles();
     }, DEFAULT_POOLING_TIMEOUT);
 
     //Load preferences and send to UI

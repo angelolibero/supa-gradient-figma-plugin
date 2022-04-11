@@ -17,6 +17,7 @@ import {
     FormLabel,
     Divider,
     Switch,
+    Link,
 } from '@chakra-ui/react';
 import {Preferences} from '../../../typings';
 import {MdArrowDownward, MdMoreVert} from 'react-icons/md';
@@ -96,9 +97,17 @@ export const PreferencesDrawer: FC<PreferencesDrawerProps> = ({
         <Drawer isOpen={isOpen} placement="bottom" onClose={onClose} finalFocusRef={btnRef} {...rest}>
             <DrawerOverlay />
             <DrawerContent textAlign="left">
-                <DrawerHeader p={4} fontSize="md">
+                <DrawerHeader p={4}>
                     <DrawerCloseButton boxSize={8} size="sm" rounded="sm" _focus={{boxShadow: 'none'}} />
-                    Preferences
+                    <Stack direction="row" alignItems="center">
+                        <Logo />
+                        <Stack spacing={0} justifyContent="flex-start">
+                            <Text>Supa Gradient</Text>
+                            <Text color="gray.400" fontSize="xs" fontWeight="normal">
+                                {!!process.env.APP_VERSION && process.env.APP_VERSION}
+                            </Text>
+                        </Stack>
+                    </Stack>
                 </DrawerHeader>
                 <DrawerBody w="full" px={4} pb={6}>
                     <Stack direction="row" boxSize="100%" flex="1">
@@ -135,17 +144,8 @@ export const PreferencesDrawer: FC<PreferencesDrawerProps> = ({
                                 />
                             </FormControl>
                             <Divider />
-                            <Stack direction="row">
-                                <Logo />
-                                <Stack spacing={0}>
-                                    <Text fontSize="xs" fontWeight="medium">
-                                        {!!process.env.APP_NAME && process.env.APP_NAME.replace('-', ' ')}
-                                    </Text>
-                                    <Text fontSize="xs" color="gray.400">
-                                        {!!process.env.APP_VERSION && process.env.APP_VERSION}
-                                    </Text>
-                                </Stack>
-                            </Stack>
+
+                            <Text color="gray.400">Made with ❤️ by: @angelolibero</Text>
                         </Stack>
                     </Stack>
                 </DrawerBody>

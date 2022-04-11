@@ -34,7 +34,7 @@ const GradientSwatch: React.FC<Props> = ({paintStyle, defaultPaint, isActive, si
     }, [currentPaint]);
 
     const handleSelectStyle = useCallback(() => {
-        console.log('handleSelectStyle', paintStyle.paints[0]);
+        paintStyle && console.log('handleSelectStyle', paintStyle.paints[0]);
         onSelect && onSelect(paintStyle);
     }, [paintStyle, onSelect]);
 

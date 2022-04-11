@@ -19,6 +19,7 @@
 		"react-colorful": "^5.5.1",
 		"react-dom": "^17.0.2",
 		"react-icons": "^4.3.1",
+		"recoil": "^0.7.0",
 		"transformation-matrix": "^2.11.1",
 		"use-hooks": "^2.0.0-rc.5"
 	},

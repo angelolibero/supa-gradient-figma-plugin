@@ -1,3 +1,5 @@
+import {GRADIENT_TYPES} from './constants';
+
 const isNodeGradientCompatible = (node: SceneNode): boolean =>
     node.type == 'RECTANGLE' ||
     node.type == 'ELLIPSE' ||
@@ -9,26 +11,41 @@ const isNodeGradientCompatible = (node: SceneNode): boolean =>
     node.type == 'COMPONENT' ||
     node.type == 'INSTANCE';
 
-const isGradientPaint = (paint: GradientPaint): boolean =>
-    paint.type == 'GRADIENT_LINEAR' || paint.type == 'GRADIENT_RADIAL' || paint.type == 'GRADIENT_ANGULAR';
-//|| paint.type == 'GRADIENT_DIAMOND';
+const isGradientPaint = (paint: GradientPaint): boolean => (GRADIENT_TYPES.indexOf(paint.type) >= 0 ? true : false);
 
-const getGradientsFromStyles = (paintStyles: PaintStyle[]): any => {
-    return paintStyles
-        .map((style) => {
-            let stylePaints: GradientPaint[] = [];
-            style.paints.forEach((paint: GradientPaint) => {
-                if (isGradientPaint(paint)) {
-                    stylePaints.push({
-                        ...paint,
-                        gradientStops: paint.gradientStops,
-                        gradientTransform: paint.gradientTransform,
-                    });
-                }
+const mapPaintStyles = (paintStyles: PaintStyle[]): {gradients: any[]; solid: any[]} => {
+    let styles: {gradients: any[]; solid: any[]} = {
+        gradients: [],
+        solid: [],
+    };
+
+    paintStyles.forEach((style: PaintStyle) => {
+        const gradientPaints: GradientPaint[] = [];
+        const solidPaints: Paint[] = [];
+        style.paints.forEach((paint: Paint) => {
+            const gradientPaint = paint as GradientPaint;
+            if (isGradientPaint(gradientPaint)) {
+                gradientPaints.push({
+                    ...gradientPaint,
+                    gradientStops: gradientPaint.gradientStops,
+                    gradientTransform: gradientPaint.gradientTransform,
+                });
+            } else {
+                solidPaints.push(paint);
+            }
+        });
+        gradientPaints.length &&
+            styles.gradients.push({id: style.id, name: style.name, type: style.type, paints: gradientPaints});
+        solidPaints.length &&
+            styles.solid.push({
+                id: style.id,
+                name: style.name,
+                type: style.type,
+                paints: solidPaints,
             });
-            if (stylePaints.length) return {id: style.id, name: style.name, paints: stylePaints};
-        })
-        .filter((value) => !!value);
+    });
+
+    return styles;
 };
 
 const createGradientStyle = (colorName: string, gradient: GradientPaint) => {
@@ -42,4 +59,4 @@ const createGradientStyle = (colorName: string, gradient: GradientPaint) => {
     return style;
 };
 
-export {isNodeGradientCompatible, getGradientsFromStyles, createGradientStyle};
+export {isNodeGradientCompatible, mapPaintStyles, createGradientStyle};

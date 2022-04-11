@@ -1,10 +1,9 @@
 import * as React from 'react';
-import {useRef} from 'react';
+import {useRef, useState, useCallback} from 'react';
 import {
     IconButton,
     Tooltip,
     Input,
-    Stack,
     Button,
     Drawer,
     DrawerBody,
@@ -18,9 +17,13 @@ import {
     chakra,
     Badge,
     Text,
+    Stack,
 } from '@chakra-ui/react';
 import {MdAdd} from 'react-icons/md';
 import GradientSwatch from '../Swatchs/GradientSwatch';
+import GradientTypeTabs from '../GradientTypeTabs';
+import {GRADIENT_TYPES} from '../../../lib/constants';
+import {GradientPaintType} from '../../../typings';
 
 type Props = {
     paintStyle?: PaintStyle;
@@ -32,10 +35,10 @@ const CreateStyleDrawerButton: React.FC<Props> = ({gradientPaint, paintStyle, on
     const {isOpen, onOpen, onClose} = useDisclosure();
     const btnRef = useRef<HTMLButtonElement>();
 
-    const handleOnCreate = React.useCallback(
-        (name: string) => {
+    const handleOnCreate = useCallback(
+        (name: string, paint: GradientPaint) => {
             if (!name || name.length == 0) return;
-            onCreate(name, gradientPaint);
+            onCreate(name, paint);
             onClose();
         },
         [onCreate, onClose, gradientPaint]
@@ -78,7 +81,7 @@ type CreateStyleDrawerProps = {
     paintStyle?: PaintStyle;
     gradientPaint: GradientPaint;
     btnRef: React.RefObject<HTMLButtonElement>;
-    onCreate: (name: string) => void;
+    onCreate: (name: string, gradientPaint: GradientPaint) => void;
 } & Omit<DrawerProps, 'children'>;
 
 export const CreateStyleDrawer: React.FC<CreateStyleDrawerProps> = ({
@@ -90,12 +93,24 @@ export const CreateStyleDrawer: React.FC<CreateStyleDrawerProps> = ({
     btnRef,
     ...rest
 }) => {
-    const [name, setName] = React.useState('');
+    const [name, setName] = useState('');
+    const [gradientType, setGradientType] = useState<GradientPaintType>(GRADIENT_TYPES[0]);
     const inputRef = useRef<HTMLInputElement>();
 
-    const handleChange = React.useCallback((event) => setName(event.target.value), [name]);
+    const newPaint = React.useMemo(() => {
+        return {...gradientPaint, type: gradientType};
+    }, [gradientPaint, gradientType]);
 
-    const handleCreate = React.useCallback((event) => onCreate(name), [name]);
+    const onChangeName = useCallback((event) => setName(event.target.value), [name]);
+
+    const onChangeType = useCallback(
+        (type: GradientPaintType): void => {
+            setGradientType(type);
+        },
+        [gradientType]
+    );
+
+    const handleCreate = useCallback((event) => onCreate(name, newPaint), [name, newPaint]);
 
     return (
         <Drawer
@@ -108,19 +123,19 @@ export const CreateStyleDrawer: React.FC<CreateStyleDrawerProps> = ({
         >
             <DrawerOverlay />
             <DrawerContent textAlign="left">
-                <DrawerHeader p={4} fontSize="md">
+                <DrawerHeader p={4}>
                     <DrawerCloseButton boxSize={8} size="sm" rounded="sm" _focus={{boxShadow: 'none'}} />
                     <Stack flex="1" spacing={2} alignItems="flex-start">
-                        {gradientPaint && gradientPaint.gradientTransform && (
+                        {newPaint && newPaint.gradientTransform && (
                             <GradientSwatch
-                                defaultPaint={gradientPaint}
+                                defaultPaint={newPaint}
                                 boxSize={12}
                                 pointerEvents="none"
                                 size="lg"
                                 shadow="md"
                             />
                         )}
-                        <Text>Create style</Text>
+                        <Text>New gradient style</Text>
                         {/* <Text fontSize="sm" color="gray.400">
                                 Create a gradient style to reuse all over the project:
                             </Text> */}
@@ -133,27 +148,29 @@ export const CreateStyleDrawer: React.FC<CreateStyleDrawerProps> = ({
                         onSubmit={(event) => {
                             event.stopPropagation();
                             event.preventDefault();
-                            onCreate(name);
+                            onCreate(name, newPaint);
                         }}
                     >
+                        <GradientTypeTabs value={gradientType} onChange={onChangeType} mb={3} />
+
                         <Input
                             ref={inputRef}
                             placeholder="Insert style name"
-                            onChange={handleChange}
+                            onChange={onChangeName}
                             w="100%"
                             size="sm"
                             variant="filled"
                             mb={4}
                         />
-                        <chakra.div>
-                            <Badge colorScheme="green" size="sm" fontSize="xs" mb={1}>
+                        <Stack direction="row" alignItems="flex-start" justifyContent="flex-start">
+                            <Badge colorScheme="green" size="sm" fontSize="xs" px={1}>
                                 Tip
                             </Badge>
                             <Text fontSize="xs" color="gray.400">
                                 Use slash naming convention to name and organize gradient styles (E.g.
                                 Gradients/Primary).
                             </Text>
-                        </chakra.div>
+                        </Stack>
                     </chakra.form>
                     <Stack direction="row" w="full">
                         {/* <Button onClick={onClose} w="100%" size="sm">
@@ -166,7 +183,7 @@ export const CreateStyleDrawer: React.FC<CreateStyleDrawerProps> = ({
                             w="100%"
                             size="sm"
                         >
-                            Save style
+                            Create style
                         </Button>
                     </Stack>
                 </DrawerBody>

@@ -13,7 +13,7 @@ type Props = {
     editingPaint?: GradientPaint;
     isChanged?: boolean;
     onSelect: (paintStyle: PaintStyle) => void;
-    onCreate?: (name: string) => void;
+    onCreate?: (name: string, gradientPaint?: GradientPaint) => void;
 } & Omit<BoxProps, 'onSelect' | 'children'>;
 
 const GradientStylesPicker: FC<Props> = ({

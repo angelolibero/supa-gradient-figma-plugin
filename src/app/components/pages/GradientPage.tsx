@@ -3,7 +3,7 @@ import {useState, useCallback, useEffect} from 'react';
 import {Stack, Badge, Button, Flex, Divider, Box} from '@chakra-ui/react';
 import BaseSlider from '../shared/Sliders/BaseSlider';
 import {GradientPaintType, GradientStops, Preferences} from '../../typings';
-import {DEFAULT_ANGLE, DEFAULT_PREFERENCES} from '../../lib/constants';
+import {DEFAULT_ANGLE, DEFAULT_GRADIENT_PAINT, DEFAULT_PREFERENCES} from '../../lib/constants';
 import {filterGradientCompatibleNodes, isExternalStyleId} from '../../lib/figma';
 import GradientPreview from '../shared/GradientPreview';
 import GradientStylesPicker from '../shared/GradientStylesPicker/GradientStylesPicker';
@@ -15,6 +15,8 @@ import GradientPicker from '../shared/GradientPicker';
 import {degreesFromTransform, rotateTransform, scaleTransform, transformToMatrix} from '../../lib/matrix';
 import {decomposeTSR} from 'transformation-matrix';
 import {MdArrowUpward, MdCircle} from 'react-icons/md';
+import {RecoilRoot, atom, selector, useRecoilState, useRecoilValue} from 'recoil';
+import stylesState from '../../atoms/styles';
 
 const GradientPage = ({}) => {
     const [gradientAngle, setGradientAngle] = useState<number>(DEFAULT_ANGLE);
@@ -29,6 +31,7 @@ const GradientPage = ({}) => {
     const [selectionGradient, setSelectionGradient] = useState<GradientPaint>();
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const scrollElementRef = React.useRef();
+    const [styles, setStyles] = useRecoilState(stylesState);
 
     const hasExternalStyle = React.useMemo(() => {
         return currentPaintStyle && isExternalStyleId(currentPaintStyle.id);
@@ -59,7 +62,9 @@ const GradientPage = ({}) => {
     }, [isSelection, hasGradientInSelection, currentPaintStyle, selection, selectionGradient]);
 
     const editingPaint = React.useMemo(() => {
-        return {gradientTransform, gradientStops, type: gradientType};
+        return gradientTransform && gradientStops
+            ? {gradientTransform, gradientStops, type: gradientType}
+            : DEFAULT_GRADIENT_PAINT;
     }, [gradientStops, gradientTransform, gradientType]);
 
     //Apply current gradient to selected layers
@@ -95,7 +100,7 @@ const GradientPage = ({}) => {
     );
 
     const updateCurrentPaintStyle = useCallback(() => {
-        let currentPaints = currentPaintStyle.paints as GradientPaint[];
+        let currentPaints = [...currentPaintStyle.paints];
         const _originalPaintStyle = paintStyles.filter((paint) => {
             if (paint.id == currentPaintStyle.id) return paint;
         })[0];
@@ -185,15 +190,18 @@ const GradientPage = ({}) => {
     );
 
     const onCreateStyle = useCallback(
-        (newName: string) => {
+        (newName: string, gradientPaint: GradientPaint) => {
             parent.postMessage(
                 {
                     pluginMessage: {
                         type: 'create-style',
-                        gradientStops,
-                        gradientTransform,
-                        gradientType,
                         name: newName,
+                        gradientPaint: {
+                            gradientStops,
+                            gradientTransform,
+                            // gradientType,
+                            ...gradientPaint,
+                        },
                     },
                 },
                 '*'
@@ -329,8 +337,9 @@ const GradientPage = ({}) => {
                     }
                     break;
                 case 'figma:styles:gradientschange':
-                    const _paintStyles: PaintStyle[] = message.paintStyles.reverse();
-                    checkPaintStylesChanged(_paintStyles);
+                    const gradientsStyles: PaintStyle[] = message.styles.gradients.reverse();
+                    if (message.styles.gradients) checkPaintStylesChanged(gradientsStyles);
+                    setStyles(message.styles);
                     break;
                 case 'figma:preferencesupdate':
                     setPreferences(message.preferences);
@@ -390,7 +399,7 @@ const GradientPage = ({}) => {
                             <Stack h="100%" w="100%" pb={0} spacing={4}>
                                 <Stack spacing={0}>
                                     <GradientTypeTabs
-                                        gradientType={gradientType}
+                                        value={gradientType}
                                         onChange={onChangeType}
                                         transition="all 0.1s"
                                         h={'auto'}

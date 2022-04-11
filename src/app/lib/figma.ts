@@ -1,4 +1,4 @@
-import {getGradientsFromStyles, isNodeGradientCompatible} from './utils';
+import {mapPaintStyles, isNodeGradientCompatible} from './utils';
 import {DEFAULT_WINDOW_SIZE} from './constants';
 
 const isExternalStyleId = (styleId: string | PluginAPI['mixed']) => {
@@ -54,11 +54,12 @@ const updateSelection = () => {
     }
 };
 
-const updateGradientStyles = (postMessage = true): PaintStyle[] => {
-    const gradientPaintStyles = getGradientsFromStyles(figma.getLocalPaintStyles());
-    if (gradientPaintStyles && gradientPaintStyles.length > 11) {
+const updatePaintStyles = (postMessage = true): {gradients: any[]; solid: any[]} => {
+    const styles = mapPaintStyles(figma.getLocalPaintStyles());
+
+    if (styles.gradients && styles.gradients.length > 11) {
         figma.ui.resize(DEFAULT_WINDOW_SIZE.width, 493);
-    } else if (gradientPaintStyles && gradientPaintStyles.length > 5) {
+    } else if (styles.gradients && styles.gradients.length > 5) {
         figma.ui.resize(DEFAULT_WINDOW_SIZE.width, 485);
     } else {
         figma.ui.resize(DEFAULT_WINDOW_SIZE.width, DEFAULT_WINDOW_SIZE.height);
@@ -68,15 +69,15 @@ const updateGradientStyles = (postMessage = true): PaintStyle[] => {
     postMessage &&
         figma.ui.postMessage({
             type: 'figma:styles:gradientschange',
-            message: {paintStyles: gradientPaintStyles},
+            message: {styles},
         });
 
-    return gradientPaintStyles;
+    return styles;
 };
 
 const selectPaintStyleWithId = (id: string) => {
-    const gradientPaintStyles = getGradientsFromStyles(figma.getLocalPaintStyles());
-    const selectedPaintStyle = gradientPaintStyles.filter((value) => value.id && value.id == id)[0];
+    const styles = mapPaintStyles(figma.getLocalPaintStyles());
+    const selectedPaintStyle = styles.gradients.filter((value) => value.id && value.id == id)[0];
 
     figma.ui.postMessage({
         type: 'figma:selectstyle',
@@ -84,10 +85,4 @@ const selectPaintStyleWithId = (id: string) => {
     });
 };
 
-export {
-    isExternalStyleId,
-    filterGradientCompatibleNodes,
-    updateSelection,
-    updateGradientStyles,
-    selectPaintStyleWithId,
-};
+export {isExternalStyleId, filterGradientCompatibleNodes, updateSelection, updatePaintStyles, selectPaintStyleWithId};

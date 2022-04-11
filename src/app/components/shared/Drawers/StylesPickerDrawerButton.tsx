@@ -21,6 +21,8 @@ import {
 } from '@chakra-ui/react';
 import {MdAdd} from 'react-icons/md';
 import StylesIcon from '../../icons/StylesIcon';
+import stylesState from '../../../atoms/styles';
+import {useRecoilState} from 'recoil';
 
 type Props = {
     selectedPaint?: SolidPaint;
@@ -84,6 +86,7 @@ export const StylesPickerDrawer: React.FC<StylesPickerDrawerProps> = ({
     ...rest
 }) => {
     const inputRef = useRef<HTMLInputElement>();
+    const [styles, setStyles] = useRecoilState(stylesState);
 
     const handleSelect = React.useCallback((paint?: SolidPaint) => onSelect(paint), [onSelect]);
 
@@ -98,7 +101,7 @@ export const StylesPickerDrawer: React.FC<StylesPickerDrawerProps> = ({
         >
             <DrawerOverlay />
             <DrawerContent textAlign="left">
-                <DrawerHeader p={4} fontSize="md">
+                <DrawerHeader p={4}>
                     <DrawerCloseButton boxSize={8} size="sm" rounded="sm" _focus={{boxShadow: 'none'}} />
                     <Stack flex="1" spacing={2} alignItems="flex-start">
                         <Text>Select solid style</Text>
@@ -109,12 +112,7 @@ export const StylesPickerDrawer: React.FC<StylesPickerDrawerProps> = ({
                 </DrawerHeader>
                 <DrawerBody px={4} pb={4} pt={0}>
                     <chakra.div m={0} pb={4}>
-                        <Badge colorScheme="green" size="sm" fontSize="xs" mb={1}>
-                            Selec
-                        </Badge>
-                        <Text fontSize="xs" color="gray.400">
-                            Use slash naming convention to name and organize gradient styles (E.g. Gradients/Primary).
-                        </Text>
+                        {styles && JSON.stringify(styles.solid)}
                     </chakra.div>
                 </DrawerBody>
             </DrawerContent>

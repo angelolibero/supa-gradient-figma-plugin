@@ -1,4 +1,4 @@
-import {Preferences} from '../typings';
+import {GradientPaintType, Preferences} from '../typings';
 
 //Styles pooling timeout
 export const DEFAULT_POOLING_TIMEOUT = 1000 * 5; //10 second
@@ -13,12 +13,7 @@ export const DEFAULT_WINDOW_SIZE = {
 export const DEFAULT_PREFERENCES: Preferences = {liveUpdates: true, updateStyles: true};
 
 //Gradient
-export const LINEAR_TRANFORMS = {
-    //Affine tranformations for common angles
-    // custom: [
-    //     [Math.cos(angle), Math.sin(angle), 0],
-    //     [-Math.sin(angle), Math.cos(angle), 0],
-    // ],
+export const DEFAULT_AFFINE_TRANSFORMS = {
     '0': [
         [0, -1, 1],
         [1, 0, 0.5],
@@ -56,13 +51,20 @@ export const LINEAR_TRANFORMS = {
         [1, 0, 0.5],
     ],
 };
+export const GRADIENT_TYPES: GradientPaintType[] = ['GRADIENT_LINEAR', 'GRADIENT_RADIAL', 'GRADIENT_ANGULAR'];
 export const DEFAULT_ANGLE = 180;
 export const DEFAULT_GRADIENT_STOPS = [
     {position: 0.0, color: {r: 238 / 255, g: 241 / 255, b: 11 / 255, a: 1}},
     {position: 0.5, color: {r: 215 / 255, g: 128 / 255, b: 37 / 255, a: 1}},
     {position: 1.0, color: {r: 126 / 255, g: 32 / 255, b: 207 / 255, a: 1}},
 ];
-export const DEFAULT_GRADIENT_TRANSFORM = LINEAR_TRANFORMS[DEFAULT_ANGLE] as Transform;
+export const DEFAULT_GRADIENT_TRANSFORM = DEFAULT_AFFINE_TRANSFORMS[DEFAULT_ANGLE] as Transform;
+export const DEFAULT_GRADIENT_PAINT: GradientPaint = {
+    gradientTransform: DEFAULT_GRADIENT_TRANSFORM,
+    gradientStops: DEFAULT_GRADIENT_STOPS,
+    type: GRADIENT_TYPES[0],
+};
+
 export const CHECKERED_GRADIENT_PROPS = {
     backgroundColor: 'gray.200',
     bgGradient:
@@ -114,7 +116,7 @@ export const EVENTS = {
 };
 
 //Figma
-export const DEFAULT_FIGMA_NOTIFICATION_TIMEOUT = 1000;
+export const DEFAULT_FIGMA_NOTIFICATION_TIMEOUT = 2000;
 
 //Debounce options
 export const DEFAULT_DEBOUNCE_TIMEOUT = 150;

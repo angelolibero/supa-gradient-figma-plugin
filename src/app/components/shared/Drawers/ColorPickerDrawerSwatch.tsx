@@ -135,7 +135,7 @@ export const ColorPickerDrawer: React.FC<ColorPickerDrawerProps> = ({
             <DrawerOverlay />
             <DrawerContent textAlign="left">
                 <DrawerCloseButton boxSize={8} size="sm" rounded="sm" _focus={{boxShadow: 'none'}} />
-                <DrawerHeader px={4} pt={4} pb={0} fontSize="md">
+                <DrawerHeader px={4} pt={4} pb={0}>
                     <Stack direction="row" flex="1" spacing={2} alignItems="flex-start">
                         <Text>Edit color</Text>
                     </Stack>

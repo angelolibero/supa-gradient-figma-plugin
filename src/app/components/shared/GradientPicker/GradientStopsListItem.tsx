@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {FC, useCallback} from 'react';
-import {Stack, IconButton, BoxProps, Center, Box} from '@chakra-ui/react';
+import {Stack, IconButton, BoxProps, Center, Box, Flex} from '@chakra-ui/react';
 import ColorPickerDrawerSwatch from '../Drawers/ColorPickerDrawerSwatch';
 import StylesPickerDrawerButton from '../Drawers/StylesPickerDrawerButton';
 import {AiOutlineMinus} from 'react-icons/ai';
@@ -47,7 +47,7 @@ const GradientStopsListItem: FC<GradientStopsListItemProps> = ({
             direction="row"
             position="relative"
             alignItems="center"
-            spacing={'2px'}
+            spacing={2}
             rounded="xs"
             py={1}
             px={4}
@@ -63,21 +63,23 @@ const GradientStopsListItem: FC<GradientStopsListItemProps> = ({
                 showInput
                 showOpacity
             />
-            <StylesPickerDrawerButton onSelect={(paint) => {}} />
-            <IconButton
-                icon={<AiOutlineMinus />}
-                onClick={handleOnDelete}
-                size="sm"
-                fontSize="sm"
-                aria-label="delete color"
-                bgColor="white"
-                boxSize={7}
-                maxW={7}
-                minW={7}
-                _focus={{
-                    shadow: 'none',
-                }}
-            />
+            <Flex>
+                <StylesPickerDrawerButton onSelect={(paint) => {}} />
+                <IconButton
+                    icon={<AiOutlineMinus />}
+                    onClick={handleOnDelete}
+                    size="sm"
+                    fontSize="sm"
+                    aria-label="delete color"
+                    bgColor="white"
+                    boxSize={7}
+                    maxW={7}
+                    minW={7}
+                    _focus={{
+                        shadow: 'none',
+                    }}
+                />
+            </Flex>
         </Stack>
     );
 };

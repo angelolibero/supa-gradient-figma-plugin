@@ -10,6 +10,7 @@ const styles: Styles = {
             transitionDuration: 'normal',
             lineHeight: 'base',
             overflowX: 'hidden',
+            fontSize: 'xs',
         },
         '*::placeholder': {
             color: mode('gray.400', 'whiteAlpha.400')(props),

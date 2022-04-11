@@ -1,14 +1,15 @@
 import * as React from 'react';
-import {FC} from 'react';
+import {FC, useState} from 'react';
 import {Stack, Button, StackProps, useMultiStyleConfig} from '@chakra-ui/react';
 import {GradientPaintType} from '../../typings';
+import {GRADIENT_TYPES} from '../../lib/constants';
 
 type Props = {
-    gradientType?: GradientPaintType;
+    value?: GradientPaintType;
     onChange?: (gradientType: GradientPaintType) => void;
 } & Omit<StackProps, 'onChange' | 'children'>;
 
-const GradientTypeTabs: FC<Props> = ({gradientType, onChange, ...rest}) => {
+const GradientTypeTabs: FC<Props> = ({value: gradientType, onChange, ...rest}) => {
     const styles = useMultiStyleConfig('ButtonTabs', rest);
 
     return (

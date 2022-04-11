@@ -98,8 +98,8 @@ const paletteFromGradientStops = (gradientStops: GradientStops, alpha: boolean =
 //     const scale_factor = Math.sqrt(transform[0][0] * transform[1][1] - transform[1][0] * transform[0][1]);
 //     const angleDeg = parseInt('' + (Math.acos(transform[0][0] / scale_factor) * 180) / Math.PI); // For degrees
 
-//     for (const angle in LINEAR_TRANFORMS) {
-//         if (LINEAR_TRANFORMS[angle] && JSON.stringify(transform) == JSON.stringify(LINEAR_TRANFORMS[angle])) {
+//     for (const angle in DEFAULT_AFFINE_TRANSFORMS) {
+//         if (DEFAULT_AFFINE_TRANSFORMS[angle] && JSON.stringify(transform) == JSON.stringify(DEFAULT_AFFINE_TRANSFORMS[angle])) {
 //             return parseInt(angle);
 //         }
 //     }
@@ -107,7 +107,7 @@ const paletteFromGradientStops = (gradientStops: GradientStops, alpha: boolean =
 // };
 
 // const gradientAngleToTransform = (angle: number): Transform => {
-//     return LINEAR_TRANFORMS[angle];
+//     return DEFAULT_AFFINE_TRANSFORMS[angle];
 // };
 
 const bgColorsFromStops = (gradientStops: GradientStops) => {
