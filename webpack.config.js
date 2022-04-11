@@ -1,6 +1,7 @@
 const HtmlWebpackInlineSourcePlugin = require('html-webpack-inline-source-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const path = require('path')
+var webpack = require('webpack');
 
 module.exports = (env, argv) => ({
   mode: argv.mode === 'production' ? 'production' : 'development',
@@ -39,7 +40,8 @@ module.exports = (env, argv) => ({
             }
           }
         ]
-      }
+      },
+
     ],
   },
 
@@ -60,5 +62,13 @@ module.exports = (env, argv) => ({
       chunks: ['ui'],
     }),
     new HtmlWebpackInlineSourcePlugin(),
+    new webpack.DefinePlugin({
+      'process.env.APP_VERSION': JSON.stringify(
+        process.env.npm_package_version,
+      ),
+      'process.env.APP_NAME': JSON.stringify(
+        process.env.npm_package_name,
+      )
+    }),
   ],
 })

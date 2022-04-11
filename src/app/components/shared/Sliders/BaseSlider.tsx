@@ -24,7 +24,7 @@ type Props = {
     showHalfMarks?: boolean;
     markDivisionCount?: number;
     icon?: React.ReactElement;
-    symbol?: string;
+    symbol?: React.ReactElement;
     onChange: (angle: number) => void;
 } & SliderProps;
 
@@ -32,11 +32,11 @@ const BaseSlider: React.FC<Props> = ({
     value,
     defaultValue = 180,
     min = 0,
-    max = 345,
+    max = 360,
     step = 45,
     markDivisionCount = 2,
     icon: iconComponent,
-    symbol,
+    symbol: symbolComponent,
     onChange,
     ...rest
 }) => {
@@ -100,7 +100,11 @@ const BaseSlider: React.FC<Props> = ({
                     variant="unstyled"
                     sx={styles.input}
                 />
-                {symbol && <Box>{symbol}</Box>}
+                {symbolComponent && (
+                    <Flex alignItems="center" alignSelf="center" mr={1}>
+                        {React.cloneElement(symbolComponent)}
+                    </Flex>
+                )}
             </Box>
 
             <Stack w="100%" spacing={0}>

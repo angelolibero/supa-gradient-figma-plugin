@@ -8,7 +8,7 @@ const isExternalStyleId = (styleId: string | PluginAPI['mixed']) => {
 const filterGradientCompatibleNodes = (selection: any[]) => {
     const gradientCompatibleNodes =
         selection &&
-        selection.map((node, index) => {
+        selection.map((node) => {
             if (node && isNodeGradientCompatible(node) && node.fills[0] && node.fills[0].gradientStops) {
                 const gradientNode = node;
                 return {

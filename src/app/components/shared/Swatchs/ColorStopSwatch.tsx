@@ -63,10 +63,10 @@ const ColorStopSwatch = forwardRef<ColorStopSwatchProps, 'input'>(
         const borderStyle = {
             py: 0,
             border: '1px solid',
-            borderColor: 'white',
+            borderColor: isActive ? 'gray.200' : 'white',
             pl: 0,
             _hover: {
-                borderColor: 'gray.200',
+                borderColor: isActive ? 'gray.200' : 'gray.200',
                 rounded: 'sm',
             },
         };
@@ -87,7 +87,6 @@ const ColorStopSwatch = forwardRef<ColorStopSwatchProps, 'input'>(
                         {...checkbox}
                         bgColor={`#${hexColor}`}
                         boxSize={7}
-                        shadow={isActive ? 'outline' : 'none'}
                         rounded="xs"
                         outline="none"
                         border="6px solid"

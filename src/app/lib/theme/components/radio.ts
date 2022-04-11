@@ -1,4 +1,4 @@
-import {mode, PartsStyleObject} from '@chakra-ui/theme-tools';
+import {mode} from '@chakra-ui/theme-tools';
 
 const baseStyle = (props) => ({
     control: {

@@ -34,8 +34,8 @@ const ImportButton: FC<Props> = ({gradientPaint, onImport, ...rest}) => {
                         <Box
                             boxSize="14px"
                             pos="absolute"
-                            right="-3px"
-                            top={-1}
+                            left="-3px"
+                            bottom={-1}
                             rounded="full"
                             bgGradient={importBgGradient}
                             border="2px solid"

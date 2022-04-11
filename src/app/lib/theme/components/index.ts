@@ -6,7 +6,6 @@ import drawer from './drawer';
 import heading from './heading';
 import input from './input';
 import link from './link';
-import menu from './menu';
 import pinInput from './pinInput';
 import radio from './radio';
 import select from './select';

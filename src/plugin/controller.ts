@@ -1,7 +1,13 @@
 import {updateSelection, updateGradientStyles, selectPaintStyleWithId, isExternalStyleId} from '../app/lib/figma';
 import {isNodeGradientCompatible, createGradientStyle} from '../app/lib/utils';
 import {GradientPaintType, GradientStops} from '../app/typings';
-import {DEFAULT_PREFERENCES, DEFAULT_POOLING_TIMEOUT, DEFAULT_FIGMA_NOTIFICATION_TIMEOUT} from '../app/lib/constants';
+import {
+    DEFAULT_PREFERENCES,
+    DEFAULT_POOLING_TIMEOUT,
+    DEFAULT_FIGMA_NOTIFICATION_TIMEOUT,
+    LINEAR_TRANFORMS,
+    DEFAULT_GRADIENT_STOPS,
+} from '../app/lib/constants';
 
 var poolingInterval;
 
@@ -18,6 +24,7 @@ figma.ui.onmessage = (msg) => {
             const gradientType: GradientPaintType = msg.gradientType;
             const gradientTransform: Transform = msg.gradientTransform;
             const paintStyleId: string = msg.paintStyleId;
+            const updateStyles = msg.updateStyles;
             const style = paintStyleId && (figma.getStyleById(paintStyleId) as PaintStyle);
 
             const updatedGradientPaint = {
@@ -32,12 +39,13 @@ figma.ui.onmessage = (msg) => {
             } else if (paintStyleId && style) {
                 // Selected style is local, updated it and
                 console.log('apply-gradient', gradientStops, gradientType, paintStyleId);
-                style.paints = [updatedGradientPaint];
+                //Load preferences and send to UI
+                if (updateStyles) style.paints = [updatedGradientPaint];
             }
 
             // Fill node with updated paint
             figma.currentPage.selection &&
-                figma.currentPage.selection.forEach((node) => {
+                figma.currentPage.selection.forEach((node: RectangleNode) => {
                     if (node && gradientStops && isNodeGradientCompatible(node)) {
                         if (style) node.fillStyleId = style.id;
                         if (!style || (style && style.id != node.fillStyleId)) node.fills = [updatedGradientPaint];
@@ -70,8 +78,8 @@ figma.ui.onmessage = (msg) => {
         // Create new paint style and updates styles
         case 'create-style':
             const newStyle = createGradientStyle(msg.name, {
-                gradientStops: msg.gradientStops,
-                gradientTransform: msg.gradientTransform,
+                gradientStops: msg.gradientStops || DEFAULT_GRADIENT_STOPS,
+                gradientTransform: msg.gradientTransform || LINEAR_TRANFORMS[0],
                 type: msg.gradientType,
             });
             figma.notify('New gradient style created', {timeout: msg.timeout || DEFAULT_FIGMA_NOTIFICATION_TIMEOUT});
@@ -110,6 +118,9 @@ figma.on('currentpagechange', () => {
 });
 
 figma.on('run' as any, () => {
+    // @ts-ignore
+    console.info('Welcome to ' + process.env.APP_NAME + ' v' + process.env.APP_VERSION + '');
+
     //Initialization
     updateSelection();
     updateGradientStyles();

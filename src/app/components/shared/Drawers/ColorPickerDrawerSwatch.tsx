@@ -37,6 +37,7 @@ const ColorPickerDrawerSwatch: React.FC<ColorPickerDrawerSwatchProps> = ({
     defaultIsOpen,
     onSelect,
     onChange,
+    isActive,
     onClose: _onClose,
     ...rest
 }) => {
@@ -64,6 +65,7 @@ const ColorPickerDrawerSwatch: React.FC<ColorPickerDrawerSwatchProps> = ({
                 onChange={handleOnChange}
                 id={id}
                 ref={swatchRef}
+                isActive={isActive}
                 {...rest}
             />
             <ColorPickerDrawer

@@ -7,7 +7,6 @@ import {
     Drawer,
     DrawerBody,
     DrawerContent,
-    DrawerFooter,
     DrawerHeader,
     DrawerOverlay,
     DrawerProps,
@@ -16,10 +15,12 @@ import {
     ButtonProps,
     FormControl,
     FormLabel,
+    Divider,
     Switch,
 } from '@chakra-ui/react';
 import {Preferences} from '../../../typings';
 import {MdArrowDownward, MdMoreVert} from 'react-icons/md';
+import Logo from '../Logo';
 
 type Props = {
     DEFAULT_PREFERENCES: Preferences;
@@ -133,6 +134,18 @@ export const PreferencesDrawer: FC<PreferencesDrawerProps> = ({
                                     onChange={() => onUpdate('updateStyles', !preferences.updateStyles)}
                                 />
                             </FormControl>
+                            <Divider />
+                            <Stack direction="row">
+                                <Logo />
+                                <Stack spacing={0}>
+                                    <Text fontSize="xs" fontWeight="medium">
+                                        {!!process.env.APP_NAME && process.env.APP_NAME.replace('-', ' ')}
+                                    </Text>
+                                    <Text fontSize="xs" color="gray.400">
+                                        {!!process.env.APP_VERSION && process.env.APP_VERSION}
+                                    </Text>
+                                </Stack>
+                            </Stack>
                         </Stack>
                     </Stack>
                 </DrawerBody>

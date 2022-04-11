@@ -1,5 +1,4 @@
 import {GradientPaintType, GradientStops, Palette} from '../typings';
-import {LINEAR_TRANFORMS} from './constants';
 
 const hexRegex = /^#([0-9a-f]{3}){1,2}$/i;
 const rgbRegex =

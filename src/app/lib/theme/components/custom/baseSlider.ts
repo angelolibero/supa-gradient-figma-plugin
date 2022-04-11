@@ -1,8 +1,8 @@
-import {mode, PartsStyleFunction} from '@chakra-ui/theme-tools';
+import {PartsStyleFunction} from '@chakra-ui/theme-tools';
 
 const parts = ['container', 'thumb', 'inputWrap', 'input', 'inputIcon'];
 
-const baseStyle: PartsStyleFunction = (props) => ({
+const baseStyle: PartsStyleFunction = () => ({
     container: {
         borderRadius: 'sm',
         bgColor: 'white',

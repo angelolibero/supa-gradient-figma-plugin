@@ -1,7 +1,6 @@
 import {MutableRefObject, useState} from 'react';
 import {StopCoordiantes, GradientStop} from '../../typings';
-import {DEFAULT_DEBOUNCE_TIMEOUT} from '../constants';
-import useDebounce from './useDebounce';
+
 import useDragging from './useDragging';
 
 /**

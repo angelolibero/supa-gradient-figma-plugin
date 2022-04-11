@@ -15,7 +15,7 @@ import {
     useMultiStyleConfig,
     Input,
 } from '@chakra-ui/react';
-import {MdArrowUpward, MdCircle, MdOutlineDragHandle} from 'react-icons/md';
+import {MdCircle, MdOutlineDragHandle} from 'react-icons/md';
 import {DEFAULT_DEBOUNCE_TIMEOUT} from '../../../lib/constants';
 import useDebouncedCallback from '../../../lib/hooks/useDebounceCallback';
 

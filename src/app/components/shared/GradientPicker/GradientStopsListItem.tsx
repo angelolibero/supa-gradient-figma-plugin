@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {FC, useCallback} from 'react';
-import {Stack, IconButton, BoxProps, Circle, Box} from '@chakra-ui/react';
+import {Stack, IconButton, BoxProps, Center, Box} from '@chakra-ui/react';
 import ColorPickerDrawerSwatch from '../Drawers/ColorPickerDrawerSwatch';
 import StylesPickerDrawerButton from '../Drawers/StylesPickerDrawerButton';
 import {AiOutlineMinus} from 'react-icons/ai';
@@ -47,23 +47,22 @@ const GradientStopsListItem: FC<GradientStopsListItemProps> = ({
             direction="row"
             position="relative"
             alignItems="center"
-            spacing={'1px'}
+            spacing={'2px'}
             rounded="xs"
             py={1}
             px={4}
             key={index}
         >
-            <Box
-                pos="absolute"
-                left={isActive ? 0 : -2}
-                opacity={isActive ? 1 : 0}
-                bg="primary.500"
-                transition="all 0.1s"
-                minH={6}
-            >
-                <Box rounded="sm" w="3px" minH={6} />
-            </Box>
-            <ColorPickerDrawerSwatch color={stop.color} onChange={handleOnChangePickerColor} showInput showOpacity />
+            <Center pos="absolute" left={isActive ? 2 : 2} opacity={isActive ? 1 : 0} minH={6}>
+                <Box rounded="sm" boxSize="4px" bg="primary.500" transition="all 0.1s" />
+            </Center>
+            <ColorPickerDrawerSwatch
+                color={stop.color}
+                isActive={isActive}
+                onChange={handleOnChangePickerColor}
+                showInput
+                showOpacity
+            />
             <StylesPickerDrawerButton onSelect={(paint) => {}} />
             <IconButton
                 icon={<AiOutlineMinus />}

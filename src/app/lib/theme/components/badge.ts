@@ -19,7 +19,7 @@ const variantSolid: SystemStyleFunction = (props) => {
 };
 
 const variantSubtle: SystemStyleFunction = (props) => {
-    const {colorScheme: c, theme} = props;
+    const {colorScheme: c} = props;
     return {
         bg: mode(`${c}.100`, `${c}.800`)(props),
         color: mode(`${c}.700`, `${c}.200`)(props),

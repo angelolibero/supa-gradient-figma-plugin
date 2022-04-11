@@ -111,13 +111,15 @@ export const CreateStyleDrawer: React.FC<CreateStyleDrawerProps> = ({
                 <DrawerHeader p={4} fontSize="md">
                     <DrawerCloseButton boxSize={8} size="sm" rounded="sm" _focus={{boxShadow: 'none'}} />
                     <Stack flex="1" spacing={2} alignItems="flex-start">
-                        <GradientSwatch
-                            defaultPaint={gradientPaint}
-                            boxSize={12}
-                            pointerEvents="none"
-                            size="lg"
-                            shadow="md"
-                        />
+                        {gradientPaint && gradientPaint.gradientTransform && (
+                            <GradientSwatch
+                                defaultPaint={gradientPaint}
+                                boxSize={12}
+                                pointerEvents="none"
+                                size="lg"
+                                shadow="md"
+                            />
+                        )}
                         <Text>Create style</Text>
                         {/* <Text fontSize="sm" color="gray.400">
                                 Create a gradient style to reuse all over the project:
