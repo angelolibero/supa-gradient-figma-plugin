@@ -30,9 +30,19 @@ const GradientPreview: React.FC<Props> = ({
 
     const isGradient = React.useMemo(() => !!gradientStops, [gradientStops]);
 
+    const styleName = useMemo(() => {
+        const splittedName = name && name.split('/');
+        return name && splittedName[splittedName.length - 1];
+    }, [name]);
+
+    // const stylePath = useMemo(() => {
+    //     const splittedName = name && name.split('/');
+    //     splittedName.splice(splittedName.length - 1, 1);
+    //     return splittedName;
+    // }, [name]);
+
     const bgGradient = useMemo(() => {
         const bgGradientColors = bgColorsFromStops(gradientStops);
-
         return bgGradientFromColors(bgGradientColors, angle, gradientType);
     }, [gradientStops, gradientType, gradientScale, angle]);
 
@@ -45,7 +55,7 @@ const GradientPreview: React.FC<Props> = ({
             setValue(
                 `background-image: ${bgGradient};` +
                     (gradientType == 'GRADIENT_RADIAL'
-                        ? `background-size: ${100 / gradientScale}% ${100 / gradientScale}%`
+                        ? `background-size: ${100 / gradientScale}% ${100 / gradientScale}%;`
                         : '') +
                     'background-position: center center;'
             );
@@ -83,19 +93,25 @@ const GradientPreview: React.FC<Props> = ({
                 >
                     <Flex w="100%" alignItems="flex-start">
                         {/* <SlideFade in={!!name} offsetY={-2}> */}
-                        {name && (
-                            <Badge
-                                size="sm"
-                                fontSize="xs"
+                        {styleName && (
+                            <Flex
                                 borderRadius="sm"
                                 bgColor={'blackAlpha.500'}
                                 color="gray.100"
-                                maxW="150px"
-                                h={5}
-                                lineHeight={5}
+                                flexDir="column"
+                                py={1}
+                                px={2}
+                                textAlign="left"
+                                alignItems="flex-start"
+                                lineHeight={3}
                             >
-                                <Text isTruncated>{name}</Text>
-                            </Badge>
+                                {/* <Text fontSize="xxs" isTruncated>
+                                    {stylePath.join('/')}/
+                                </Text> */}
+                                <Text isTruncated maxW="150px">
+                                    {styleName}
+                                </Text>
+                            </Flex>
                         )}
                         {/* </SlideFade> */}
                     </Flex>
@@ -109,6 +125,7 @@ const GradientPreview: React.FC<Props> = ({
                             onClick={onCopy}
                             size="sm"
                             fontSize="sm"
+                            colorScheme="blackAlpha"
                             bgColor={hasCopied ? 'primary.500' : 'blackAlpha.500'}
                             color="gray.100"
                             _hover={{

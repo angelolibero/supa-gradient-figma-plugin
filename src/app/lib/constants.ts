@@ -10,7 +10,7 @@ export const DEFAULT_WINDOW_SIZE = {
 };
 
 //Preferences
-export const DEFAULT_PREFERENCES: Preferences = {liveUpdates: true, updateStyles: true};
+export const DEFAULT_PREFERENCES: Preferences = {liveUpdates: true};
 
 //Gradient
 export const DEFAULT_AFFINE_TRANSFORMS = {

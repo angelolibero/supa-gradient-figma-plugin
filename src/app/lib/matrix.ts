@@ -29,6 +29,14 @@ export const compareObjects = (a: any, b: any) => {
     return JSON.stringify(a) == JSON.stringify(b);
 };
 
+export const compareGradients = (a: GradientPaint, b: GradientPaint) => {
+    return (
+        JSON.stringify(a.gradientTransform) == JSON.stringify(b.gradientTransform) &&
+        JSON.stringify(a.gradientStops) == JSON.stringify(b.gradientStops) &&
+        JSON.stringify(a.type) == JSON.stringify(b.type)
+    );
+};
+
 export const decomposeTransform = (transform: Transform) => {
     const decomposed = decomposeTSR(transformToMatrix(transform));
     return decomposed;

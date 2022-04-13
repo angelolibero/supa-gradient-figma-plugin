@@ -41,7 +41,7 @@ const mapPaintStyles = (paintStyles: PaintStyle[]): {gradients: any[]; solid: an
                 id: style.id,
                 name: style.name,
                 type: style.type,
-                paints: solidPaints,
+                paints: [...solidPaints],
             });
     });
 

@@ -24,7 +24,7 @@ figma.ui.onmessage = (msg) => {
             const gradientType: GradientPaintType = msg.gradientType;
             const gradientTransform: Transform = msg.gradientTransform;
             const paintStyleId: string = msg.paintStyleId;
-            const updateStyles = msg.updateStyles;
+            //  const updateStyles = msg.updateStyles;
             const style = paintStyleId && (figma.getStyleById(paintStyleId) as PaintStyle);
 
             const updatedGradientPaint = {
@@ -40,7 +40,8 @@ figma.ui.onmessage = (msg) => {
                 // Selected style is local, updated it and
                 console.log('apply-gradient', gradientStops, gradientType, paintStyleId);
                 //Load preferences and send to UI
-                if (updateStyles) style.paints = [updatedGradientPaint];
+                //  if (updateStyles)
+                style.paints = [updatedGradientPaint];
             }
 
             // Fill node with updated paint

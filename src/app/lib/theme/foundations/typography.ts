@@ -56,6 +56,7 @@ const typography = {
         'button-primary': '1rem',
         'button-secondary': '0.875rem',
         //Chakra UI sizes
+        xxs: '0.55rem',
         xs: '0.688rem',
         sm: '0.875rem',
         md: '1rem',

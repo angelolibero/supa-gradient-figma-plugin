@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {FC, useMemo, useCallback} from 'react';
-import {RadioGroup, Center, BoxProps, SimpleGrid, Box, Text, GridItem} from '@chakra-ui/react';
+import {RadioGroup, Center, BoxProps, Stack, Box, Text, GridItem} from '@chakra-ui/react';
 import GradientSwatch from '../Swatchs/GradientSwatch';
 import CreateStyleDrawerButton from '../Drawers/CreateStyleDrawerButton';
 import {bgColorsFromStops, bgGradientFromColors} from '../../../lib/colors';
@@ -25,15 +25,9 @@ const GradientStylesPicker: FC<Props> = ({
     onCreate,
     ...rest
 }) => {
-    const height = useMemo(() => {
-        // if (styles && styles.length > 11) return '88px';
-        if (styles && styles.length > 5) return '56px';
-        else return '48px';
-    }, [styles]);
-
     const currentGradientPaint = useMemo(() => {
         return (selectedStyle && (selectedStyle.paints[0] as GradientPaint)) || editingPaint;
-    }, [selectedStyle, styles]);
+    }, [selectedStyle, styles, editingPaint]);
 
     const newBgGradient = useMemo(() => {
         if (currentGradientPaint && currentGradientPaint.gradientTransform) {
@@ -44,7 +38,7 @@ const GradientStylesPicker: FC<Props> = ({
                 editingPaint.type
             );
         }
-    }, [selectedStyle, currentGradientPaint]);
+    }, [selectedStyle, currentGradientPaint, editingPaint]);
 
     //Select PaintGradient from a global PaintStyle
     const handleOnSelect = useCallback(
@@ -70,11 +64,10 @@ const GradientStylesPicker: FC<Props> = ({
                 overflow="scroll"
                 w="100%"
                 maxW="100%"
-                height={height}
                 value={selectedStyle ? selectedStyle.id : undefined}
-                transition="all 0.5s"
+                transition="all 0.25s"
             >
-                <SimpleGrid columns={6} w="100%" height="auto" alignItems="center" spacing={2} p={3}>
+                <Stack direction="row" spacing={3} w="fit-content" height="auto" alignItems="center" p={3}>
                     {editingPaint && (
                         <Center pos="relative">
                             <CreateStyleDrawerButton
@@ -101,9 +94,11 @@ const GradientStylesPicker: FC<Props> = ({
                         </Center>
                     )}
                     {editingPaint && editingPaint.gradientTransform && styles.length == 0 && (
-                        <GridItem colSpan={5} textAlign="left">
-                            <Text fontSize="xs">Create gradient style</Text>
-                        </GridItem>
+                        <Box>
+                            <Text fontSize="xs" textAlign="left">
+                                Create gradient style
+                            </Text>
+                        </Box>
                     )}
                     {styles &&
                         styles.map((style, index) => {
@@ -117,7 +112,7 @@ const GradientStylesPicker: FC<Props> = ({
                                 />
                             );
                         })}
-                </SimpleGrid>
+                </Stack>
             </RadioGroup>
         </Box>
     );

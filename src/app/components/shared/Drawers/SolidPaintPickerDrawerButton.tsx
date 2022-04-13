@@ -89,7 +89,6 @@ export const SolidPaintPickerDrawer: React.FC<SolidPaintPickerDrawerProps> = ({
     const [styles] = useRecoilState(stylesState);
 
     const handleSelect = React.useCallback((paint?: PaintStyle) => onSelect(paint), [onSelect]);
-
     return (
         <Drawer
             isOpen={isOpen}

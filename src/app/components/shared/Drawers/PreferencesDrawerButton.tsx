@@ -130,7 +130,7 @@ export const PreferencesDrawer: FC<PreferencesDrawerProps> = ({
                                     onChange={() => onUpdate('liveUpdates', !preferences.liveUpdates)}
                                 />
                             </FormControl>
-                            <FormControl d="flex" w="full" alignItems="center" justifyContent="center">
+                            {/* <FormControl d="flex" w="full" alignItems="center" justifyContent="center">
                                 <FormLabel htmlFor="update-styles" fontSize="xs" mx={0} mr={3} w="100%">
                                     Update color styles
                                 </FormLabel>
@@ -141,7 +141,7 @@ export const PreferencesDrawer: FC<PreferencesDrawerProps> = ({
                                     id="update-styles"
                                     onChange={() => onUpdate('updateStyles', !preferences.updateStyles)}
                                 />
-                            </FormControl>
+                            </FormControl> */}
                             <Divider />
                             <Flex color="gray.400" d="flex">
                                 Made with ❤️ by

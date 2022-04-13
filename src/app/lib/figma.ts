@@ -9,7 +9,8 @@ const filterGradientCompatibleNodes = (selection: any[]) => {
     const gradientCompatibleNodes =
         selection &&
         selection.map((node) => {
-            if (node && isNodeGradientCompatible(node) && node.fills[0] && node.fills[0].gradientStops) {
+            if (node && isNodeGradientCompatible(node) && node.fills[0]) {
+                //&& node.fills[0].gradientStops
                 const gradientNode = node;
                 return {
                     id: node.id,
@@ -56,16 +57,11 @@ const updateSelection = () => {
 
 const updatePaintStyles = (postMessage = true): {gradients: any[]; solid: any[]} => {
     const styles = mapPaintStyles(figma.getLocalPaintStyles());
-
-    // if (styles.gradients && styles.gradients.length > 11) {
-    //     figma.ui.resize(DEFAULT_WINDOW_SIZE.width, 493);
-    // } else
-
-    if (styles.gradients && styles.gradients.length > 5) {
-        figma.ui.resize(DEFAULT_WINDOW_SIZE.width, 475);
-    } else {
-        figma.ui.resize(DEFAULT_WINDOW_SIZE.width, DEFAULT_WINDOW_SIZE.height);
-    }
+    // if (styles.gradients && styles.gradients.length > 5) {
+    figma.ui.resize(DEFAULT_WINDOW_SIZE.width, DEFAULT_WINDOW_SIZE.height);
+    // } else {
+    //     figma.ui.resize(DEFAULT_WINDOW_SIZE.width, DEFAULT_WINDOW_SIZE.height);
+    // }
 
     //Gradient styles change event
     postMessage &&

@@ -1,9 +1,10 @@
 import * as React from 'react';
-import {FC, useRef} from 'react';
+import {FC, useRef, useMemo} from 'react';
 import {CHECKERED_GRADIENT_PROPS} from '../../../lib/constants';
 import useStopDragging from '../../../lib/hooks/useStopDragging';
 import {chakra, BoxProps} from '@chakra-ui/react';
 import {GradientStop} from '../../../typings';
+import {colorStringToRGBAArray} from '../../../lib/colors';
 
 type Props = {
     stop: GradientStop;
@@ -14,7 +15,7 @@ type Props = {
     onDragStart?: (id: number) => {};
     onDragEnd?: (id: number) => {};
     onEdit?: (stop: GradientStop) => {};
-} & BoxProps;
+} & Omit<BoxProps, 'color'>;
 
 const ColorStop: FC<Props> = ({stop, color, limits, onPosChange, onDeleteColor, onDragStart, onDragEnd, onEdit}) => {
     const colorStopRef = useRef();
@@ -30,8 +31,13 @@ const ColorStop: FC<Props> = ({stop, color, limits, onPosChange, onDeleteColor, 
 
     const {position, isActive} = stop;
 
+    const rgbColor = useMemo(() => {
+        const rgba = colorStringToRGBAArray(color);
+        return `rgb(${rgba[0]}, ${rgba[1]}, ${rgba[2]})`;
+    }, [color]);
+
     return (
-        <div
+        <chakra.div
             className={isActive ? 'cs active' : 'cs'}
             ref={colorStopRef}
             style={{left: position}}
@@ -40,8 +46,11 @@ const ColorStop: FC<Props> = ({stop, color, limits, onPosChange, onDeleteColor, 
             onClick={() => onEdit(stop)}
         >
             <chakra.div {...CHECKERED_GRADIENT_PROPS} bgSize="6px 6px" bgPos="0px 0px, 3px 3px" pos="absolute" />
-            <div style={{backgroundColor: color}} />
-        </div>
+            <chakra.div d="flex">
+                <chakra.span style={{backgroundColor: color}} w="50%" h="100%" />
+                <chakra.span style={{backgroundColor: rgbColor}} w="50%" h="100%" />
+            </chakra.div>
+        </chakra.div>
     );
 };
 

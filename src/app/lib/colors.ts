@@ -115,7 +115,7 @@ const bgColorsFromStops = (gradientStops: GradientStops) => {
         return gradientStops.map((value, index) => {
             return `rgba(${parseInt('' + value.color.r * 255)},${parseInt('' + value.color.g * 255)},${parseInt(
                 '' + value.color.b * 255
-            )},${value.color.a}) ${parseFloat('' + value.position * 100)}%`;
+            )},${value.color.a.toFixed(2)}) ${parseFloat('' + value.position * 100).toFixed(0)}%`;
         });
     }
     return [];
@@ -125,7 +125,7 @@ const bgGradientFromColors = (gradientColors, angle = 0, type: GradientPaintType
     let gradientTypeMethod;
     switch (type) {
         case 'GRADIENT_LINEAR':
-            gradientTypeMethod = 'linear';
+            gradientTypeMethod = 'linear-gradient';
             return `${gradientTypeMethod}(${angle}deg, ${gradientColors})`;
         case 'GRADIENT_ANGULAR':
             gradientTypeMethod = 'conic-gradient';
@@ -141,7 +141,7 @@ const bgGradientFromColors = (gradientColors, angle = 0, type: GradientPaintType
     //AGGIUNGERE GESTIONE GRADIENTI MULTIPLI
 };
 
-const colorStringToRGBAObject = (color) => {
+const colorStringToRGBAArray = (color) => {
     return color.match(/\d+/g);
 };
 
@@ -157,7 +157,7 @@ export {
     //gradientAngleToTransform,
     bgColorsFromStops,
     bgGradientFromColors,
-    colorStringToRGBAObject,
+    colorStringToRGBAArray,
     hexRegex,
     rgbRegex,
     rgbaRegex,

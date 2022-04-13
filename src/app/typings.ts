@@ -6,7 +6,7 @@ export type Palette = ColorStop[];
 
 export type Preferences = {
     liveUpdates?: boolean;
-    updateStyles?: boolean;
+    //  updateStyles?: boolean;
 };
 
 export type AxisType = {
