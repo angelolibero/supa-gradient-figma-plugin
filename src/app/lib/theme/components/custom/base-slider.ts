@@ -62,6 +62,7 @@ const baseStyle: PartsStyleFunction = () => ({
         cursor: 'pointer',
         shadow: 'none',
         boxSizing: 'content-box',
+        zIndex: 0,
     },
 });
 

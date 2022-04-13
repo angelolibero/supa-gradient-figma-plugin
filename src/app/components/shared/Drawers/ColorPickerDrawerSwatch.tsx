@@ -1,7 +1,6 @@
 import * as React from 'react';
 import {useRef, useCallback} from 'react';
 import {
-    Tooltip,
     Stack,
     Drawer,
     DrawerBody,
@@ -14,6 +13,7 @@ import {
     chakra,
     useControllableState,
     Text,
+    Box,
 } from '@chakra-ui/react';
 import ColorStopSwatch, {ColorStopSwatchProps} from '../Swatchs/ColorStopSwatch';
 import {FocusableElement} from '@chakra-ui/utils';
@@ -58,7 +58,7 @@ const ColorPickerDrawerSwatch: React.FC<ColorPickerDrawerSwatchProps> = ({
     }, [_onClose, onClose]);
 
     return (
-        <>
+        <Box w="100%">
             <ColorStopSwatch
                 color={color}
                 onClick={onOpen}
@@ -76,7 +76,7 @@ const ColorPickerDrawerSwatch: React.FC<ColorPickerDrawerSwatchProps> = ({
                 onChange={handleOnChange}
                 swatchRef={swatchRef}
             />
-        </>
+        </Box>
     );
 };
 
@@ -141,7 +141,8 @@ export const ColorPickerDrawer: React.FC<ColorPickerDrawerProps> = ({
                     </Stack>
                 </DrawerHeader>
                 <DrawerBody px={4} py={4}>
-                    <chakra.form
+                    <Stack spacing={3}>
+                        {/* <chakra.form
                         m={0}
                         pb={4}
                         onSubmit={(event) => {
@@ -149,10 +150,11 @@ export const ColorPickerDrawer: React.FC<ColorPickerDrawerProps> = ({
                             event.preventDefault();
                             //   onClose();
                         }}
-                    >
+                    > */}
                         <RgbaColorPicker color={pickerColor} onChange={handleOnChange} />
-                    </chakra.form>
-                    <ColorStopSwatch color={debouncedColor} showInput showOpacity onChange={handleOnChange} />
+                        {/* </chakra.form> */}
+                        <ColorStopSwatch color={debouncedColor} showInput showOpacity onChange={handleOnChange} />
+                    </Stack>
                 </DrawerBody>
             </DrawerContent>
         </Drawer>

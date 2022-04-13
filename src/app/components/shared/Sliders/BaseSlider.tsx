@@ -101,14 +101,23 @@ const BaseSlider: React.FC<Props> = ({
                     sx={styles.input}
                 />
                 {symbolComponent && (
-                    <Flex alignItems="center" alignSelf="center" mr={1}>
+                    <Flex alignItems="center" alignSelf="center">
                         {React.cloneElement(symbolComponent)}
                     </Flex>
                 )}
             </Box>
 
             <Stack w="100%" spacing={0}>
-                <Slider value={sliderValue} min={min} max={max} step={step} onChange={handleOnChange} h={9} {...rest}>
+                <Slider
+                    value={sliderValue}
+                    min={min}
+                    max={max}
+                    step={step}
+                    onChange={handleOnChange}
+                    px={1}
+                    h={9}
+                    {...rest}
+                >
                     {stopMarks &&
                         stopMarks.map((value, index) => {
                             return (

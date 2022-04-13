@@ -1,10 +1,11 @@
 import * as React from 'react';
+import {FC} from 'react';
 import {StackProps, Stack, List, ListIcon, ListItem, Text} from '@chakra-ui/react';
 import {MdCheckCircle} from 'react-icons/md';
 
 type Props = {} & StackProps;
 
-const Empty: React.FC<Props> = ({...rest}) => {
+const Empty: FC<Props> = ({...rest}) => {
     return (
         <Stack
             py={4}
@@ -12,9 +13,9 @@ const Empty: React.FC<Props> = ({...rest}) => {
             spacing={3}
             alignItems="center"
             justifyContent="center"
-            {...rest}
             bgColor={'gray.100'}
             boxSize={'100%'}
+            {...rest}
         >
             <Stack>
                 <Text textAlign="center" fontSize="sm" fontWeight="semibold">

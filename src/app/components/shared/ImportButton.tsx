@@ -14,7 +14,11 @@ const ImportButton: FC<Props> = ({gradientPaint, onImport, ...rest}) => {
     const importBgGradient = useMemo(() => {
         if (!gradientPaint) return;
         const bgGradientColors = bgColorsFromStops(gradientPaint.gradientStops);
-        return bgGradientFromColors(bgGradientColors, degreesFromTransform(gradientPaint.gradientTransform));
+        return bgGradientFromColors(
+            bgGradientColors,
+            degreesFromTransform(gradientPaint.gradientTransform),
+            gradientPaint.type
+        );
     }, [gradientPaint]);
 
     return (

@@ -17,10 +17,10 @@ import {
     FormLabel,
     Divider,
     Switch,
-    Link,
+    Flex,
 } from '@chakra-ui/react';
 import {Preferences} from '../../../typings';
-import {MdArrowDownward, MdMoreVert} from 'react-icons/md';
+import {MdMoreVert} from 'react-icons/md';
 import Logo from '../Logo';
 
 type Props = {
@@ -116,9 +116,9 @@ export const PreferencesDrawer: FC<PreferencesDrawerProps> = ({
                             <FormControl d="flex" w="full" alignItems="center" justifyContent="center">
                                 <FormLabel htmlFor="live-mode" mx={0} mr={3} w="100%">
                                     <Stack flex="1" spacing={0}>
-                                        <Text fontSize="xs">Live updates</Text>
+                                        <Text fontSize="xs">Live editing</Text>
                                         <Text fontSize="xs" color="gray.400">
-                                            Update selection automatically or manually
+                                            Edit styles and fills with real-time preview.
                                         </Text>
                                     </Stack>
                                 </FormLabel>
@@ -130,7 +130,6 @@ export const PreferencesDrawer: FC<PreferencesDrawerProps> = ({
                                     onChange={() => onUpdate('liveUpdates', !preferences.liveUpdates)}
                                 />
                             </FormControl>
-                            {/* updateStyles */}
                             <FormControl d="flex" w="full" alignItems="center" justifyContent="center">
                                 <FormLabel htmlFor="update-styles" fontSize="xs" mx={0} mr={3} w="100%">
                                     Update color styles
@@ -144,18 +143,15 @@ export const PreferencesDrawer: FC<PreferencesDrawerProps> = ({
                                 />
                             </FormControl>
                             <Divider />
-
-                            <Text color="gray.400">Made with ❤️ by: @angelolibero</Text>
+                            <Flex color="gray.400" d="flex">
+                                Made with ❤️ by
+                                <Text color="gray.600" ml={1}>
+                                    @angelolibero
+                                </Text>
+                            </Flex>
                         </Stack>
                     </Stack>
                 </DrawerBody>
-                {/* <DrawerFooter p={4}>
-                    <Stack direction="row" w="full" spacing={2}>
-                        <Button w="full" size="sm" onClick={onClose}>
-                            Close
-                        </Button>
-                    </Stack>
-                </DrawerFooter> */}
             </DrawerContent>
         </Drawer>
     );

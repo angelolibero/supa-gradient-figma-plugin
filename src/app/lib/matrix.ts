@@ -25,6 +25,10 @@ export const scaleTransform = (scaleX: number, scaleY: number): Transform => {
     return transform;
 };
 
+export const compareObjects = (a: any, b: any) => {
+    return JSON.stringify(a) == JSON.stringify(b);
+};
+
 export const decomposeTransform = (transform: Transform) => {
     const decomposed = decomposeTSR(transformToMatrix(transform));
     return decomposed;

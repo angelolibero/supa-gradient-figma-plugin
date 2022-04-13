@@ -57,10 +57,12 @@ const updateSelection = () => {
 const updatePaintStyles = (postMessage = true): {gradients: any[]; solid: any[]} => {
     const styles = mapPaintStyles(figma.getLocalPaintStyles());
 
-    if (styles.gradients && styles.gradients.length > 11) {
-        figma.ui.resize(DEFAULT_WINDOW_SIZE.width, 493);
-    } else if (styles.gradients && styles.gradients.length > 5) {
-        figma.ui.resize(DEFAULT_WINDOW_SIZE.width, 485);
+    // if (styles.gradients && styles.gradients.length > 11) {
+    //     figma.ui.resize(DEFAULT_WINDOW_SIZE.width, 493);
+    // } else
+
+    if (styles.gradients && styles.gradients.length > 5) {
+        figma.ui.resize(DEFAULT_WINDOW_SIZE.width, 475);
     } else {
         figma.ui.resize(DEFAULT_WINDOW_SIZE.width, DEFAULT_WINDOW_SIZE.height);
     }

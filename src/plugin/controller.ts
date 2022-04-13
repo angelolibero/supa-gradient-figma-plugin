@@ -12,7 +12,7 @@ import {
 var poolingInterval;
 
 figma.showUI(__html__);
-figma.ui.resize(240, 437); //initial window size
+figma.ui.resize(240, 430); //initial window size
 
 figma.ui.onmessage = (msg) => {
     switch (msg.type) {

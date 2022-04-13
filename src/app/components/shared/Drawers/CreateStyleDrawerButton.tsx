@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {useRef, useState, useCallback} from 'react';
+import {useRef, useState, useCallback, useEffect, useMemo} from 'react';
 import {
     IconButton,
     Tooltip,
@@ -18,6 +18,8 @@ import {
     Badge,
     Text,
     Stack,
+    Box,
+    useControllableState,
 } from '@chakra-ui/react';
 import {MdAdd} from 'react-icons/md';
 import GradientSwatch from '../Swatchs/GradientSwatch';
@@ -26,12 +28,12 @@ import {GRADIENT_TYPES} from '../../../lib/constants';
 import {GradientPaintType} from '../../../typings';
 
 type Props = {
-    paintStyle?: PaintStyle;
+    style?: PaintStyle;
     gradientPaint: GradientPaint;
     onCreate: (name: string, gradientPaint: GradientPaint) => void;
 } & Omit<ButtonProps, 'onCreate'>;
 
-const CreateStyleDrawerButton: React.FC<Props> = ({gradientPaint, paintStyle, onCreate, ...rest}) => {
+const CreateStyleDrawerButton: React.FC<Props> = ({gradientPaint, style, onCreate, ...rest}) => {
     const {isOpen, onOpen, onClose} = useDisclosure();
     const btnRef = useRef<HTMLButtonElement>();
 
@@ -47,26 +49,28 @@ const CreateStyleDrawerButton: React.FC<Props> = ({gradientPaint, paintStyle, on
     return (
         <>
             <Tooltip label="Create style" openDelay={300} placement="bottom-start">
-                <IconButton
-                    icon={<MdAdd />}
-                    aria-label="Create style"
-                    boxSize={7}
-                    minW={7}
-                    maxW={7}
-                    p={0}
-                    rounded="full"
-                    border="1px dashed"
-                    borderColor="gray.200"
-                    bgColor="white"
-                    fontSize="md"
-                    ref={btnRef}
-                    onClick={onOpen}
-                    {...rest}
-                />
+                <Box>
+                    <IconButton
+                        icon={<MdAdd />}
+                        aria-label="Create style"
+                        boxSize={7}
+                        minW={7}
+                        maxW={7}
+                        p={0}
+                        rounded="full"
+                        border="1px dashed"
+                        borderColor="gray.200"
+                        bgColor="white"
+                        fontSize="md"
+                        ref={btnRef}
+                        onClick={onOpen}
+                        {...rest}
+                    />
+                </Box>
             </Tooltip>
             <CreateStyleDrawer
                 gradientPaint={gradientPaint}
-                paintStyle={paintStyle}
+                style={style}
                 isOpen={isOpen}
                 placement="bottom"
                 onClose={onClose}
@@ -78,7 +82,7 @@ const CreateStyleDrawerButton: React.FC<Props> = ({gradientPaint, paintStyle, on
 };
 
 type CreateStyleDrawerProps = {
-    paintStyle?: PaintStyle;
+    style?: PaintStyle;
     gradientPaint: GradientPaint;
     btnRef: React.RefObject<HTMLButtonElement>;
     onCreate: (name: string, gradientPaint: GradientPaint) => void;
@@ -86,7 +90,7 @@ type CreateStyleDrawerProps = {
 
 export const CreateStyleDrawer: React.FC<CreateStyleDrawerProps> = ({
     gradientPaint,
-    paintStyle,
+    style,
     isOpen,
     onClose,
     onCreate,
@@ -94,10 +98,12 @@ export const CreateStyleDrawer: React.FC<CreateStyleDrawerProps> = ({
     ...rest
 }) => {
     const [name, setName] = useState('');
-    const [gradientType, setGradientType] = useState<GradientPaintType>(GRADIENT_TYPES[0]);
+    const [gradientType, setGradientType] = useControllableState<GradientPaintType>({
+        defaultValue: gradientPaint ? gradientPaint.type : GRADIENT_TYPES[0],
+    });
     const inputRef = useRef<HTMLInputElement>();
 
-    const newPaint = React.useMemo(() => {
+    const newPaint = useMemo(() => {
         return {...gradientPaint, type: gradientType};
     }, [gradientPaint, gradientType]);
 
@@ -111,6 +117,10 @@ export const CreateStyleDrawer: React.FC<CreateStyleDrawerProps> = ({
     );
 
     const handleCreate = useCallback((event) => onCreate(name, newPaint), [name, newPaint]);
+
+    useEffect(() => {
+        gradientPaint && setGradientType(gradientPaint.type);
+    }, [gradientPaint]);
 
     return (
         <Drawer

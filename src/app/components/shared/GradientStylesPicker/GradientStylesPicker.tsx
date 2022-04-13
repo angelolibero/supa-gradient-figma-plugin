@@ -4,21 +4,21 @@ import {RadioGroup, Center, BoxProps, SimpleGrid, Box, Text, GridItem} from '@ch
 import GradientSwatch from '../Swatchs/GradientSwatch';
 import CreateStyleDrawerButton from '../Drawers/CreateStyleDrawerButton';
 import {bgColorsFromStops, bgGradientFromColors} from '../../../lib/colors';
-import PaintStylesSkeleton from './GradientStylesSkeleton';
+import GradientStylesSkeleton from './GradientStylesSkeleton';
 import {degreesFromTransform} from '../../../lib/matrix';
 
 type Props = {
-    paintStyles: PaintStyle[];
-    currentPaintStyle?: PaintStyle;
+    styles: PaintStyle[];
+    selectedStyle?: PaintStyle;
     editingPaint?: GradientPaint;
     isChanged?: boolean;
-    onSelect: (paintStyle: PaintStyle) => void;
+    onSelect: (style: PaintStyle) => void;
     onCreate?: (name: string, gradientPaint?: GradientPaint) => void;
 } & Omit<BoxProps, 'onSelect' | 'children'>;
 
 const GradientStylesPicker: FC<Props> = ({
-    paintStyles,
-    currentPaintStyle,
+    styles,
+    selectedStyle,
     editingPaint,
     isChanged,
     onSelect,
@@ -26,33 +26,37 @@ const GradientStylesPicker: FC<Props> = ({
     ...rest
 }) => {
     const height = useMemo(() => {
-        if (paintStyles && paintStyles.length > 11) return '88px';
-        else if (paintStyles && paintStyles.length > 5) return '80px';
+        // if (styles && styles.length > 11) return '88px';
+        if (styles && styles.length > 5) return '56px';
         else return '48px';
-    }, [paintStyles]);
+    }, [styles]);
 
     const currentGradientPaint = useMemo(() => {
-        return (currentPaintStyle && (currentPaintStyle.paints[0] as GradientPaint)) || editingPaint;
-    }, [currentPaintStyle, paintStyles]);
+        return (selectedStyle && (selectedStyle.paints[0] as GradientPaint)) || editingPaint;
+    }, [selectedStyle, styles]);
 
     const newBgGradient = useMemo(() => {
         if (currentGradientPaint && currentGradientPaint.gradientTransform) {
             const bgGradientColors = bgColorsFromStops(currentGradientPaint.gradientStops);
-            return bgGradientFromColors(bgGradientColors, degreesFromTransform(currentGradientPaint.gradientTransform));
+            return bgGradientFromColors(
+                bgGradientColors,
+                degreesFromTransform(currentGradientPaint.gradientTransform),
+                editingPaint.type
+            );
         }
-    }, [currentPaintStyle, currentGradientPaint]);
+    }, [selectedStyle, currentGradientPaint]);
 
     //Select PaintGradient from a global PaintStyle
     const handleOnSelect = useCallback(
         (paintStyle: PaintStyle) => {
-            if (currentPaintStyle && currentPaintStyle.id == paintStyle.id) return;
+            if (selectedStyle && selectedStyle.id == paintStyle.id) return;
             onSelect(paintStyle);
         },
-        [onSelect, currentPaintStyle, paintStyles]
+        [onSelect, selectedStyle, styles]
     );
 
-    return !paintStyles ? (
-        <PaintStylesSkeleton />
+    return !styles ? (
+        <GradientStylesSkeleton />
     ) : (
         <Box
             w="100%"
@@ -67,15 +71,14 @@ const GradientStylesPicker: FC<Props> = ({
                 w="100%"
                 maxW="100%"
                 height={height}
-                value={currentPaintStyle ? currentPaintStyle.id : undefined}
+                value={selectedStyle ? selectedStyle.id : undefined}
                 transition="all 0.5s"
             >
                 <SimpleGrid columns={6} w="100%" height="auto" alignItems="center" spacing={2} p={3}>
                     {editingPaint && (
                         <Center pos="relative">
                             <CreateStyleDrawerButton
-                                paintStyle={currentPaintStyle}
-                                // || ({paints: [gradientPaint]} as any
+                                style={selectedStyle}
                                 gradientPaint={currentGradientPaint || editingPaint}
                                 onCreate={onCreate}
                                 boxSize={6}
@@ -97,20 +100,20 @@ const GradientStylesPicker: FC<Props> = ({
                             )}
                         </Center>
                     )}
-                    {editingPaint && editingPaint.gradientTransform && paintStyles.length == 0 && (
+                    {editingPaint && editingPaint.gradientTransform && styles.length == 0 && (
                         <GridItem colSpan={5} textAlign="left">
-                            <Text fontSize="xs">Create first gradient style</Text>
+                            <Text fontSize="xs">Create gradient style</Text>
                         </GridItem>
                     )}
-                    {paintStyles &&
-                        paintStyles.map((paintStyle, index) => {
+                    {styles &&
+                        styles.map((style, index) => {
                             return (
                                 <GradientSwatch
-                                    paintStyle={paintStyle}
+                                    style={style}
                                     key={index}
                                     onSelect={handleOnSelect}
-                                    isActive={currentPaintStyle && paintStyle.id == currentPaintStyle.id}
-                                    //    showReset={isChanged && currentPaintStyle && paintStyle.id == currentPaintStyle.id}
+                                    isActive={selectedStyle && style.id == selectedStyle.id}
+                                    //    showReset={isChanged && selectedStyle && paintStyle.id == selectedStyle.id}
                                 />
                             );
                         })}

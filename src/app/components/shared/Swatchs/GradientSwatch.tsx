@@ -3,29 +3,27 @@ import {useMemo, useCallback} from 'react';
 import {Tooltip, Center, RadioProps, Box, useRadio} from '@chakra-ui/react';
 import {bgColorsFromStops, bgGradientFromColors} from '../../../lib/colors';
 import {CHECKERED_GRADIENT_PROPS} from '../../../lib/constants';
-//import {MdRefresh} from 'react-icons/md';
 import {degreesFromTransform} from '../../../lib/matrix';
 
 type Props = {
-    paintStyle?: PaintStyle;
+    style?: PaintStyle;
     defaultPaint?: GradientPaint;
     isActive?: boolean;
-    // showReset?: boolean;
-    onSelect?: (paintStyle: PaintStyle) => void;
+    onSelect?: (style: PaintStyle) => void;
 } & Omit<RadioProps, 'onSelect'>;
 
-const GradientSwatch: React.FC<Props> = ({paintStyle, defaultPaint, isActive, size, onSelect, ...rest}) => {
+const GradientSwatch: React.FC<Props> = ({style, defaultPaint, isActive, size, onSelect, ...rest}) => {
     const {getInputProps, getCheckboxProps} = useRadio({
-        value: paintStyle ? paintStyle.id : 'custom',
-        name: paintStyle && paintStyle.name,
+        value: style ? style.id : 'custom',
+        name: style && style.name,
         ...rest,
     });
     const input = getInputProps();
     const checkbox = getCheckboxProps();
 
     const currentPaint = useMemo(() => {
-        return defaultPaint ? defaultPaint : paintStyle && (paintStyle.paints[0] as GradientPaint);
-    }, [defaultPaint, paintStyle]);
+        return defaultPaint ? defaultPaint : style && (style.paints[0] as GradientPaint);
+    }, [defaultPaint, style]);
 
     const bgGradient = useMemo(() => {
         const bgGradientColors = bgColorsFromStops(currentPaint.gradientStops);
@@ -34,9 +32,9 @@ const GradientSwatch: React.FC<Props> = ({paintStyle, defaultPaint, isActive, si
     }, [currentPaint]);
 
     const handleSelectStyle = useCallback(() => {
-        paintStyle && console.log('handleSelectStyle', paintStyle.paints[0]);
-        onSelect && onSelect(paintStyle);
-    }, [paintStyle, onSelect]);
+        style && console.log('handleSelectStyle', style.paints[0]);
+        onSelect && onSelect(style);
+    }, [style, onSelect]);
 
     const onPressEnter = useCallback(
         (e) => {
@@ -51,9 +49,9 @@ const GradientSwatch: React.FC<Props> = ({paintStyle, defaultPaint, isActive, si
     return (
         <Box>
             <Tooltip
-                label={paintStyle && paintStyle.name}
+                label={style && style.name}
                 openDelay={300}
-                isDisabled={!paintStyle || !(paintStyle && paintStyle.id)}
+                isDisabled={!style || !(style && style.id)}
                 offset={[0, -1]}
             >
                 <Center>
@@ -83,26 +81,6 @@ const GradientSwatch: React.FC<Props> = ({paintStyle, defaultPaint, isActive, si
                             {...rest}
                             {...checkbox}
                         />
-                        {/* // show reset original style  */}
-                        {/* {isActive ? 'si' : 'no'} */}
-                        {/* {showReset && (
-                            <Center
-                                boxSize={3}
-                                pos="absolute"
-                                right="-3px"
-                                top={-1}
-                                rounded="full"
-                                border="2px solid"
-                                borderColor="white"
-                                shadow="sm"
-                                fontSize="md"
-                                overflow="hidden"
-                                pointerEvents="none"
-                                bgColor="white"
-                            >
-                                <MdRefresh />
-                            </Center>
-                        )} */}
                     </Box>
                 </Center>
             </Tooltip>

@@ -6,7 +6,7 @@ export const DEFAULT_POOLING_TIMEOUT = 1000 * 5; //10 second
 //Window
 export const DEFAULT_WINDOW_SIZE = {
     width: 240,
-    height: 437,
+    height: 430,
 };
 
 //Preferences
@@ -79,7 +79,7 @@ export const HALF_STOP_WIDTH = STOP_WIDTH / 2;
 export const DEFAULT_STOP_REMOVAL_DROP = 25;
 export const DEFAULT_PALETTE_WIDTH = 208;
 export const DEFAULT_PALETTE_HEIGHT = 4; //Chakra size
-export const DEFAULT_MAX_STOPS = 5;
+export const DEFAULT_MAX_STOPS = 6;
 export const DEFAULT_MIN_STOPS = 2;
 
 //Colors
@@ -119,4 +119,6 @@ export const EVENTS = {
 export const DEFAULT_FIGMA_NOTIFICATION_TIMEOUT = 2000;
 
 //Debounce options
+export const DEFAULT_FAST_DEBOUNCE_TIMEOUT = 50;
 export const DEFAULT_DEBOUNCE_TIMEOUT = 150;
+export const DEFAULT_SLOW_DEBOUNCE_TIMEOUT = 500;
