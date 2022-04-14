@@ -60,7 +60,7 @@
 /* React Colorful picker */
 
 .chakra-portal .react-colorful {
-    width: 208px;
+    /* width: 196px; */
 }
 .chakra-portal .react-colorful__saturation {
     border-radius: 4px 4px 0 0;

@@ -32,7 +32,6 @@ const GradientSwatch: React.FC<Props> = ({style, defaultPaint, isActive, size, o
     }, [currentPaint]);
 
     const handleSelectStyle = useCallback(() => {
-        style && console.log('handleSelectStyle', style.paints[0]);
         onSelect && onSelect(style);
     }, [style, onSelect]);
 
@@ -48,12 +47,7 @@ const GradientSwatch: React.FC<Props> = ({style, defaultPaint, isActive, size, o
 
     return (
         <Box>
-            <Tooltip
-                label={style && style.name}
-                openDelay={300}
-                isDisabled={!style || !(style && style.id)}
-                offset={[0, -1]}
-            >
+            <Tooltip label={style && style.name} openDelay={300} isDisabled={!style || !(style && style.id)}>
                 <Center>
                     <Box
                         as="label"

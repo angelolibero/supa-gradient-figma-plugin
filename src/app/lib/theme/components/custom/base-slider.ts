@@ -58,7 +58,7 @@ const baseStyle: PartsStyleFunction = () => ({
         borderColor: 'white',
         _active: {boxSize: 4},
         position: 'relative',
-        transition: 'all 0.1s',
+        // transition: 'all 0.1s',
         cursor: 'pointer',
         shadow: 'none',
         boxSizing: 'content-box',

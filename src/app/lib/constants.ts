@@ -1,12 +1,12 @@
 import {GradientPaintType, Preferences} from '../typings';
 
 //Styles pooling timeout
-export const DEFAULT_POOLING_TIMEOUT = 1000 * 5; //10 second
+export const DEFAULT_POOLING_TIMEOUT = 1000 * 2; //N second
 
 //Window
 export const DEFAULT_WINDOW_SIZE = {
     width: 240,
-    height: 430,
+    height: 456,
 };
 
 //Preferences
@@ -76,8 +76,8 @@ export const CHECKERED_GRADIENT_PROPS = {
 //GradientStops
 const STOP_WIDTH = 18;
 export const HALF_STOP_WIDTH = STOP_WIDTH / 2;
-export const DEFAULT_STOP_REMOVAL_DROP = 25;
-export const DEFAULT_PALETTE_WIDTH = 208;
+export const DEFAULT_STOP_REMOVAL_DROP = 50;
+export const DEFAULT_PALETTE_WIDTH = 190;
 export const DEFAULT_PALETTE_HEIGHT = 4; //Chakra size
 export const DEFAULT_MAX_STOPS = 6;
 export const DEFAULT_MIN_STOPS = 2;
@@ -120,5 +120,5 @@ export const DEFAULT_FIGMA_NOTIFICATION_TIMEOUT = 2000;
 
 //Debounce options
 export const DEFAULT_FAST_DEBOUNCE_TIMEOUT = 50;
-export const DEFAULT_DEBOUNCE_TIMEOUT = 150;
-export const DEFAULT_SLOW_DEBOUNCE_TIMEOUT = 500;
+export const DEFAULT_DEBOUNCE_TIMEOUT = 100;
+export const DEFAULT_SLOW_DEBOUNCE_TIMEOUT = 250;

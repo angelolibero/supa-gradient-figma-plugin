@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {FC, useState, useMemo} from 'react';
+import {FC, useState, useMemo, useCallback} from 'react';
 import ColorStopsHolder from './ColorStopsHolder';
 import GradientPalette from './GradientPalette';
 import {Box} from '@chakra-ui/react';
@@ -45,6 +45,14 @@ const GradientPicker: FC<Props> = ({
     const [activeColorId, setActiveColorId] = useState(defaultActiveColor.id);
     const [editColorId, setEditColorId] = useState(undefined);
 
+    const paletteWidth = width;
+    const stopsHolderDisabled = palette.length >= maxStops;
+
+    const activePaletteColor = React.useMemo(() => {
+        const {color, opacity} = getPaletteColor(palette, activeColorId);
+        return {currentColor: color, opacity};
+    }, [palette, activeColorId]);
+
     const limits = useMemo(() => {
         const min = -HALF_STOP_WIDTH;
         const max = width - HALF_STOP_WIDTH;
@@ -52,7 +60,7 @@ const GradientPicker: FC<Props> = ({
         return {min, max, drop: stopRemovalDrop};
     }, [width]);
 
-    const handleColorAdd = React.useCallback(
+    const handleColorAdd = useCallback(
         ({position}) => {
             if (palette.length >= maxStops) return;
 
@@ -66,7 +74,7 @@ const GradientPicker: FC<Props> = ({
         [palette, activeColorId]
     );
 
-    const handleColorDelete = React.useCallback(
+    const handleColorDelete = useCallback(
         (id) => {
             if (palette.length <= minStops) return;
 
@@ -79,7 +87,7 @@ const GradientPicker: FC<Props> = ({
         [palette]
     );
 
-    const onStopDragStart = React.useCallback(
+    const onStopDragStart = useCallback(
         (id) => {
             if (id !== activeColorId) {
                 setActiveColorId(id);
@@ -90,7 +98,7 @@ const GradientPicker: FC<Props> = ({
         [activeColorId, palette, onColorStopSelect]
     );
 
-    const handleColorSelect = React.useCallback(
+    const handleColorSelect = useCallback(
         (color, opacity = 1) => {
             const updatedPalette = palette.map((c) => (activeColorId === c.id ? {...c, color, opacity} : c));
             handlePaletteChange(updatedPalette);
@@ -98,7 +106,7 @@ const GradientPicker: FC<Props> = ({
         [palette, activeColorId]
     );
 
-    const handlePaletteChange = React.useCallback(
+    const handlePaletteChange = useCallback(
         (updatedPalette) => {
             const sortedPalette = sortPalette(updatedPalette).map(({position, id, ...rest}) => ({
                 ...rest,
@@ -111,7 +119,7 @@ const GradientPicker: FC<Props> = ({
         [onChange]
     );
 
-    const handleStopPosChange = React.useCallback(
+    const handleStopPosChange = useCallback(
         ({id, position}) => {
             const updatedPalette = palette.map((c) =>
                 id === c.id ? {...c, position: (position + HALF_STOP_WIDTH) / width} : c
@@ -122,20 +130,12 @@ const GradientPicker: FC<Props> = ({
         [palette]
     );
 
-    const handleEditColor = React.useCallback(
+    const handleEditColor = useCallback(
         (editStop) => {
             setEditColorId(editStop.id);
         },
         [setEditColorId]
     );
-
-    const activePaletteColor = React.useMemo(() => {
-        const {color, opacity} = getPaletteColor(palette, activeColorId);
-        return {currentColor: color, opacity};
-    }, [palette, activeColorId]);
-
-    const paletteWidth = width;
-    const stopsHolderDisabled = palette.length >= maxStops;
 
     return (
         <Box d="flex" flexDirection="column" alignItems="center" w="100%" {...rest}>

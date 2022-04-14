@@ -1,9 +1,8 @@
 import * as React from 'react';
 import {FC, useState, useCallback, useEffect, useMemo} from 'react';
-import {Stack, Badge, Button, Flex, Divider, Box, Alert, AlertIcon} from '@chakra-ui/react';
+import {Stack, Badge, Button, Flex, Divider, Box, Alert, AlertIcon, Fade} from '@chakra-ui/react';
 import BaseSlider from '../shared/Sliders/BaseSlider';
 import {GradientPaintType, GradientStops, Preferences} from '../../typings';
-import {DEFAULT_ANGLE, DEFAULT_GRADIENT_PAINT, DEFAULT_PREFERENCES} from '../../lib/constants';
 import {filterGradientCompatibleNodes, isExternalStyleId} from '../../lib/figma';
 import GradientPreview from '../shared/GradientPreview';
 import GradientStylesPicker from '../shared/GradientStylesPicker/GradientStylesPicker';
@@ -12,6 +11,11 @@ import ImportButton from '../shared/ImportButton';
 import Empty from '../shared/Empty';
 import GradientTypeTabs from '../shared/GradientTypeTabs';
 import GradientPicker from '../shared/GradientPicker';
+import {MdArrowUpward, MdCircle} from 'react-icons/md';
+import {useRecoilState} from 'recoil';
+import stylesState from '../../atoms/styles';
+import useDebouncedCallback from '../../lib/hooks/useDebounceCallback';
+import {decomposeTSR} from 'transformation-matrix';
 import {
     compareGradients,
     compareObjects,
@@ -20,11 +24,12 @@ import {
     scaleTransform,
     transformToMatrix,
 } from '../../lib/matrix';
-import {decomposeTSR} from 'transformation-matrix';
-import {MdArrowUpward, MdCircle} from 'react-icons/md';
-import {useRecoilState} from 'recoil';
-import stylesState from '../../atoms/styles';
-import useDebouncedCallback from '../../lib/hooks/useDebounceCallback';
+import {
+    DEFAULT_ANGLE,
+    DEFAULT_DEBOUNCE_TIMEOUT,
+    DEFAULT_GRADIENT_PAINT,
+    DEFAULT_PREFERENCES,
+} from '../../lib/constants';
 
 const GradientPage: FC<any> = ({}) => {
     const [gradientAngle, setGradientAngle] = useState<number>(DEFAULT_ANGLE);
@@ -74,12 +79,6 @@ const GradientPage: FC<any> = ({}) => {
 
     const isSelectionImportable = useMemo(() => {
         const gradient = currentPaintStyle && (currentPaintStyle.paints[0] as GradientPaint);
-        // if (
-        //     selectionGradient &&
-        //     gradientTransform &&
-        //     !compareObjects(gradientTransform, selectionGradient.gradientTransform)
-        // )
-        //     return true;
 
         return (
             isSelection &&
@@ -92,58 +91,50 @@ const GradientPage: FC<any> = ({}) => {
     //METHODS
 
     //Apply current gradient to selected layers
-    const applyGradient = useCallback(
-        (updateSelection = true) => {
-            if (isChanged && currentPaintStyle) {
-                console.log('update currentPaintStyle');
-                updateCurrentPaintStyle();
-            }
-            if (!updateSelection || !gradientTransform || hasExternalStyle) {
-                console.log('external,invalid or not updated gradient');
-                return;
-            } else if (updateSelection) {
-                debouncedApplyPostMessage();
+    const applyGradient = useCallback(() => {
+        if (gradientTransform && !hasExternalStyle) {
+            parent.postMessage(
+                {
+                    pluginMessage: {
+                        type: 'apply-gradient',
+                        gradientStops,
+                        gradientTransform,
+                        gradientType,
+                        paintStyleId: currentPaintStyle && currentPaintStyle.id,
+                    },
+                },
+                '*'
+            );
+        }
+    }, [currentPaintStyle, gradientStops, gradientTransform, gradientType, hasExternalStyle]);
+
+    const debouncedApply = useDebouncedCallback(() => {
+        applyGradient();
+    }, DEFAULT_DEBOUNCE_TIMEOUT);
+
+    const updatePaintInStyles = useCallback(
+        (updatedPaint: GradientPaint) => {
+            if (!currentPaintStyle) return;
+            const updatedPaints = [...currentPaintStyle.paints];
+            updatedPaints.splice(0, 1, {...editingPaint, ...updatedPaint});
+            const _originalPaintStyle: PaintStyle = styles.gradients.find(
+                (paintStyle) => paintStyle.id == currentPaintStyle.id
+            );
+            const updateIndex = styles.gradients.indexOf(_originalPaintStyle);
+            const gradients = [...styles.gradients];
+            gradients.splice(updateIndex, 1, {
+                ..._originalPaintStyle,
+                ...{...currentPaintStyle, paints: updatedPaints},
+            });
+            setStyles({...styles, gradients});
+
+            if (selectionGradient) {
+                console.log('NOOOOOOOOOOOOOOO');
+                setSelectionGradient(updatedPaints[0] as GradientPaint);
             }
         },
-        [currentPaintStyle, gradientStops, gradientTransform, gradientType, isChanged, hasExternalStyle]
+        [currentPaintStyle, styles, editingPaint]
     );
-
-    const debouncedApplyPostMessage = useDebouncedCallback(() => {
-        parent.postMessage(
-            {
-                pluginMessage: {
-                    type: 'apply-gradient',
-                    gradientStops,
-                    gradientTransform,
-                    gradientType,
-                    paintStyleId: currentPaintStyle && currentPaintStyle.id,
-                    //  updateStyles: preferences.updateStyles,
-                },
-            },
-            '*'
-        );
-    }, 0);
-
-    //Updates current paint style
-    const updateCurrentPaintStyle = useCallback(() => {
-        let currentPaints = [...(currentPaintStyle.paints as GradientPaint[])];
-        const _originalPaintStyle = styles.gradients.filter((paint) => {
-            if (paint.id == currentPaintStyle.id) return paint;
-        })[0];
-        const originalPaintStyleIndex = styles.gradients.indexOf(_originalPaintStyle);
-        console.log('updateCurrentPaintStyle');
-
-        const updatedGradientPaint: GradientPaint = {
-            ...currentPaints[0],
-            gradientStops,
-            gradientTransform: rotateTransform(gradientAngle),
-            type: gradientType,
-        };
-        currentPaints.splice(originalPaintStyleIndex, 1, updatedGradientPaint);
-        const updatedStyle = {...currentPaintStyle, paints: currentPaints};
-
-        setCurrentPaintStyle(updatedStyle);
-    }, [currentPaintStyle, gradientTransform, gradientStops, gradientType, gradientAngle, styles]);
 
     //Select a paint style
     const selectPaintStyle = useCallback(
@@ -160,7 +151,7 @@ const GradientPage: FC<any> = ({}) => {
             setGradientType(gradientPaint.type);
             setGradientAngle(angle == 0 && gradientAngle == 360 ? 360 : angle);
             setSelectionGradient(undefined);
-            applyGradient();
+            debouncedApply();
         },
         [styles]
     );
@@ -178,15 +169,6 @@ const GradientPage: FC<any> = ({}) => {
         [selection]
     );
 
-    // //Check for paint styles changes and updates, if any change is found, updates styles
-    // const checkGradientStylesChanged = useCallback(
-    //     (gradientStyles: PaintStyle[]) => {
-    //         const canUpdateStyles = !compareObjects(gradientStyles, styles);
-    //         if (canUpdateStyles) setStyles({...styles, gradients: gradientStyles});
-    //     },
-    //     [styles]
-    // );
-
     //Import a PaintGradient from current selection
     const importSelectionGradient = useCallback(() => {
         const gradientNode = selection && (selection[0] as RectangleNode);
@@ -203,14 +185,15 @@ const GradientPage: FC<any> = ({}) => {
             setCurrentPaintStyle(undefined);
         }
         selectionGradient && selectGradientPaint(selectionGradient);
-    }, [selection, selectionGradient]);
+    }, [selection, selectionGradient, styles]);
 
     //EVENT HANDLERS
 
     const onChangeType = useCallback(
         (type: GradientPaintType): void => {
             setGradientType(type);
-            applyGradient();
+            updatePaintInStyles({type: type} as GradientPaint);
+            debouncedApply();
         },
         [gradientType]
     );
@@ -241,10 +224,11 @@ const GradientPage: FC<any> = ({}) => {
                 const rotatedTransform = rotateTransform(angle);
                 setGradientTransform(rotatedTransform);
                 setGradientAngle(angle);
-                applyGradient();
+                updatePaintInStyles({gradientTransform: rotatedTransform} as GradientPaint);
+                debouncedApply();
             }
         },
-        [gradientAngle, gradientTransform]
+        [gradientAngle, gradientTransform, editingPaint, currentPaintStyle]
     );
 
     const onChangeScale = useCallback(
@@ -253,7 +237,8 @@ const GradientPage: FC<any> = ({}) => {
                 const scaledTransform = scaleTransform(scale / 100, scale / 100);
                 setGradientTransform(scaledTransform);
                 setGradientScale(+(scale / 100).toFixed(2));
-                applyGradient();
+                updatePaintInStyles({gradientTransform: scaledTransform} as GradientPaint);
+                debouncedApply();
             }
         },
         [gradientAngle, gradientTransform, gradientScale]
@@ -264,7 +249,8 @@ const GradientPage: FC<any> = ({}) => {
             const updatedGradientStops: GradientStops = _gradientStops;
             if (!compareObjects(gradientStops, updatedGradientStops)) {
                 setGradientStops(updatedGradientStops);
-                applyGradient();
+                updatePaintInStyles({gradientStops: updatedGradientStops} as GradientPaint);
+                debouncedApply();
             }
         },
         [gradientStops]
@@ -297,7 +283,6 @@ const GradientPage: FC<any> = ({}) => {
 
         if (selection && selection.length && !currentPaintStyle) {
             //if selection and no currentPaintStyle
-
             if (selectionGradientNode && selectionGradientNode.fillStyleId && !gradientTransform) {
                 //if selection has a paint style, select it
                 !gradientTransform &&
@@ -329,48 +314,74 @@ const GradientPage: FC<any> = ({}) => {
     useEffect(() => {
         const selectionGradientPaint = selection && selection[0] && selection[0].fills && selection[0].fills[0];
 
-        if (styles.gradients && styles.gradients.length && currentPaintStyle && currentPaintStyle.id) {
-            const _originalPaintStyle: PaintStyle = styles.gradients.find(
-                (paintStyle) => paintStyle.id == currentPaintStyle.id
-            );
-            console.log('_originalPaintStyle', _originalPaintStyle);
-            const isStyleChanged =
-                _originalPaintStyle && currentPaintStyle && !compareObjects(_originalPaintStyle, currentPaintStyle);
+        // if (styles.gradients && styles.gradients.length && currentPaintStyle && currentPaintStyle.id) {
+        //     const _originalPaintStyle: PaintStyle = styles.gradients.find(
+        //         (paintStyle) => paintStyle.id == currentPaintStyle.id
+        //     );
+        //     const isStyleChanged =
+        //         _originalPaintStyle && currentPaintStyle && !compareObjects(_originalPaintStyle, currentPaintStyle);
 
-            if (isStyleChanged && selectionGradientPaint && currentPaintStyle.id == selection[0].fillStyleId) {
-                //If original style is different from current and selection style is different from current one
-                const paintStyle = _originalPaintStyle ? _originalPaintStyle : currentPaintStyle;
-                const paint = paintStyle.paints[0] as GradientPaint;
-                let angle = degreesFromTransform(paint.gradientTransform);
-                if (angle == 0 && gradientAngle == 360) {
-                    //avoid the problem with 360° rotation that becomes 0 (0 == 360)
-                    const updatedGradientPaint = {
-                        ...paintStyle.paints[0],
-                        gradientTransform: rotateTransform(360),
-                    } as GradientPaint;
-                    const paints = [...paintStyle.paints];
-                    paints.splice(0, 1, updatedGradientPaint);
-                    const updatedPaintStyle = {...paintStyle, paints};
-                    //  setCurrentPaintStyle(updatedPaintStyle);
-                    selectPaintStyle(updatedPaintStyle);
-                } else {
-                    setCurrentPaintStyle(paintStyle);
-                    selectGradientPaint(paintStyle.paints[0] as GradientPaint);
-                }
-            } else if (isStyleChanged) {
-                const paintStyle = _originalPaintStyle ? _originalPaintStyle : currentPaintStyle;
-                paintStyle && setCurrentPaintStyle(paintStyle);
-            }
-        } else if (
-            styles &&
-            styles.gradients.length &&
-            !currentPaintStyle &&
-            !selectionGradientPaint &&
-            !gradientTransform
-        ) {
+        //     if (isStyleChanged && selectionGradientPaint && currentPaintStyle.id == selection[0].fillStyleId) {
+        //         //&& selectionGradientPaint && currentPaintStyle.id == selection[0].fillStyleId
+        //         //If original style is different from current and selection style is different from current one
+        //         const paintStyle = _originalPaintStyle ? _originalPaintStyle : currentPaintStyle;
+        //         const paint = paintStyle.paints[0] as GradientPaint;
+        //         let angle = degreesFromTransform(paint.gradientTransform);
+        //         if (angle == 0 && gradientAngle == 360) {
+        //             //avoid the problem with 360° rotation that becomes 0 (0 == 360)
+        //             const updatedGradientPaint = {
+        //                 ...paintStyle.paints[0],
+        //                 gradientTransform: rotateTransform(360),
+        //             } as GradientPaint;
+        //             const paints = [...paintStyle.paints];
+        //             paints.splice(0, 1, updatedGradientPaint);
+        //             const updatedPaintStyle = {...paintStyle, paints};
+        //             // setCurrentPaintStyle(updatedPaintStyle);
+        //             // selectPaintStyle(updatedPaintStyle);
+        //             //  selectGradientPaint(updatedGradientPaint);
+        //             setGradientStops(updatedGradientPaint.gradientStops);
+        //             setGradientTransform(updatedGradientPaint.gradientTransform);
+        //             setGradientType(updatedGradientPaint.type);
+
+        //             console.log('1');
+        //         } else {
+        //             console.log('2');
+
+        //             // setCurrentPaintStyle(paintStyle);
+        //             // selectGradientPaint(paintStyle.paints[0] as GradientPaint);
+        //             if (paint && isStyleChanged) {
+        //                 setGradientTransform(paint.gradientTransform);
+        //                 //    setGradientStops(paint.gradientStops);
+        //                 console.log('2.1', paint);
+        //                 //  selectGradientPaint(paint);
+        //             }
+        //         }
+        //     } else if (isStyleChanged) {
+        //         const paintStyle = _originalPaintStyle ? _originalPaintStyle : currentPaintStyle;
+        //         const paint = paintStyle && (paintStyle.paints[0] as GradientPaint);
+
+        //         if (paint) {
+        //             console.log('3', paint);
+        //             !compareObjects(paint.gradientTransform, gradientTransform) &&
+        //                 setGradientTransform(paint.gradientTransform);
+        //             // setGradientStops(paint.gradientStops);
+        //         }
+        //         //   paintStyle && setCurrentPaintStyle(paintStyle);
+        //         // paintStyle && selectGradientPaint(paintStyle.paints[0] as GradientPaint);
+        //         // if (selectionGradient) {
+        //         //     console.log('3.1', selectGradientPaint, paintStyle.paints[0]);
+        //         //     setSelectionGradient(paintStyle.paints[0] as GradientPaint);
+        //         // }
+        //     }
+        // } else
+
+        if (styles && styles.gradients.length && !currentPaintStyle && !selectionGradientPaint && !gradientTransform) {
             //if there are gradient styles and no gradient is selected, loads it from first gradient style available
             selectPaintStyle(styles.gradients[0]);
+        } else if (styles.gradients.length == 0 && currentPaintStyle) {
+            setCurrentPaintStyle(undefined);
         }
+
         isLoading && setIsLoading(false);
     }, [styles]);
 
@@ -434,21 +445,28 @@ const GradientPage: FC<any> = ({}) => {
                 boxSizing="content-box"
                 ref={scrollElementRef}
             >
-                {!isLoading && styles && (
-                    <GradientStylesPicker
-                        styles={styles.gradients}
-                        selectedStyle={currentPaintStyle}
-                        isChanged={isChanged}
-                        editingPaint={editingPaint}
-                        onSelect={selectPaintStyle}
-                        onCreate={onCreateStyle}
-                        pos="sticky"
-                        top={0}
-                        zIndex="1"
-                    />
-                )}
-                {isGradient && !isLoading ? (
-                    <Flex direction="column" h="100%" w="100%" bgColor="white" transition="all 0.15s">
+                <Fade
+                    in={!isLoading && styles && styles.gradients && !styles.gradients.length && !gradientTransform}
+                    unmountOnExit
+                    style={{width: '100%', height: '100%', position: 'absolute', top: 0, left: 0}}
+                >
+                    <Empty />
+                </Fade>
+                <Fade in={isGradient && !isLoading} unmountOnExit style={{width: '100%', height: '100%'}}>
+                    {styles && (
+                        <GradientStylesPicker
+                            styles={styles.gradients}
+                            selectedStyle={currentPaintStyle}
+                            isChanged={isChanged}
+                            editingPaint={editingPaint}
+                            onSelect={selectPaintStyle}
+                            onCreate={onCreateStyle}
+                            pos="sticky"
+                            top={0}
+                            zIndex="1"
+                        />
+                    )}
+                    <Flex direction="column" w="100%" bgColor="white">
                         <GradientPreview
                             gradientStops={gradientStops}
                             gradientTransform={gradientTransform}
@@ -510,9 +528,7 @@ const GradientPage: FC<any> = ({}) => {
                         </Stack>
                         <GradientPicker onChange={onChangeStops} gradientStops={gradientStops} />
                     </Flex>
-                ) : (
-                    !isLoading && <Empty />
-                )}
+                </Fade>
             </Stack>
 
             {isGradient && (

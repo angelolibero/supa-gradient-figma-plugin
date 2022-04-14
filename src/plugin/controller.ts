@@ -8,6 +8,7 @@ import {
     DEFAULT_AFFINE_TRANSFORMS,
     DEFAULT_GRADIENT_STOPS,
 } from '../app/lib/constants';
+import {degreesFromTransform} from '../app/lib/matrix';
 
 var poolingInterval;
 
@@ -20,13 +21,12 @@ figma.ui.onmessage = (msg) => {
         // only gradient compatible nodes
         case 'apply-gradient':
             // const angle = msg.angle;
+            //  const updateStyles = msg.updateStyles;
             const gradientStops: GradientStops = msg.gradientStops;
             const gradientType: GradientPaintType = msg.gradientType;
             const gradientTransform: Transform = msg.gradientTransform;
             const paintStyleId: string = msg.paintStyleId;
-            //  const updateStyles = msg.updateStyles;
             const style = paintStyleId && (figma.getStyleById(paintStyleId) as PaintStyle);
-
             const updatedGradientPaint = {
                 type: gradientType,
                 gradientTransform,
@@ -37,18 +37,16 @@ figma.ui.onmessage = (msg) => {
                 // Selected style is external, cannot edit it
                 figma.notify('Cannot update external styles', {timeout: DEFAULT_FIGMA_NOTIFICATION_TIMEOUT});
             } else if (paintStyleId && style) {
-                // Selected style is local, updated it and
-                console.log('apply-gradient', gradientStops, gradientType, paintStyleId);
-                //Load preferences and send to UI
-                //  if (updateStyles)
+                // Selected style exist, updated it
                 style.paints = [updatedGradientPaint];
             }
+            console.log('apply-gradient', updatedGradientPaint);
 
             // Fill node with updated paint
             figma.currentPage.selection &&
                 figma.currentPage.selection.forEach((node: RectangleNode) => {
                     if (node && gradientStops && isNodeGradientCompatible(node)) {
-                        if (style) node.fillStyleId = style.id;
+                        if (style && node.fillStyleId != style.id) node.fillStyleId = style.id;
                         if (!style || (style && style.id != node.fillStyleId)) node.fills = [updatedGradientPaint];
                     }
                 });

@@ -86,7 +86,7 @@ const GradientPreview: React.FC<Props> = ({
                     bgSize={bgSize}
                     bgRepeat="no-repeat"
                     bgPos="center center"
-                    alignItems={isGradient ? 'flex-start' : 'center'}
+                    alignItems={isGradient ? 'flex-end' : 'center'}
                     justifyContent={isGradient ? 'flex-end' : 'center'}
                     p={2}
                     transition="all 0.25s"
@@ -116,7 +116,7 @@ const GradientPreview: React.FC<Props> = ({
                         {/* </SlideFade> */}
                     </Flex>
 
-                    <Tooltip label="Copy CSS" placement="auto-end">
+                    <Tooltip label="Copy CSS" placement="top-start">
                         <Button
                             h={5}
                             w={5}

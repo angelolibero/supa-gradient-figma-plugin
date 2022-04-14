@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {RGBAObjetToString} from '../../../lib/colors';
-import {DEFAULT_DEBOUNCE_TIMEOUT} from '../../../lib/constants';
-import useDebounce from '../../../lib/hooks/useDebounce';
+import {Tooltip, chakra} from '@chakra-ui/react';
+
 import ColorStop from './ColorStop';
 
 const getStopsHolderStyle = (width, disabled) => ({
