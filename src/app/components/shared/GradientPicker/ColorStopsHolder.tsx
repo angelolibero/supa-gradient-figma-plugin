@@ -1,6 +1,5 @@
 import * as React from 'react';
 import {RGBAObjetToString} from '../../../lib/colors';
-import {Tooltip, chakra} from '@chakra-ui/react';
 
 import ColorStop from './ColorStop';
 

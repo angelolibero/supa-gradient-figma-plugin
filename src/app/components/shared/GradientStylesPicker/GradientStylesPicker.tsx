@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {FC, useMemo, useCallback} from 'react';
-import {RadioGroup, Center, BoxProps, Stack, Box, Text, GridItem} from '@chakra-ui/react';
+import {RadioGroup, Center, BoxProps, Stack, Box, Text} from '@chakra-ui/react';
 import GradientSwatch from '../Swatchs/GradientSwatch';
 import CreateStyleDrawerButton from '../Drawers/CreateStyleDrawerButton';
 import {bgColorsFromStops, bgGradientFromColors} from '../../../lib/colors';

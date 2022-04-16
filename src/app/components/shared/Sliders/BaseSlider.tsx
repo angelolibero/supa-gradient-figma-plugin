@@ -14,9 +14,8 @@ import {
     useControllableState,
     useMultiStyleConfig,
     Input,
-    As,
 } from '@chakra-ui/react';
-import {MdArrowUpward, MdOutlineDragHandle} from 'react-icons/md';
+import {MdOutlineDragHandle} from 'react-icons/md';
 import {DEFAULT_DEBOUNCE_TIMEOUT} from '../../../lib/constants';
 import useDebouncedCallback from '../../../lib/hooks/useDebounceCallback';
 
@@ -42,6 +41,7 @@ const BaseSlider: React.FC<Props> = ({
 }) => {
     const [sliderValue, setSliderValue] = useControllableState({value, defaultValue});
     const styles = useMultiStyleConfig('BaseSlider', rest);
+    const stopMarks = new Array(max / step + 1).fill(0);
 
     const debouncedOnChange = useDebouncedCallback((value: number) => {
         if (value >= 0 && value <= 360) {
@@ -55,7 +55,7 @@ const BaseSlider: React.FC<Props> = ({
         }
     }, DEFAULT_DEBOUNCE_TIMEOUT);
 
-    const handleOnChange = useCallback(
+    const handleSliderOnChange = useCallback(
         (angle) => {
             onChange(angle);
             setSliderValue(angle);
@@ -66,22 +66,21 @@ const BaseSlider: React.FC<Props> = ({
     const handleInputOnChange = useCallback(
         (e) => {
             if (e.target.value >= 0 && e.target.value <= 360) {
-                debouncedOnChange(e.target.value);
                 setSliderValue(e.target.value);
             } else {
                 if (e.target.value < 0) {
-                    debouncedOnChange(0);
                     setSliderValue(0);
                     return;
                 }
-                debouncedOnChange(360);
                 setSliderValue(360);
             }
         },
         [onChange]
     );
 
-    const stopMarks = new Array(max / step + 1).fill(0);
+    const handleOnBlur = useCallback(() => {
+        onChange && onChange(sliderValue);
+    }, [onChange, sliderValue]);
 
     return (
         <Stack sx={styles.container} direction="row" spacing="0">
@@ -94,7 +93,7 @@ const BaseSlider: React.FC<Props> = ({
                 <Input
                     value={sliderValue}
                     onChange={handleInputOnChange}
-                    placeholder="Hex code"
+                    onBlur={handleOnBlur}
                     size="sm"
                     type="number"
                     variant="unstyled"
@@ -113,13 +112,13 @@ const BaseSlider: React.FC<Props> = ({
                     min={min}
                     max={max}
                     step={step}
-                    onChange={handleOnChange}
+                    onChange={handleSliderOnChange}
                     px={1}
                     h={9}
                     {...rest}
                 >
                     {stopMarks &&
-                        stopMarks.map((value, index) => {
+                        stopMarks.map((_value, index) => {
                             return (
                                 <SliderMark
                                     value={step * index}

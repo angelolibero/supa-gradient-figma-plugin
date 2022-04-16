@@ -10,7 +10,6 @@ import {
     DrawerOverlay,
     useDisclosure,
     DrawerCloseButton,
-    chakra,
     useControllableState,
     Text,
     Box,

@@ -1,13 +1,17 @@
 import {GradientPaintType, GradientStops, Palette} from '../typings';
 
 const hexRegex = /^#([0-9a-f]{3}){1,2}$/i;
+const hexWithoutRegex = /^([0-9a-f]{3}){1,2}$/i;
 const rgbRegex =
     /^rgb[(](?:\s*0*(?:\d\d?(?:\.\d+)?(?:\s*%)?|\.\d+\s*%|100(?:\.0*)?\s*%|(?:1\d\d|2[0-4]\d|25[0-5])(?:\.\d+)?)\s*(?:,(?![)])|(?=[)]))){3}[)]$/i;
 const rgbaRegex =
     /^rgba[(](?: \s * 0 * (?: \d\d ? (?: \.\d +) ? (?: \s*%)?|\.\d +\s *%| 100(?: \.0 *) ?\s *%| (?: 1\d\d | 2[0 - 4]\d | 25[0 - 5]) (?: \.\d +)?) \s *,) { 3 } \s * 0 * (?: \.\d +| 1(?: \.0 *) ?) \s * [)]$/i;
 
-const checkIsHex = (color: string) => {
-    return hexRegex.test(color);
+const alphanumericRegex = /[^a-z0-9]/gi;
+const numericRegex = /[^0-9]/gi;
+
+const checkIsHex = (color: string, withoutHash = false) => {
+    return !withoutHash ? hexRegex.test(color) : hexWithoutRegex.test(color);
 };
 
 const checkIsGradient = (paint: Paint | GradientPaint) => {
@@ -32,7 +36,7 @@ const hexToRgb = (hex: string, alpha?: boolean) => {
 
 const hexToRGBAObject = (hex: string, alpha?: boolean) => {
     let c;
-    if (/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)) {
+    if (hexRegex.test(hex)) {
         c = hex.substring(1).split('');
         if (c.length == 3) {
             c = [c[0], c[0], c[1], c[1], c[2], c[2]];
@@ -161,4 +165,6 @@ export {
     hexRegex,
     rgbRegex,
     rgbaRegex,
+    alphanumericRegex,
+    numericRegex,
 };

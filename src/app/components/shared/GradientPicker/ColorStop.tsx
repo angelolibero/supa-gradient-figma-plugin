@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {FC, useRef, useMemo, useEffect, useState} from 'react';
+import {FC, useRef, useMemo} from 'react';
 import {CHECKERED_GRADIENT_PROPS, DEFAULT_PALETTE_WIDTH, HALF_STOP_WIDTH} from '../../../lib/constants';
 import useStopDragging from '../../../lib/hooks/useStopDragging';
 import {chakra, BoxProps, Tooltip} from '@chakra-ui/react';

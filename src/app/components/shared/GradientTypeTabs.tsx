@@ -1,8 +1,7 @@
 import * as React from 'react';
-import {FC, useState} from 'react';
+import {FC} from 'react';
 import {Stack, Button, StackProps, useMultiStyleConfig} from '@chakra-ui/react';
 import {GradientPaintType} from '../../typings';
-import {GRADIENT_TYPES} from '../../lib/constants';
 
 type Props = {
     value?: GradientPaintType;

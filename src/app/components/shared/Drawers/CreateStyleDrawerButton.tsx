@@ -116,7 +116,7 @@ export const CreateStyleDrawer: React.FC<CreateStyleDrawerProps> = ({
         [gradientType]
     );
 
-    const handleCreate = useCallback((event) => onCreate(name, newPaint), [name, newPaint]);
+    const handleCreate = useCallback((_event) => onCreate(name, newPaint), [name, newPaint]);
 
     useEffect(() => {
         gradientPaint && setGradientType(gradientPaint.type);

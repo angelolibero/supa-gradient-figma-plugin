@@ -1,9 +1,9 @@
 import * as React from 'react';
-import {useMemo, useCallback} from 'react';
+import {useMemo, useCallback, useState} from 'react';
 import {RadioProps, Box, useRadio, forwardRef, Input, Stack, Divider, Flex, Center} from '@chakra-ui/react';
 import {CHECKERED_GRADIENT_PROPS} from '../../../lib/constants';
 import {rgbToHex} from '@ctrl/tinycolor';
-import {hexToRGBAObject} from '../../../lib/colors';
+import {alphanumericRegex, checkIsHex, hexToRGBAObject, numericRegex} from '../../../lib/colors';
 
 export type ColorStopSwatchProps = {
     color?: RGBA;
@@ -17,48 +17,94 @@ export type ColorStopSwatchProps = {
 
 const ColorStopSwatch = forwardRef<ColorStopSwatchProps, 'input'>(
     ({color, id, isActive, showInput, showOpacity, size, onSelect, onChange, ...rest}, ref) => {
+        const [opacity, setOpacity] = useState(color && parseInt('' + color.a * 100) + '%');
+        const [hex, setHex] = useState(color && rgbToHex(color.r * 255, color.g * 255, color.b * 255, false));
+
         const {getInputProps, getCheckboxProps} = useRadio({
             value: JSON.stringify(color),
             ...rest,
         });
         const input = getInputProps({}, ref);
+        const hexInputRef = React.useRef<HTMLInputElement>();
+        const opacityInputRef = React.useRef<HTMLInputElement>();
         const checkbox = getCheckboxProps();
 
-        const hexColor = useMemo(() => {
-            return color && rgbToHex(color.r * 255, color.g * 255, color.b * 255, false);
-        }, [color]);
+        // const hexColor = useMemo(() => {
+        //     return color && rgbToHex(color.r * 255, color.g * 255, color.b * 255, false);
+        // }, [color]);
 
-        const opacity = useMemo(() => {
-            return color && parseInt('' + color.a * 100);
-        }, [color]);
+        // const rgbaObject = useMemo(() => {
+        //     let formattedAlpha = parseInt(opacity) || 0;
+        //     if (formattedAlpha > 100) formattedAlpha = 100;
+        //     else if (formattedAlpha < 0) formattedAlpha = 0;
+        //     return color && {...color, a: formattedAlpha / 100};
+        // }, [color]);
 
         const handleSelectPaint = useCallback(() => {
             onSelect && onSelect(color);
         }, [color, onSelect]);
 
-        const handleOnKeyDown = useCallback(
-            (e) => {
-                //enter and space key code:
-                if (e.key === 'Enter' || e.keyCode === 13 || e.keyCode === 32) {
-                    handleSelectPaint();
-                }
+        const handleOnChangeHex = useCallback((event) => {
+            setHex(event.target.value.replace(alphanumericRegex, ''));
+        }, []);
+
+        const handleOnBlurHex = useCallback(
+            (event) => {
+                let hexColor = event.target.value;
+                if (!checkIsHex(hexColor, true)) return;
+                const rgbaObject = hexToRGBAObject('#' + hexColor);
+                const rgbaFormattedObject = {
+                    r: +(rgbaObject.r / 255).toFixed(2),
+                    g: +(rgbaObject.g / 255).toFixed(2),
+                    b: +(rgbaObject.b / 255).toFixed(2),
+                    a: parseInt(opacityInputRef.current.value) / 100,
+                };
+                setHex(hexColor);
+                onChange && onChange(rgbaFormattedObject, id);
             },
-            [handleSelectPaint]
+            [onChange, opacityInputRef, id]
         );
 
-        const handleOnChangeInputColor = React.useCallback(
-            (hexColor: string) => {
-                onChange && onChange(hexToRGBAObject(hexColor), id);
+        const handleOnChangeOpacity = useCallback((event) => {
+            setOpacity(event.target.value.replace(numericRegex, ''));
+        }, []);
+
+        const handleOnBlurOpacity = useCallback(
+            (event) => {
+                const alpha = event.target.value;
+                let formattedAlpha = parseInt(alpha.replace('%', '')) || 0;
+                if (formattedAlpha > 100) formattedAlpha = 100;
+                else if (formattedAlpha < 0) formattedAlpha = 0;
+                event.target.value = formattedAlpha + '%';
+                const rgbaObject = hexToRGBAObject('#' + hexInputRef.current.value);
+                const rgbaFormattedObject = {
+                    r: +(rgbaObject.r / 255).toFixed(2),
+                    g: +(rgbaObject.g / 255).toFixed(2),
+                    b: +(rgbaObject.b / 255).toFixed(2),
+                    a: formattedAlpha / 100,
+                };
+                setOpacity(formattedAlpha + '%');
+                onChange && onChange(rgbaFormattedObject, id);
             },
-            [onChange, id]
+            [hex, hexInputRef, onChange, id]
         );
 
-        const handleOnChangeInputAlpha = React.useCallback(
-            (alphaPercentage: string) => {
-                onChange && onChange({...color, a: +parseInt(alphaPercentage.replace('%', '')).toFixed(2) / 100}, id);
-            },
-            [onChange, color]
-        );
+        const handleOnKeyDown = useCallback((event) => {
+            //enter key code:
+            if (event.key === 'Enter' || event.keyCode === 13) {
+                if (event.target == opacityInputRef.current) handleOnBlurOpacity(event);
+                if (event.target == hexInputRef.current) handleOnBlurHex(event);
+            }
+        }, []);
+
+        const handleOnFocus = useCallback((event) => event.target.select(), []);
+
+        // const handleOnBlur = useCallback(
+        //     (event) => {
+        //         onChange && onChange(rgbaObject, id);
+        //     },
+        //     [onChange, rgbaObject, opacity, id]
+        // );
 
         const borderStyle = {
             py: 0,
@@ -82,10 +128,10 @@ const ColorStopSwatch = forwardRef<ColorStopSwatchProps, 'input'>(
                 sx={showInput || showOpacity ? borderStyle : undefined}
             >
                 <Box as="label" {...CHECKERED_GRADIENT_PROPS} pos="relative">
-                    <input {...input} onKeyDown={handleOnKeyDown} ref={ref} />
+                    <input {...input} ref={ref} />
                     <Box
                         {...checkbox}
-                        bgColor={`#${hexColor}`}
+                        bgColor={`#${hex}`}
                         boxSize={7}
                         rounded="xs"
                         outline="none"
@@ -107,10 +153,12 @@ const ColorStopSwatch = forwardRef<ColorStopSwatchProps, 'input'>(
                             <Divider orientation="vertical" borderColor="inherit" />
                         </Center>
                         <Input
-                            value={hexColor}
-                            onChange={(event) => {
-                                handleOnChangeInputColor(event.target.value);
-                            }}
+                            ref={hexInputRef}
+                            value={hex}
+                            onChange={handleOnChangeHex}
+                            onBlur={handleOnBlurHex}
+                            onFocus={handleOnFocus}
+                            onKeyDown={handleOnKeyDown}
                             borderRadius="sm"
                             flex="1"
                             bgColor="white"
@@ -122,7 +170,7 @@ const ColorStopSwatch = forwardRef<ColorStopSwatchProps, 'input'>(
                                 shadow: 'none',
                             }}
                             rounded="none"
-                            placeholder="Hex code"
+                            placeholder="Hex color"
                             minH={7}
                             maxH={7}
                             px={1}
@@ -136,10 +184,12 @@ const ColorStopSwatch = forwardRef<ColorStopSwatchProps, 'input'>(
                             <Divider orientation="vertical" borderColor="inherit" />
                         </Center>
                         <Input
-                            value={`${opacity}%`}
-                            onChange={(event) => {
-                                handleOnChangeInputAlpha(event.target.value);
-                            }}
+                            ref={opacityInputRef}
+                            value={opacity}
+                            onChange={handleOnChangeOpacity}
+                            onBlur={handleOnBlurOpacity}
+                            onFocus={handleOnFocus}
+                            onKeyDown={handleOnKeyDown}
                             borderRadius="sm"
                             flex="1"
                             bgColor="white"
@@ -149,7 +199,7 @@ const ColorStopSwatch = forwardRef<ColorStopSwatchProps, 'input'>(
                             _focus={{
                                 shadow: 'none',
                             }}
-                            placeholder="Opacity"
+                            placeholder="Alpha"
                             rounded="none"
                             minH={7}
                             maxH={7}

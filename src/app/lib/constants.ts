@@ -69,8 +69,8 @@ export const CHECKERED_GRADIENT_PROPS = {
     backgroundColor: 'gray.200',
     bgGradient:
         'linear-gradient(45deg, #eee 25%, transparent 25%, transparent 75%, #eee 75%, #eee 100%),linear-gradient(45deg, #eee 25%, white 25%, white 75%, #eee 75%, #eee 100%)',
-    backgroundSize: '20px 20px',
-    backgroundPosition: '0px 0px, 10px 10px',
+    backgroundSize: '18px 18px',
+    backgroundPosition: '0px 0px, 9px 9px',
 };
 
 //GradientStops

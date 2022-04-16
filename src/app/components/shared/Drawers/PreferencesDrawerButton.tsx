@@ -18,6 +18,7 @@ import {
     Divider,
     Switch,
     Flex,
+    Link,
 } from '@chakra-ui/react';
 import {Preferences} from '../../../typings';
 import {MdMoreVert} from 'react-icons/md';
@@ -118,7 +119,7 @@ export const PreferencesDrawer: FC<PreferencesDrawerProps> = ({
                                     <Stack flex="1" spacing={0}>
                                         <Text fontSize="xs">Live editing</Text>
                                         <Text fontSize="xs" color="gray.400">
-                                            Edit styles and fills with real-time preview.
+                                            Apply changes immediately
                                         </Text>
                                     </Stack>
                                 </FormLabel>
@@ -145,9 +146,9 @@ export const PreferencesDrawer: FC<PreferencesDrawerProps> = ({
                             <Divider />
                             <Flex color="gray.400" d="flex">
                                 Made with ❤️ by
-                                <Text color="gray.600" ml={1}>
+                                <Link color="gray.600" ml={1} href="https://www.figma.com/@angelolibero" isExternal>
                                     @angelolibero
-                                </Text>
+                                </Link>
                             </Flex>
                         </Stack>
                     </Stack>

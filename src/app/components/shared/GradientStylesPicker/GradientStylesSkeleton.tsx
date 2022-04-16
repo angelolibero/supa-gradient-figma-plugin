@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {SkeletonProps, SkeletonCircle, SimpleGrid, Box, Flex, Divider} from '@chakra-ui/react';
+import {SkeletonProps, SkeletonCircle, SimpleGrid, Box} from '@chakra-ui/react';
 
 type Props = {} & SkeletonProps;
 

@@ -1,7 +1,6 @@
 import * as React from 'react';
 import {useCallback} from 'react';
 import {
-    Text,
     Slider,
     SliderTrack,
     SliderProps,
@@ -102,7 +101,7 @@ const ScaleSlider: React.FC<Props> = ({
             <Box w="100%">
                 <Slider value={sliderValue} min={min} max={max} step={step} onChange={handleOnChange} h={9} {...rest}>
                     {stopMarks &&
-                        stopMarks.map((value, index) => {
+                        stopMarks.map((_value, index) => {
                             return (
                                 <SliderMark
                                     value={step * index}
