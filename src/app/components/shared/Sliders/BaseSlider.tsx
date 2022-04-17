@@ -38,6 +38,7 @@ const BaseSlider: FC<Props> = ({
     ...rest
 }) => {
     const [sliderValue, setSliderValue] = useState(value);
+    const [inputValue, setInputValue] = useState(value);
     const stopMarks = new Array(max / step + 1).fill(0);
     const inputRef = useRef<HTMLInputElement>();
     const styles = useMultiStyleConfig('BaseSlider', rest);
@@ -46,6 +47,7 @@ const BaseSlider: FC<Props> = ({
         (angle) => {
             onChange(angle);
             setSliderValue(angle);
+            setInputValue(angle);
         },
         [onChange]
     );
@@ -54,27 +56,38 @@ const BaseSlider: FC<Props> = ({
         (event) => {
             const newValue = +event.target.value.replace(numericRegex, '');
             if (newValue >= 0 && newValue <= 360) {
-                setSliderValue(newValue);
-                // onChange(newValue);
+                setInputValue(parseInt('' + newValue));
             } else if (newValue < 0) {
-                setSliderValue(0);
-                //  onChange(0);
+                setInputValue(0);
             } else {
-                setSliderValue(360);
-                //  onChange(360);
+                setInputValue(360);
             }
         },
         [onChange]
     );
 
-    const handleOnBlur = useCallback(() => {
-        onChange && onChange(sliderValue);
-    }, [onChange, sliderValue]);
+    const handleOnBlur = useCallback(
+        (event) => {
+            setSliderValue(inputValue);
+            onChange && onChange(inputValue);
+        },
+        [onChange, inputValue]
+    );
 
     const handleOnFocus = useCallback((event) => event.target.select(), []);
 
+    const handleOnKeyDown = useCallback((event) => {
+        //enter key code:
+        if (event.key === 'Enter' || event.keyCode === 13) {
+            handleOnBlur(event);
+        }
+    }, []);
+
     useEffect(() => {
-        if (value != sliderValue) setSliderValue(value);
+        if (value != sliderValue) {
+            setSliderValue(value);
+            setInputValue(value);
+        }
     }, [value]);
 
     return (
@@ -87,9 +100,11 @@ const BaseSlider: FC<Props> = ({
                 )}
                 <Input
                     ref={inputRef}
-                    value={sliderValue}
+                    value={inputValue}
                     onChange={handleInputOnChange}
                     onFocus={handleOnFocus}
+                    onBlur={handleOnBlur}
+                    onKeyDown={handleOnKeyDown}
                     size="sm"
                     type="number"
                     variant="unstyled"

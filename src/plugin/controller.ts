@@ -35,7 +35,7 @@ figma.ui.onmessage = (msg) => {
 
             if (style && isExternalStyleId(style.id)) {
                 // Selected style is external, cannot edit it
-                figma.notify('Cannot update external styles', {timeout: DEFAULT_FIGMA_NOTIFICATION_TIMEOUT});
+                //  figma.notify('Cannot update external styles', {timeout: DEFAULT_FIGMA_NOTIFICATION_TIMEOUT});
             } else if (paintStyleId && style) {
                 // Selected style exist, updated it
                 style.paints = [updatedGradientPaint];

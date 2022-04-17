@@ -92,7 +92,7 @@ const GradientPage: FC<any> = ({}) => {
 
     //Apply current gradient to selected layers
     const applyGradient = useCallback(() => {
-        if (gradientTransform && !hasExternalStyle) {
+        if (gradientTransform) {
             selectionGradient && setSelectionGradient(undefined);
             parent.postMessage(
                 {
@@ -115,7 +115,7 @@ const GradientPage: FC<any> = ({}) => {
 
     const updatePaintInStyles = useCallback(
         (updatedPaint: GradientPaint) => {
-            if (!currentPaintStyle) return;
+            if (!currentPaintStyle || hasExternalStyle) return;
             const updatedPaints = [...currentPaintStyle.paints];
             updatedPaints.splice(0, 1, {...editingPaint, ...updatedPaint});
             const _originalPaintStyle: PaintStyle = styles.gradients.find(
@@ -578,13 +578,7 @@ const GradientPageFooter: FC<GradientPageFooterProps> = ({
         isGradient && (
             <Stack direction="row" spacing={2} py={3} px={3} borderTop="1px solid" borderColor="blackAlpha.100">
                 {isSelectionImportable && <ImportButton gradientPaint={selectionGradient} onImport={onImport} />}
-                <Button
-                    size="sm"
-                    colorScheme={'primary'}
-                    w="full"
-                    onClick={() => onApply()}
-                    isDisabled={!isSelection || hasExternalStyle}
-                >
+                <Button size="sm" colorScheme={'primary'} w="full" onClick={() => onApply()} isDisabled={!isSelection}>
                     {!isSelection ? 'No selection' : 'Fill selection'}
                     {selection && isSelection && isGradient ? (
                         <Badge
