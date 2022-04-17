@@ -1,4 +1,5 @@
 import * as React from 'react';
+import {FC} from 'react';
 import {
     SkeletonProps,
     Stack,
@@ -15,7 +16,7 @@ type Props = {
     isLoading: boolean;
 } & SkeletonProps;
 
-const PageSkeleton: React.FC<Props> = ({isLoading = true, ...rest}) => {
+const PageSkeleton: FC<Props> = ({isLoading = true, ...rest}) => {
     return (
         <Flex direction="column" h="100%" bgColor="white" {...rest}>
             <Box w="100%" h="48px" p={4} overflow="hidden">

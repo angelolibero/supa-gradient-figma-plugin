@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {useEffect, useMemo} from 'react';
+import {FC, useEffect, useMemo, useState} from 'react';
 import {Flex, Button, FlexProps, Text, Tooltip} from '@chakra-ui/react';
 import {GradientPaintType, GradientStops} from '../../typings';
 import {useClipboard} from '@chakra-ui/react';
@@ -16,7 +16,7 @@ type Props = {
     gradientScale: number;
 } & FlexProps;
 
-const GradientPreview: React.FC<Props> = ({
+const GradientPreview: FC<Props> = ({
     name,
     angle,
     gradientStops,
@@ -25,10 +25,10 @@ const GradientPreview: React.FC<Props> = ({
     gradientScale,
     ...rest
 }) => {
-    const [value, setValue] = React.useState('');
+    const [value, setValue] = useState('');
     const {hasCopied, onCopy} = useClipboard(value);
 
-    const isGradient = React.useMemo(() => !!gradientStops, [gradientStops]);
+    const isGradient = useMemo(() => !!gradientStops, [gradientStops]);
 
     const styleName = useMemo(() => {
         const splittedName = name && name.split('/');

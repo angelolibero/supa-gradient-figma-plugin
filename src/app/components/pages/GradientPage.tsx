@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {FC, useState, useCallback, useEffect, useMemo} from 'react';
+import {FC, useState, useCallback, useEffect, useRef, useMemo} from 'react';
 import {Stack, Badge, Button, Flex, Divider, Box, Alert, AlertIcon, Fade} from '@chakra-ui/react';
 import BaseSlider from '../shared/Sliders/BaseSlider';
 import {GradientPaintType, GradientStops, Preferences} from '../../typings';
@@ -36,13 +36,13 @@ const GradientPage: FC<any> = ({}) => {
     const [gradientStops, setGradientStops] = useState<GradientStops>();
     const [gradientTransform, setGradientTransform] = useState<Transform>();
     const [gradientScale, setGradientScale] = useState<number>(1);
-    const [gradientType, setGradientType] = React.useState<GradientPaintType>('GRADIENT_LINEAR');
+    const [gradientType, setGradientType] = useState<GradientPaintType>('GRADIENT_LINEAR');
     const [currentPaintStyle, setCurrentPaintStyle] = useState<PaintStyle>();
     const [preferences, setPreferences] = useState<Preferences>(DEFAULT_PREFERENCES);
     const [selection, setSelection] = useState<RectangleNode[]>();
     const [selectionGradient, setSelectionGradient] = useState<GradientPaint>();
     const [isLoading, setIsLoading] = useState<boolean>(true);
-    const scrollElementRef = React.useRef();
+    const scrollElementRef = useRef();
     const [styles, setStyles] = useRecoilState(stylesState);
 
     //MEMOS
@@ -93,6 +93,7 @@ const GradientPage: FC<any> = ({}) => {
     //Apply current gradient to selected layers
     const applyGradient = useCallback(() => {
         if (gradientTransform && !hasExternalStyle) {
+            selectionGradient && setSelectionGradient(undefined);
             parent.postMessage(
                 {
                     pluginMessage: {
@@ -106,7 +107,7 @@ const GradientPage: FC<any> = ({}) => {
                 '*'
             );
         }
-    }, [currentPaintStyle, gradientStops, gradientTransform, gradientType, hasExternalStyle]);
+    }, [currentPaintStyle, gradientStops, gradientTransform, gradientType, selectionGradient, hasExternalStyle]);
 
     const debouncedApply = useDebouncedCallback(() => {
         applyGradient();
@@ -129,7 +130,6 @@ const GradientPage: FC<any> = ({}) => {
             setStyles({...styles, gradients});
 
             if (selectionGradient) {
-                console.log('NOOOOOOOOOOOOOOO');
                 setSelectionGradient(updatedPaints[0] as GradientPaint);
             }
         },
@@ -395,7 +395,7 @@ const GradientPage: FC<any> = ({}) => {
             switch (type) {
                 case 'figma:selectionchange':
                     const objectMessage = JSON.parse(message);
-                    console.log('figma:selectionchange', objectMessage);
+                    // console.log('figma:selectionchange', objectMessage);
                     if (!objectMessage.selection) {
                         setSelection([]);
                     } else {
@@ -421,7 +421,7 @@ const GradientPage: FC<any> = ({}) => {
                     break;
                 case 'figma:selectstyle':
                     const selectedPaintStyle = message.paintStyle as PaintStyle;
-                    console.log('figma:selectstyle', selectedPaintStyle);
+                    // console.log('figma:selectstyle', selectedPaintStyle);
                     if (selectedPaintStyle) selectPaintStyle(selectedPaintStyle);
                     break;
                 default:

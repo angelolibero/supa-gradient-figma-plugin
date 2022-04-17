@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {useCallback, useMemo} from 'react';
+import {FC, useCallback, useMemo} from 'react';
 import {Tooltip, Center, RadioProps, Box, useRadio} from '@chakra-ui/react';
 import {CHECKERED_GRADIENT_PROPS} from '../../../lib/constants';
 
@@ -9,7 +9,7 @@ type Props = {
     onSelect?: (style: PaintStyle) => void;
 } & Omit<RadioProps, 'onSelect'>;
 
-const SolidSwatch: React.FC<Props> = ({style, isActive, size, onSelect, ...rest}) => {
+const SolidSwatch: FC<Props> = ({style, isActive, size, onSelect, ...rest}) => {
     const {getInputProps, getCheckboxProps} = useRadio({
         value: style ? style.id : 'custom',
         name: style && style.name,

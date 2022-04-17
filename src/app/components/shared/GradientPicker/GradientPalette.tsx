@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {useMemo} from 'react';
+import {useMemo, useCallback} from 'react';
 import {sortPalette} from '../../../lib/palette';
 import {chakra} from '@chakra-ui/react';
 import {RGBAObjetToString} from '../../../lib/colors';
@@ -14,7 +14,7 @@ const GradientPalette = ({palette, width, height}: Props) => {
     const gradientId = useMemo(generateGradientId, [palette.length]);
     const sortedPalette = useMemo(() => sortPalette(palette), [palette]);
 
-    const rgbaColor = React.useCallback(RGBAObjetToString, [palette]);
+    const rgbaColor = useCallback(RGBAObjetToString, [palette]);
 
     return (
         <chakra.div className="palette" width={width} height={height} {...CHECKERED_GRADIENT_PROPS}>

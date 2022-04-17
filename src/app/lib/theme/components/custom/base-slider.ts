@@ -26,6 +26,9 @@ const baseStyle: PartsStyleFunction = () => ({
             borderColor: 'gray.300',
             rounded: 'sm',
         },
+        _focusWithin: {
+            borderColor: 'primary.500',
+        },
     },
     input: {
         maxW: 6,

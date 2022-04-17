@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {useRef, useCallback} from 'react';
+import {FC, useRef, useCallback, useMemo, RefObject} from 'react';
 import {
     Stack,
     Drawer,
@@ -28,9 +28,9 @@ export type ColorPickerDrawerSwatchProps = {
     onSelect?: (color: RGBA) => void;
     onChange?: (color: RGBA, id?: number) => void;
     onClose?: () => void;
-} & Omit<ColorStopSwatchProps, 'onCreate' | 'onChange'>;
+} & Omit<ColorStopSwatchProps, 'onCreate' | 'onChange' | 'position'>;
 
-const ColorPickerDrawerSwatch: React.FC<ColorPickerDrawerSwatchProps> = ({
+const ColorPickerDrawerSwatch: FC<ColorPickerDrawerSwatchProps> = ({
     color,
     id,
     defaultIsOpen,
@@ -48,7 +48,7 @@ const ColorPickerDrawerSwatch: React.FC<ColorPickerDrawerSwatchProps> = ({
             if (!updatedColor) return;
             onChange && onChange({...updatedColor, a: +updatedColor.a.toFixed(2)}, id);
         },
-        [onChange]
+        [onChange, id]
     );
 
     const handleOnClose = useCallback(() => {
@@ -82,11 +82,11 @@ const ColorPickerDrawerSwatch: React.FC<ColorPickerDrawerSwatchProps> = ({
 type ColorPickerDrawerProps = {
     color?: RGBA;
     defaultColor?: RGBA;
-    swatchRef: React.RefObject<FocusableElement>;
+    swatchRef: RefObject<FocusableElement>;
     onChange: (updatedColor: RGBA, id?: number) => void;
 } & Omit<DrawerProps, 'children'>;
 
-export const ColorPickerDrawer: React.FC<ColorPickerDrawerProps> = ({
+export const ColorPickerDrawer: FC<ColorPickerDrawerProps> = ({
     color: value,
     defaultColor: defaultValue,
     isOpen,
@@ -99,7 +99,7 @@ export const ColorPickerDrawer: React.FC<ColorPickerDrawerProps> = ({
     const debouncedColor = useDebounce(color, DEFAULT_DEBOUNCE_TIMEOUT);
     const inputRef = useRef<HTMLInputElement>();
 
-    const handleOnChange = React.useCallback(
+    const handleOnChange = useCallback(
         (updatedColor: RGBA) => {
             const rgbaColor = {
                 r: +(updatedColor.r / 255).toFixed(2),
@@ -113,7 +113,7 @@ export const ColorPickerDrawer: React.FC<ColorPickerDrawerProps> = ({
         [onChange]
     );
 
-    const pickerColor = React.useMemo(() => {
+    const pickerColor = useMemo(() => {
         return {
             r: parseInt((debouncedColor.r * 255).toString()),
             g: parseInt((debouncedColor.g * 255).toString()),

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {useCallback} from 'react';
+import {FC, useCallback, useState, useEffect, useRef, ReactElement, cloneElement} from 'react';
 import {
     Flex,
     Slider,
@@ -11,23 +11,21 @@ import {
     Box,
     Circle,
     Center,
-    useControllableState,
     useMultiStyleConfig,
     Input,
 } from '@chakra-ui/react';
 import {MdOutlineDragHandle} from 'react-icons/md';
-import {DEFAULT_DEBOUNCE_TIMEOUT} from '../../../lib/constants';
-import useDebouncedCallback from '../../../lib/hooks/useDebounceCallback';
+import {numericRegex} from '../../../lib/colors';
 
 type Props = {
     showHalfMarks?: boolean;
     markDivisionCount?: number;
-    icon?: React.ReactElement;
-    symbol?: React.ReactElement;
+    icon?: ReactElement;
+    symbol?: ReactElement;
     onChange: (angle: number) => void;
 } & SliderProps;
 
-const BaseSlider: React.FC<Props> = ({
+const BaseSlider: FC<Props> = ({
     value,
     defaultValue = 180,
     min = 0,
@@ -39,21 +37,10 @@ const BaseSlider: React.FC<Props> = ({
     onChange,
     ...rest
 }) => {
-    const [sliderValue, setSliderValue] = useControllableState({value, defaultValue});
-    const styles = useMultiStyleConfig('BaseSlider', rest);
+    const [sliderValue, setSliderValue] = useState(value);
     const stopMarks = new Array(max / step + 1).fill(0);
-
-    const debouncedOnChange = useDebouncedCallback((value: number) => {
-        if (value >= 0 && value <= 360) {
-            onChange(value);
-        } else {
-            if (value < 0) {
-                onChange(0);
-                return;
-            }
-            onChange(360);
-        }
-    }, DEFAULT_DEBOUNCE_TIMEOUT);
+    const inputRef = useRef<HTMLInputElement>();
+    const styles = useMultiStyleConfig('BaseSlider', rest);
 
     const handleSliderOnChange = useCallback(
         (angle) => {
@@ -64,15 +51,17 @@ const BaseSlider: React.FC<Props> = ({
     );
 
     const handleInputOnChange = useCallback(
-        (e) => {
-            if (e.target.value >= 0 && e.target.value <= 360) {
-                setSliderValue(e.target.value);
+        (event) => {
+            const newValue = +event.target.value.replace(numericRegex, '');
+            if (newValue >= 0 && newValue <= 360) {
+                setSliderValue(newValue);
+                // onChange(newValue);
+            } else if (newValue < 0) {
+                setSliderValue(0);
+                //  onChange(0);
             } else {
-                if (e.target.value < 0) {
-                    setSliderValue(0);
-                    return;
-                }
                 setSliderValue(360);
+                //  onChange(360);
             }
         },
         [onChange]
@@ -82,26 +71,34 @@ const BaseSlider: React.FC<Props> = ({
         onChange && onChange(sliderValue);
     }, [onChange, sliderValue]);
 
+    const handleOnFocus = useCallback((event) => event.target.select(), []);
+
+    useEffect(() => {
+        if (value != sliderValue) setSliderValue(value);
+    }, [value]);
+
     return (
         <Stack sx={styles.container} direction="row" spacing="0">
             <Box sx={styles.inputWrap}>
                 {iconComponent && (
                     <Flex alignItems="center" alignSelf="center" mr={1}>
-                        {React.cloneElement(iconComponent, {sx: styles.inputIcon})}
+                        {cloneElement(iconComponent, {sx: styles.inputIcon})}
                     </Flex>
                 )}
                 <Input
+                    ref={inputRef}
                     value={sliderValue}
                     onChange={handleInputOnChange}
-                    onBlur={handleOnBlur}
+                    onFocus={handleOnFocus}
                     size="sm"
                     type="number"
                     variant="unstyled"
                     sx={styles.input}
+                    maxLength={3}
                 />
                 {symbolComponent && (
                     <Flex alignItems="center" alignSelf="center">
-                        {React.cloneElement(symbolComponent)}
+                        {cloneElement(symbolComponent)}
                     </Flex>
                 )}
             </Box>

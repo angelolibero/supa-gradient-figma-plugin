@@ -1,6 +1,7 @@
 import * as React from 'react';
+import {FC, useCallback} from 'react';
+import {chakra, BoxProps} from '@chakra-ui/react';
 import {RGBAObjetToString} from '../../../lib/colors';
-
 import ColorStop from './ColorStop';
 
 const getStopsHolderStyle = (width, disabled) => ({
@@ -10,8 +11,31 @@ const getStopsHolderStyle = (width, disabled) => ({
     cursor: disabled ? 'default' : 'crosshair',
 });
 
-const ColorStopsHolder = ({width, stops, disabled = false, onAddColor, onEdit, ...rest}) => {
-    const handleColorAdd = React.useCallback(
+type Props = {
+    width;
+    limits;
+    stops;
+    disabled: boolean;
+    onAddColor;
+    onEdit;
+    onPosChange;
+    onDeleteColor;
+    onDragStart;
+} & Omit<BoxProps, 'color'>;
+
+const ColorStopsHolder: FC<Props> = ({
+    width,
+    stops,
+    disabled = false,
+    limits,
+    onEdit,
+    onAddColor,
+    onDeleteColor,
+    onDragStart,
+    onPosChange,
+    ...rest
+}) => {
+    const handleColorAdd = useCallback(
         (e) => {
             e.preventDefault();
             if (e.button) return;
@@ -22,17 +46,25 @@ const ColorStopsHolder = ({width, stops, disabled = false, onAddColor, onEdit, .
     );
 
     return (
-        <div className="csh" style={getStopsHolderStyle(width, disabled) as any} onMouseDown={handleColorAdd}>
+        <chakra.div
+            className="csh"
+            style={getStopsHolderStyle(width, disabled) as any}
+            onMouseDown={handleColorAdd}
+            {...rest}
+        >
             {stops.map((stop, index) => (
                 <ColorStop
                     key={stop.id || index}
                     stop={stop}
                     color={RGBAObjetToString(stop.color)}
-                    {...rest}
                     onEdit={onEdit}
+                    onDeleteColor={onDeleteColor}
+                    onDragStart={onDragStart}
+                    onPosChange={onPosChange}
+                    limits={limits}
                 />
             ))}
-        </div>
+        </chakra.div>
     );
 };
 

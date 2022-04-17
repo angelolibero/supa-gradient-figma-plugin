@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {useRef, useCallback} from 'react';
+import {FC, RefObject, useRef, useCallback} from 'react';
 import {
     IconButton,
     Tooltip,
@@ -27,7 +27,7 @@ type Props = {
     onSelect: (style: PaintStyle) => void;
 } & Omit<ButtonProps, 'onCreate' | 'onSelect'>;
 
-const SolidPaintPickerDrawerButton: React.FC<Props> = ({selectedPaintStyle, onSelect, ...rest}) => {
+const SolidPaintPickerDrawerButton: FC<Props> = ({selectedPaintStyle, onSelect, ...rest}) => {
     const {isOpen, onOpen, onClose} = useDisclosure();
     const btnRef = useRef<HTMLButtonElement>();
 
@@ -73,11 +73,11 @@ const SolidPaintPickerDrawerButton: React.FC<Props> = ({selectedPaintStyle, onSe
 
 type SolidPaintPickerDrawerProps = {
     selectedPaintStyle?: PaintStyle;
-    btnRef: React.RefObject<HTMLButtonElement>;
+    btnRef: RefObject<HTMLButtonElement>;
     onSelect: (paint: PaintStyle) => void;
 } & Omit<DrawerProps, 'children'>;
 
-export const SolidPaintPickerDrawer: React.FC<SolidPaintPickerDrawerProps> = ({
+export const SolidPaintPickerDrawer: FC<SolidPaintPickerDrawerProps> = ({
     selectedPaintStyle,
     isOpen,
     btnRef,
@@ -88,7 +88,7 @@ export const SolidPaintPickerDrawer: React.FC<SolidPaintPickerDrawerProps> = ({
     const inputRef = useRef<HTMLInputElement>();
     const [styles] = useRecoilState(stylesState);
 
-    const handleSelect = React.useCallback((paint?: PaintStyle) => onSelect(paint), [onSelect]);
+    const handleSelect = useCallback((paint?: PaintStyle) => onSelect(paint), [onSelect]);
     return (
         <Drawer
             isOpen={isOpen}

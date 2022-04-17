@@ -48,7 +48,7 @@ const GradientPicker: FC<Props> = ({
     const paletteWidth = width;
     const stopsHolderDisabled = palette.length >= maxStops;
 
-    const activePaletteColor = React.useMemo(() => {
+    const activePaletteColor = useMemo(() => {
         const {color, opacity} = getPaletteColor(palette, activeColorId);
         return {currentColor: color, opacity};
     }, [palette, activeColorId]);
@@ -59,6 +59,14 @@ const GradientPicker: FC<Props> = ({
 
         return {min, max, drop: stopRemovalDrop};
     }, [width]);
+
+    const stops = useMemo(() => {
+        return mapPaletteToStops({
+            palette: palette,
+            width: paletteWidth,
+            activeId: activeColorId,
+        });
+    }, [palette, paletteWidth, activeColorId]);
 
     const handleColorAdd = useCallback(
         ({position}) => {
@@ -116,18 +124,17 @@ const GradientPicker: FC<Props> = ({
             }));
             onChange && onChange(sortedPalette);
         },
-        [onChange]
+        [onChange, palette]
     );
 
     const handleStopPosChange = useCallback(
         ({id, position}) => {
             const updatedPalette = palette.map((c) =>
-                id === c.id ? {...c, position: (position + HALF_STOP_WIDTH) / width} : c
+                id === c.id ? {...c, position: +((position + HALF_STOP_WIDTH) / width).toFixed(2)} : c
             );
-
             handlePaletteChange(updatedPalette);
         },
-        [palette]
+        [palette, width]
     );
 
     const handleEditColor = useCallback(
@@ -143,11 +150,7 @@ const GradientPicker: FC<Props> = ({
             <ColorStopsHolder
                 width={paletteWidth}
                 disabled={stopsHolderDisabled}
-                stops={mapPaletteToStops({
-                    palette: palette,
-                    width: paletteWidth,
-                    activeId: activeColorId,
-                })}
+                stops={stops}
                 limits={limits}
                 onPosChange={handleStopPosChange}
                 onAddColor={handleColorAdd}

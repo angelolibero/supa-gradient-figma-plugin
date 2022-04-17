@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {useMemo, useCallback} from 'react';
+import {FC, useMemo, useCallback} from 'react';
 import {Tooltip, Center, RadioProps, Box, useRadio} from '@chakra-ui/react';
 import {bgColorsFromStops, bgGradientFromColors} from '../../../lib/colors';
 import {CHECKERED_GRADIENT_PROPS} from '../../../lib/constants';
@@ -12,7 +12,7 @@ type Props = {
     onSelect?: (style: PaintStyle) => void;
 } & Omit<RadioProps, 'onSelect'>;
 
-const GradientSwatch: React.FC<Props> = ({style, defaultPaint, isActive, size, onSelect, ...rest}) => {
+const GradientSwatch: FC<Props> = ({style, defaultPaint, isActive, size, onSelect, ...rest}) => {
     const {getInputProps, getCheckboxProps} = useRadio({
         value: style ? style.id : 'custom',
         name: style && style.name,

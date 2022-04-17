@@ -67,10 +67,12 @@ export const DEFAULT_GRADIENT_PAINT: GradientPaint = {
 
 export const CHECKERED_GRADIENT_PROPS = {
     backgroundColor: 'gray.200',
-    bgGradient:
-        'linear-gradient(45deg, #eee 25%, transparent 25%, transparent 75%, #eee 75%, #eee 100%),linear-gradient(45deg, #eee 25%, white 25%, white 75%, #eee 75%, #eee 100%)',
-    backgroundSize: '18px 18px',
-    backgroundPosition: '0px 0px, 9px 9px',
+    // bgGradient:
+    //     'linear-gradient(45deg, #eee 25%, transparent 25%, transparent 75%, #eee 75%, #eee 100%),linear-gradient(45deg, #eee 25%, white 25%, white 75%, #eee 75%, #eee 100%)',
+    // backgroundSize: '18px 18px',
+    // backgroundPosition: '0px 0px, 9px 9px',
+    bgImage:
+        'url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3QgZmlsbD0iI0ZGRkZGRiIgd2lkdGg9IjE2IiBoZWlnaHQ9IjE2Ii8+PHBhdGggZmlsbD0iI0YxRjFGMSIgZD0iTSAwIDggSCAxNiBWIDAgSCA4IFYgMTYgSCAwIi8+PC9zdmc+")',
 };
 
 //GradientStops

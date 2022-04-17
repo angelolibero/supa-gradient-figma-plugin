@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {useCallback, useState, FC} from 'react';
+import {FC, useCallback, useState, RefObject, useRef} from 'react';
 import {
     IconButton,
     Text,
@@ -31,7 +31,7 @@ type Props = {
 
 const PreferencesDrawerButton: FC<Props> = ({DEFAULT_PREFERENCES, onChange, ...rest}) => {
     const {isOpen, onOpen, onClose} = useDisclosure();
-    const btnRef = React.useRef();
+    const btnRef = useRef();
     const [preferences, setPreferences] = useState<Preferences>(DEFAULT_PREFERENCES);
 
     const handleOnUpdate = useCallback(
@@ -82,7 +82,7 @@ const PreferencesDrawerButton: FC<Props> = ({DEFAULT_PREFERENCES, onChange, ...r
 
 type PreferencesDrawerProps = {
     preferences: Preferences;
-    btnRef: React.RefObject<HTMLButtonElement>;
+    btnRef: RefObject<HTMLButtonElement>;
     onUpdate: (key: string, value: string | number | boolean) => void;
 } & Omit<DrawerProps, 'children'>;
 

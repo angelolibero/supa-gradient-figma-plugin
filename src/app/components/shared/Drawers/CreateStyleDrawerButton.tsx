@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {useRef, useState, useCallback, useEffect, useMemo} from 'react';
+import {FC, useRef, useState, useCallback, useEffect, useMemo, RefObject} from 'react';
 import {
     IconButton,
     Tooltip,
@@ -33,7 +33,7 @@ type Props = {
     onCreate: (name: string, gradientPaint: GradientPaint) => void;
 } & Omit<ButtonProps, 'onCreate'>;
 
-const CreateStyleDrawerButton: React.FC<Props> = ({gradientPaint, style, onCreate, ...rest}) => {
+const CreateStyleDrawerButton: FC<Props> = ({gradientPaint, style, onCreate, ...rest}) => {
     const {isOpen, onOpen, onClose} = useDisclosure();
     const btnRef = useRef<HTMLButtonElement>();
 
@@ -84,11 +84,11 @@ const CreateStyleDrawerButton: React.FC<Props> = ({gradientPaint, style, onCreat
 type CreateStyleDrawerProps = {
     style?: PaintStyle;
     gradientPaint: GradientPaint;
-    btnRef: React.RefObject<HTMLButtonElement>;
+    btnRef: RefObject<HTMLButtonElement>;
     onCreate: (name: string, gradientPaint: GradientPaint) => void;
 } & Omit<DrawerProps, 'children'>;
 
-export const CreateStyleDrawer: React.FC<CreateStyleDrawerProps> = ({
+export const CreateStyleDrawer: FC<CreateStyleDrawerProps> = ({
     gradientPaint,
     style,
     isOpen,

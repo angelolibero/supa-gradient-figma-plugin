@@ -40,7 +40,7 @@ figma.ui.onmessage = (msg) => {
                 // Selected style exist, updated it
                 style.paints = [updatedGradientPaint];
             }
-            console.log('apply-gradient', updatedGradientPaint);
+            // console.log('apply-gradient', updatedGradientPaint);
 
             // Fill node with updated paint
             figma.currentPage.selection &&
@@ -111,7 +111,7 @@ figma.ui.onmessage = (msg) => {
 
 figma.on('selectionchange', () => {
     // Current selection has changed
-    console.log('selectionchange', figma.currentPage.selection[0]);
+    // console.log('selectionchange', figma.currentPage.selection[0]);
     updateSelection();
 });
 
@@ -121,9 +121,6 @@ figma.on('currentpagechange', () => {
 });
 
 figma.on('run' as any, () => {
-    // @ts-ignore
-    console.info('Welcome to ' + process.env.APP_NAME + ' v' + process.env.APP_VERSION + '');
-
     //Initialization
     updateSelection();
     updatePaintStyles();
@@ -135,7 +132,6 @@ figma.on('run' as any, () => {
 
     //Load preferences and send to UI
     figma.clientStorage.getAsync('preferences').then((preferences) => {
-        console.log('preferences:', JSON.parse(preferences));
         figma.ui.postMessage({
             type: 'figma:preferencesupdate',
             message: {preferences: JSON.parse(preferences) || DEFAULT_PREFERENCES},

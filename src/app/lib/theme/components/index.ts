@@ -17,11 +17,13 @@ import tooltip from './tooltip';
 import divider from './divider';
 
 //Custom
-import buttonTabs from './custom/button-tabs';
 import baseSlider from './custom/base-slider';
+import buttonTabs from './custom/button-tabs';
+import colorStopSwatch from './custom/color-stop-swatch';
 import iconsSwitch from './custom/icons-switch';
 
 export default {
+    //CHAKRA components overrides
     Accordion: accordion,
     Badge: badge,
     Button: button,
@@ -32,7 +34,6 @@ export default {
     Heading: heading,
     Input: input,
     Link: link,
-    // Menu: menu,
     PinInput: pinInput,
     Radio: radio,
     Select: select,
@@ -41,7 +42,8 @@ export default {
     Tooltip: tooltip,
     Textarea: textarea,
     //CUSTOM components
-    ButtonTabs: buttonTabs,
     BaseSlider: baseSlider,
+    ButtonTabs: buttonTabs,
+    ColorStopSwatch: colorStopSwatch,
     IconsSwitch: iconsSwitch,
 };

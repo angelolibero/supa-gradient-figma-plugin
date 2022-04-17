@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {useCallback} from 'react';
+import {FC, useCallback} from 'react';
 import {
     Slider,
     SliderTrack,
@@ -24,7 +24,7 @@ type Props = {
     onChange: (angle) => void;
 } & SliderProps;
 
-const ScaleSlider: React.FC<Props> = ({
+const ScaleSlider: FC<Props> = ({
     onChange,
     value,
     defaultValue = 1,

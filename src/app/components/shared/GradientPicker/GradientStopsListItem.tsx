@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {FC, useCallback} from 'react';
+import {FC, useCallback, useMemo} from 'react';
 import {Stack, IconButton, BoxProps, Center, Box, Flex} from '@chakra-ui/react';
 import ColorPickerDrawerSwatch from '../Drawers/ColorPickerDrawerSwatch';
 import StylesPickerDrawerButton from '../Drawers/SolidPaintPickerDrawerButton';
@@ -10,6 +10,7 @@ export type GradientStopsListItemProps = {
     activeColorId?: number;
     editColorId?: number;
     index: number;
+    showRemove?: boolean;
     onChange: (stop: ColorStop, index: number) => void;
     onDelete: (stop: ColorStop) => void;
 } & Omit<BoxProps, 'onChange'>;
@@ -19,6 +20,7 @@ const GradientStopsListItem: FC<GradientStopsListItemProps> = ({
     activeColorId,
     editColorId,
     index,
+    showRemove,
     onChange,
     onDelete,
     ...rest
@@ -35,18 +37,16 @@ const GradientStopsListItem: FC<GradientStopsListItemProps> = ({
         [onChange, stop, index]
     );
 
-    const handleOnChangePickerColor = useCallback(
-        (color: RGBA) => {
-            const updatedStop: ColorStop = {
-                ...stop,
-                color,
-            };
-            onChange && onChange(updatedStop, index);
-        },
-        [onChange, stop, index]
-    );
+    const handleOnChangePickerColor = (color: RGBA) => {
+        const updatedStop: ColorStop = {
+            ...stop,
+            color,
+        };
+        console.log('updatedStop', updatedStop);
+        onChange && onChange(updatedStop, index);
+    };
 
-    const isActive = React.useMemo(() => {
+    const isActive = useMemo(() => {
         return activeColorId - 1 == index;
     }, [activeColorId, index]);
 
@@ -80,20 +80,22 @@ const GradientStopsListItem: FC<GradientStopsListItemProps> = ({
             </Flex>
             <Flex>
                 <StylesPickerDrawerButton onSelect={handleOnSelectStyle} />
-                <IconButton
-                    icon={<AiOutlineMinus />}
-                    onClick={handleOnDelete}
-                    size="sm"
-                    fontSize="sm"
-                    aria-label="delete color"
-                    bgColor="white"
-                    boxSize={7}
-                    maxW={7}
-                    minW={7}
-                    _focus={{
-                        shadow: 'none',
-                    }}
-                />
+                {showRemove && (
+                    <IconButton
+                        icon={<AiOutlineMinus />}
+                        onClick={handleOnDelete}
+                        size="sm"
+                        fontSize="sm"
+                        aria-label="delete color"
+                        bgColor="white"
+                        boxSize={7}
+                        maxW={7}
+                        minW={7}
+                        _focus={{
+                            shadow: 'none',
+                        }}
+                    />
+                )}
             </Flex>
         </Stack>
     );

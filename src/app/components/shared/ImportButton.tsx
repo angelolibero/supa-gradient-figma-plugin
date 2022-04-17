@@ -22,34 +22,32 @@ const ImportButton: FC<Props> = ({gradientPaint, onImport, ...rest}) => {
     }, [gradientPaint]);
 
     return (
-        <>
-            <Tooltip label="Import gradient" openDelay={300} placement="top-start">
-                <Box pos="relative">
-                    <IconButton
-                        icon={<CgColorPicker />}
-                        aria-label="import gradient"
-                        onClick={onImport}
-                        size="sm"
-                        fontSize="md"
-                        bgColor="gray.100"
-                        {...rest}
+        <Tooltip label="Import gradient" openDelay={300} placement="top-start">
+            <Box pos="relative">
+                <IconButton
+                    icon={<CgColorPicker />}
+                    aria-label="import gradient"
+                    onClick={onImport}
+                    size="sm"
+                    fontSize="md"
+                    bgColor="gray.100"
+                    {...rest}
+                />
+                {gradientPaint && (
+                    <Box
+                        boxSize="14px"
+                        pos="absolute"
+                        left="-3px"
+                        bottom={-1}
+                        rounded="full"
+                        bgGradient={importBgGradient}
+                        border="2px solid"
+                        borderColor="white"
+                        shadow="sm"
                     />
-                    {gradientPaint && (
-                        <Box
-                            boxSize="14px"
-                            pos="absolute"
-                            left="-3px"
-                            bottom={-1}
-                            rounded="full"
-                            bgGradient={importBgGradient}
-                            border="2px solid"
-                            borderColor="white"
-                            shadow="sm"
-                        />
-                    )}
-                </Box>
-            </Tooltip>
-        </>
+                )}
+            </Box>
+        </Tooltip>
     );
 };
 

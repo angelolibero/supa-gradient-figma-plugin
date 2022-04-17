@@ -25,8 +25,9 @@ const GradientStopsList: FC<Props> = ({
 }) => {
     const handleOnChange = useCallback(
         (stop: ColorStop, index: number) => {
+            const oldStop = gradientStops[index];
             let stops = [...gradientStops];
-            stops.splice(index, 1, stop);
+            stops.splice(index, 1, {...oldStop, color: stop.color});
             onChange && onChange(stops);
         },
         [gradientStops, onChange]
@@ -44,24 +45,29 @@ const GradientStopsList: FC<Props> = ({
         [gradientStops, onChange]
     );
 
-    return (
-        <Stack w="100%" maxW="100%" spacing={'1px'} {...rest}>
-            {gradientStops &&
-                gradientStops.map((stop, index) => {
-                    return (
-                        <GradientStopsListItem
-                            stop={stop}
-                            index={index}
-                            activeColorId={activeColorId}
-                            editColorId={editColorId}
-                            onChange={handleOnChange}
-                            onDelete={handleOnDelete}
-                            key={index}
-                        />
-                    );
-                })}
-        </Stack>
-    );
+    const Stops = useCallback(() => {
+        return (
+            <Stack w="100%" maxW="100%" spacing={'1px'} {...rest}>
+                {gradientStops &&
+                    gradientStops.map((stop, index) => {
+                        return (
+                            <GradientStopsListItem
+                                stop={stop}
+                                index={index}
+                                activeColorId={activeColorId}
+                                editColorId={editColorId}
+                                onChange={handleOnChange}
+                                onDelete={handleOnDelete}
+                                key={index}
+                                showRemove={gradientStops.length >= 2}
+                            />
+                        );
+                    })}
+            </Stack>
+        );
+    }, [gradientStops]);
+
+    return <Stops />;
 };
 
 export default GradientStopsList;

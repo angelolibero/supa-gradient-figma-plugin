@@ -27,7 +27,7 @@ const filterGradientCompatibleNodes = (selection: any[]) => {
 const updateSelection = () => {
     if (figma.currentPage.selection && figma.currentPage.selection.length) {
         const selection = [...figma.currentPage.selection];
-        console.log('updateSelection', selection);
+        // console.log('updateSelection', selection);
         const gradientCompatibleNodes = filterGradientCompatibleNodes(selection);
         if (gradientCompatibleNodes && gradientCompatibleNodes.length > 0 && gradientCompatibleNodes[0]) {
             figma.ui.postMessage({

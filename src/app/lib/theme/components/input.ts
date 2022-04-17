@@ -108,6 +108,7 @@ const variants = {
 
 const defaultProps = {
     variant: 'filled',
+    size: 'sm',
 };
 
 export default {
