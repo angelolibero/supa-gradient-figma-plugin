@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {FC, useRef, useCallback, useMemo, RefObject} from 'react';
+import {FC, useRef, useCallback, useMemo, useState, useEffect, RefObject} from 'react';
 import {
     Stack,
     Drawer,
@@ -10,9 +10,10 @@ import {
     DrawerOverlay,
     useDisclosure,
     DrawerCloseButton,
-    useControllableState,
+    Button,
     Text,
     Box,
+    DrawerFooter,
 } from '@chakra-ui/react';
 import ColorStopSwatch, {ColorStopSwatchProps} from '../Swatchs/ColorStopSwatch';
 import {FocusableElement} from '@chakra-ui/utils';
@@ -81,37 +82,21 @@ const ColorPickerDrawerSwatch: FC<ColorPickerDrawerSwatchProps> = ({
 
 type ColorPickerDrawerProps = {
     color?: RGBA;
-    defaultColor?: RGBA;
     swatchRef: RefObject<FocusableElement>;
     onChange: (updatedColor: RGBA, id?: number) => void;
 } & Omit<DrawerProps, 'children'>;
 
 export const ColorPickerDrawer: FC<ColorPickerDrawerProps> = ({
     color: value,
-    defaultColor: defaultValue,
     isOpen,
     onClose,
     onChange,
     swatchRef,
     ...rest
 }) => {
-    const [color, setColor] = useControllableState({value, defaultValue});
+    const [color, setColor] = useState(value);
     const debouncedColor = useDebounce(color, DEFAULT_DEBOUNCE_TIMEOUT);
     const inputRef = useRef<HTMLInputElement>();
-
-    const handleOnChange = useCallback(
-        (updatedColor: RGBA) => {
-            const rgbaColor = {
-                r: +(updatedColor.r / 255).toFixed(2),
-                g: +(updatedColor.g / 255).toFixed(2),
-                b: +(updatedColor.b / 255).toFixed(2),
-                a: updatedColor.a,
-            };
-            setColor(rgbaColor);
-            onChange(rgbaColor);
-        },
-        [onChange]
-    );
 
     const pickerColor = useMemo(() => {
         return {
@@ -122,11 +107,51 @@ export const ColorPickerDrawer: FC<ColorPickerDrawerProps> = ({
         };
     }, [debouncedColor]);
 
+    const handleOnChange = useCallback(
+        (updatedColor: RGBA) => {
+            const rgbaColor = {
+                r: +(updatedColor.r / 255).toFixed(2),
+                g: +(updatedColor.g / 255).toFixed(2),
+                b: +(updatedColor.b / 255).toFixed(2),
+                a: updatedColor.a,
+            };
+            setColor(rgbaColor);
+        },
+        [onChange]
+    );
+
+    const handleSwatchOnChange = useCallback(
+        (updatedColor: RGBA) => {
+            setColor(updatedColor);
+        },
+        [onChange]
+    );
+
+    const handleOnClose = useCallback(() => {
+        onClose && onClose();
+    }, []);
+
+    const selectColor = useCallback(() => {
+        handleOnClose();
+        setTimeout(() => {
+            onChange(color);
+        }, DEFAULT_DEBOUNCE_TIMEOUT);
+    }, [onChange, color]);
+
+    const resetColor = useCallback(() => {
+        handleOnClose();
+        onChange(value);
+    }, [onChange, value]);
+
+    useEffect(() => {
+        if (isOpen && value != color) setColor(value);
+    }, [isOpen]);
+
     return (
         <Drawer
             isOpen={isOpen}
             placement="bottom"
-            onClose={onClose}
+            onClose={handleOnClose}
             finalFocusRef={swatchRef}
             initialFocusRef={inputRef}
             {...rest}
@@ -136,25 +161,25 @@ export const ColorPickerDrawer: FC<ColorPickerDrawerProps> = ({
                 <DrawerCloseButton boxSize={8} size="sm" rounded="sm" _focus={{boxShadow: 'none'}} />
                 <DrawerHeader px={4} pt={4} pb={0}>
                     <Stack direction="row" flex="1" spacing={2} alignItems="flex-start">
-                        <Text>Edit color</Text>
+                        <Text>Edit color stop</Text>
                     </Stack>
                 </DrawerHeader>
                 <DrawerBody px={4} py={4}>
                     <Stack spacing={3}>
-                        {/* <chakra.form
-                        m={0}
-                        pb={4}
-                        onSubmit={(event) => {
-                            event.stopPropagation();
-                            event.preventDefault();
-                            //   onClose();
-                        }}
-                    > */}
                         <RgbaColorPicker color={pickerColor} onChange={handleOnChange} />
-                        {/* </chakra.form> */}
-                        <ColorStopSwatch color={debouncedColor} showInput showOpacity onChange={handleOnChange} />
+                        <ColorStopSwatch color={debouncedColor} showInput showOpacity onChange={handleSwatchOnChange} />
                     </Stack>
                 </DrawerBody>
+                <DrawerFooter py={3} px={3} borderTop="1px solid" borderColor="blackAlpha.100">
+                    <Stack direction="row" spacing={2} w="full">
+                        <Button size="sm" colorScheme={'gray'} w="full" onClick={resetColor}>
+                            Cancel
+                        </Button>
+                        <Button size="sm" colorScheme={'primary'} w="full" onClick={selectColor}>
+                            Select color
+                        </Button>
+                    </Stack>
+                </DrawerFooter>
             </DrawerContent>
         </Drawer>
     );

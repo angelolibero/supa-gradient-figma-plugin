@@ -7,13 +7,13 @@ import {
     DEFAULT_FIGMA_NOTIFICATION_TIMEOUT,
     DEFAULT_AFFINE_TRANSFORMS,
     DEFAULT_GRADIENT_STOPS,
+    DEFAULT_WINDOW_SIZE,
 } from '../app/lib/constants';
-import {degreesFromTransform} from '../app/lib/matrix';
 
 var poolingInterval;
 
 figma.showUI(__html__);
-figma.ui.resize(240, 430); //initial window size
+figma.ui.resize(240, DEFAULT_WINDOW_SIZE.height); //initial window size
 
 figma.ui.onmessage = (msg) => {
     switch (msg.type) {
