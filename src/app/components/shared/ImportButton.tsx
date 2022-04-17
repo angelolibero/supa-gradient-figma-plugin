@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {FC, useMemo} from 'react';
-import {IconButton, Tooltip, ButtonProps, Box} from '@chakra-ui/react';
+import {Tooltip, ButtonProps, Box, Center, IconButton} from '@chakra-ui/react';
 import {CgColorPicker} from 'react-icons/cg';
 import {bgColorsFromStops, bgGradientFromColors} from '../../lib/colors';
 import {degreesFromTransform} from '../../lib/matrix';
@@ -23,14 +23,20 @@ const ImportButton: FC<Props> = ({gradientPaint, onImport, ...rest}) => {
 
     return (
         <Tooltip label="Import gradient" openDelay={300} placement="top-start">
-            <Box pos="relative">
+            <Center pos="relative" h="100%">
                 <IconButton
                     icon={<CgColorPicker />}
                     aria-label="import gradient"
-                    onClick={onImport}
-                    size="sm"
+                    boxSize={7}
+                    minW={7}
+                    maxW={7}
+                    p={0}
+                    rounded="full"
+                    border="1px dashed"
+                    borderColor="gray.200"
+                    bgColor="white"
                     fontSize="md"
-                    bgColor="gray.100"
+                    onClick={onImport}
                     {...rest}
                 />
                 {gradientPaint && (
@@ -46,7 +52,7 @@ const ImportButton: FC<Props> = ({gradientPaint, onImport, ...rest}) => {
                         shadow="sm"
                     />
                 )}
-            </Box>
+            </Center>
         </Tooltip>
     );
 };

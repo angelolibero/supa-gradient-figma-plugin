@@ -66,20 +66,17 @@ const BaseSlider: FC<Props> = ({
         [onChange]
     );
 
-    const handleOnBlur = useCallback(
-        (event) => {
-            setSliderValue(inputValue);
-            onChange && onChange(inputValue);
-        },
-        [onChange, inputValue]
-    );
+    const handleOnBlur = useCallback(() => {
+        setSliderValue(inputValue);
+        onChange && onChange(inputValue);
+    }, [onChange, inputValue]);
 
     const handleOnFocus = useCallback((event) => event.target.select(), []);
 
     const handleOnKeyDown = useCallback((event) => {
         //enter key code:
         if (event.key === 'Enter' || event.keyCode === 13) {
-            handleOnBlur(event);
+            handleOnBlur();
         }
     }, []);
 

@@ -159,7 +159,7 @@ const GradientPicker: FC<Props> = ({
                 onEdit={handleEditColor}
             />
             <GradientStopsList
-                pt={3}
+                pt={4}
                 pb={2}
                 activeColorId={activeColorId}
                 editColorId={editColorId}

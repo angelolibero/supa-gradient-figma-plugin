@@ -65,7 +65,7 @@ const GradientStopsList: FC<Props> = ({
                     })}
             </Stack>
         );
-    }, [gradientStops]);
+    }, [gradientStops, activeColorId, editColorId]);
 
     return <Stops />;
 };

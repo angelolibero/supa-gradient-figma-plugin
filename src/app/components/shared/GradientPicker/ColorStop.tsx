@@ -45,8 +45,8 @@ const ColorStop: FC<Props> = ({stop, color, limits, onPosChange, onDeleteColor, 
         <chakra.div
             className={isActive ? 'cs active' : 'cs'}
             ref={colorStopRef}
-            onMouseDown={drag}
-            onTouchStart={drag}
+            onMouseDown={drag as any}
+            onTouchStart={drag as any}
             onClick={() => onEdit(stop)}
             style={{left: position}}
         >

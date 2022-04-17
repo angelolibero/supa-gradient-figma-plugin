@@ -1,17 +1,6 @@
 import * as React from 'react';
 import {useEffect, useCallback, useRef, useState} from 'react';
-import {
-    RadioProps,
-    Box,
-    useRadio,
-    forwardRef,
-    Input,
-    Stack,
-    Divider,
-    Flex,
-    Center,
-    useMultiStyleConfig,
-} from '@chakra-ui/react';
+import {RadioProps, Box, forwardRef, Input, Stack, Divider, Flex, Center, useMultiStyleConfig} from '@chakra-ui/react';
 import {CHECKERED_GRADIENT_PROPS} from '../../../lib/constants';
 import {rgbToHex} from '@ctrl/tinycolor';
 import {alphanumericRegex, checkIsHex, hexToRGBAObject, numericRegex} from '../../../lib/colors';
@@ -84,7 +73,6 @@ const ColorStopSwatch = forwardRef<ColorStopSwatchProps, 'input'>(
         );
 
         const handleOnKeyDown = useCallback((event) => {
-            //enter key code:
             if (event.key === 'Enter' || event.keyCode === 13) {
                 if (event.target == opacityInputRef.current) handleOnBlurOpacity(event);
                 if (event.target == hexInputRef.current) handleOnBlurHex(event);
@@ -105,9 +93,7 @@ const ColorStopSwatch = forwardRef<ColorStopSwatchProps, 'input'>(
         return (
             <Stack direction="row" spacing={'0px'} sx={styles.container} ref={ref}>
                 <Box as="label" {...CHECKERED_GRADIENT_PROPS} pos="relative">
-                    {/* <input {...input} ref={ref} /> */}
                     <Box
-                        //     {...checkbox}
                         bgColor={`#${hex}`}
                         boxSize={7}
                         rounded="xs"

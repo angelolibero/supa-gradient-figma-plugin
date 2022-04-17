@@ -53,12 +53,12 @@ const RGBAObjetToString = (color: RGBA) => {
     )}, ${color.a})`;
 };
 
-const paletteToRgbArray = (palette: Palette, alpha?: boolean) => {
+const paletteToRgbArray = (palette: Palette) => {
     return palette && palette.map((value) => RGBAObjetToString(value.color));
 };
 
 const paletteToGradientStops = (palette: Palette, alpha: boolean = false) => {
-    let rgbArray = paletteToRgbArray(palette, alpha);
+    let rgbArray = paletteToRgbArray(palette);
     let rgbaObjects =
         rgbArray &&
         rgbArray.map((value, index) => {
@@ -82,7 +82,7 @@ const paletteToGradientStops = (palette: Palette, alpha: boolean = false) => {
 const paletteFromGradientStops = (gradientStops: GradientStops, alpha: boolean = true) => {
     let palette = !gradientStops
         ? undefined
-        : gradientStops.map((value, index) => {
+        : gradientStops.map((value) => {
               return {
                   position: parseFloat(new Number(value.position).toFixed(2)),
                   color: !alpha
@@ -97,26 +97,9 @@ const paletteFromGradientStops = (gradientStops: GradientStops, alpha: boolean =
     return palette;
 };
 
-// const gradientAngleFromTransform = (transform: Transform): number => {
-//     if (!transform) return undefined;
-//     const scale_factor = Math.sqrt(transform[0][0] * transform[1][1] - transform[1][0] * transform[0][1]);
-//     const angleDeg = parseInt('' + (Math.acos(transform[0][0] / scale_factor) * 180) / Math.PI); // For degrees
-
-//     for (const angle in DEFAULT_AFFINE_TRANSFORMS) {
-//         if (DEFAULT_AFFINE_TRANSFORMS[angle] && JSON.stringify(transform) == JSON.stringify(DEFAULT_AFFINE_TRANSFORMS[angle])) {
-//             return parseInt(angle);
-//         }
-//     }
-//     return angleDeg;
-// };
-
-// const gradientAngleToTransform = (angle: number): Transform => {
-//     return DEFAULT_AFFINE_TRANSFORMS[angle];
-// };
-
 const bgColorsFromStops = (gradientStops: GradientStops) => {
     if (gradientStops && gradientStops.length) {
-        return gradientStops.map((value, index) => {
+        return gradientStops.map((value) => {
             return `rgba(${parseInt('' + value.color.r * 255)},${parseInt('' + value.color.g * 255)},${parseInt(
                 '' + value.color.b * 255
             )},${value.color.a.toFixed(2)}) ${parseFloat('' + value.position * 100).toFixed(0)}%`;

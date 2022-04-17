@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {FC, useCallback, useState, RefObject, useRef} from 'react';
+import {FC, useCallback, useState, RefObject, useRef, useEffect} from 'react';
 import {
     IconButton,
     Text,
@@ -25,14 +25,14 @@ import {MdMoreVert} from 'react-icons/md';
 import Logo from '../Logo';
 
 type Props = {
-    DEFAULT_PREFERENCES: Preferences;
+    preferences: Preferences;
     onChange: (preferences: Preferences) => void;
 } & Omit<ButtonProps, 'onCreate'>;
 
-const PreferencesDrawerButton: FC<Props> = ({DEFAULT_PREFERENCES, onChange, ...rest}) => {
+const PreferencesDrawerButton: FC<Props> = ({preferences: value, onChange, ...rest}) => {
     const {isOpen, onOpen, onClose} = useDisclosure();
     const btnRef = useRef();
-    const [preferences, setPreferences] = useState<Preferences>(DEFAULT_PREFERENCES);
+    const [preferences, setPreferences] = useState<Preferences>(value);
 
     const handleOnUpdate = useCallback(
         (key: string, value: string | number | boolean) => {
@@ -50,6 +50,10 @@ const PreferencesDrawerButton: FC<Props> = ({DEFAULT_PREFERENCES, onChange, ...r
         },
         [preferences, isOpen]
     );
+
+    useEffect(() => {
+        if (value != preferences) setPreferences(value);
+    }, [value]);
 
     return (
         <>
@@ -117,7 +121,7 @@ export const PreferencesDrawer: FC<PreferencesDrawerProps> = ({
                             <FormControl d="flex" w="full" alignItems="center" justifyContent="center">
                                 <FormLabel htmlFor="live-mode" mx={0} mr={3} w="100%">
                                     <Stack flex="1" spacing={0}>
-                                        <Text fontSize="xs">Live editing</Text>
+                                        <Text fontSize="xs">Live update</Text>
                                         <Text fontSize="xs" color="gray.400">
                                             Apply changes immediately
                                         </Text>

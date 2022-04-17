@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {FC, useState, useCallback, useEffect, useRef, useMemo} from 'react';
-import {Stack, Badge, Button, Flex, Divider, Box, Alert, AlertIcon, Fade} from '@chakra-ui/react';
+import {Stack, Badge, Button, Flex, Divider, Box, Alert, AlertIcon, Fade, Text} from '@chakra-ui/react';
 import BaseSlider from '../shared/Sliders/BaseSlider';
 import {GradientPaintType, GradientStops, Preferences} from '../../typings';
 import {filterGradientCompatibleNodes, isExternalStyleId} from '../../lib/figma';
@@ -79,38 +79,47 @@ const GradientPage: FC<any> = ({}) => {
 
     const isSelectionImportable = useMemo(() => {
         const gradient = currentPaintStyle && (currentPaintStyle.paints[0] as GradientPaint);
+        const selectionStyleId = selection && selection[0] && selection[0].fillStyleId;
 
         return (
             isSelection &&
             hasGradientInSelection &&
             selectionGradient &&
-            !compareObjects(selectionGradient.gradientTransform, gradient && gradient.gradientTransform)
+            (!compareObjects(selectionGradient.gradientTransform, gradient && gradient.gradientTransform) ||
+                (selectionStyleId && currentPaintStyle.id && selectionStyleId != currentPaintStyle.id))
         );
     }, [isSelection, hasGradientInSelection, currentPaintStyle, selection, selectionGradient, gradientTransform]);
 
     //METHODS
 
     //Apply current gradient to selected layers
-    const applyGradient = useCallback(() => {
-        if (gradientTransform) {
-            selectionGradient && setSelectionGradient(undefined);
-            parent.postMessage(
-                {
-                    pluginMessage: {
-                        type: 'apply-gradient',
-                        gradientStops,
-                        gradientTransform,
-                        gradientType,
-                        paintStyleId: currentPaintStyle && currentPaintStyle.id,
+    const applyGradient = useCallback(
+        (updatedGradient?: GradientPaint) => {
+            if (gradientTransform) {
+                selectionGradient && setSelectionGradient(undefined);
+                parent.postMessage(
+                    {
+                        pluginMessage: {
+                            paintStyleId: currentPaintStyle && currentPaintStyle.id,
+                            gradientStops,
+                            gradientTransform,
+                            gradientType: updatedGradient && updatedGradient.type ? updatedGradient.type : gradientType,
+                            ...updatedGradient,
+                            type: 'apply-gradient',
+                        },
                     },
-                },
-                '*'
-            );
-        }
-    }, [currentPaintStyle, gradientStops, gradientTransform, gradientType, selectionGradient, hasExternalStyle]);
+                    '*'
+                );
+            }
+        },
+        [currentPaintStyle, gradientStops, gradientTransform, gradientType, selectionGradient, hasExternalStyle]
+    );
 
-    const debouncedApply = useDebouncedCallback(() => {
-        applyGradient();
+    const debouncedApply = useDebouncedCallback((updatedGradient?: GradientPaint) => {
+        if (preferences.liveUpdates) {
+            applyGradient(updatedGradient);
+            updatedGradient && updatePaintInStyles(updatedGradient);
+        }
     }, DEFAULT_DEBOUNCE_TIMEOUT);
 
     const updatePaintInStyles = useCallback(
@@ -189,15 +198,6 @@ const GradientPage: FC<any> = ({}) => {
 
     //EVENT HANDLERS
 
-    const onChangeType = useCallback(
-        (type: GradientPaintType): void => {
-            setGradientType(type);
-            updatePaintInStyles({type: type} as GradientPaint);
-            debouncedApply();
-        },
-        [gradientType]
-    );
-
     const onCreateStyle = useCallback(
         (newName: string, gradientPaint: GradientPaint) => {
             parent.postMessage(
@@ -218,14 +218,23 @@ const GradientPage: FC<any> = ({}) => {
         [currentPaintStyle, styles, gradientStops, gradientTransform]
     );
 
+    const onChangeType = useCallback(
+        (type: GradientPaintType): void => {
+            setGradientType(type);
+            //  updatePaintInStyles({type: type} as GradientPaint);
+            debouncedApply({type: type} as GradientPaint);
+        },
+        [gradientType]
+    );
+
     const onChangeAngle = useCallback(
         (angle) => {
             if (angle != gradientAngle) {
                 const rotatedTransform = rotateTransform(angle);
                 setGradientTransform(rotatedTransform);
                 setGradientAngle(angle);
-                updatePaintInStyles({gradientTransform: rotatedTransform} as GradientPaint);
-                debouncedApply();
+                // updatePaintInStyles({gradientTransform: rotatedTransform} as GradientPaint);
+                debouncedApply({gradientTransform: rotatedTransform} as GradientPaint);
             }
         },
         [gradientAngle, gradientTransform, editingPaint, currentPaintStyle]
@@ -237,8 +246,8 @@ const GradientPage: FC<any> = ({}) => {
                 const scaledTransform = scaleTransform(scale / 100, scale / 100);
                 setGradientTransform(scaledTransform);
                 setGradientScale(+(scale / 100).toFixed(2));
-                updatePaintInStyles({gradientTransform: scaledTransform} as GradientPaint);
-                debouncedApply();
+                //     updatePaintInStyles({gradientTransform: scaledTransform} as GradientPaint);
+                debouncedApply({gradientTransform: scaledTransform} as GradientPaint);
             }
         },
         [gradientAngle, gradientTransform, gradientScale]
@@ -249,8 +258,8 @@ const GradientPage: FC<any> = ({}) => {
             const updatedGradientStops: GradientStops = _gradientStops;
             if (!compareObjects(gradientStops, updatedGradientStops)) {
                 setGradientStops(updatedGradientStops);
-                updatePaintInStyles({gradientStops: updatedGradientStops} as GradientPaint);
-                debouncedApply();
+                //    updatePaintInStyles({gradientStops: updatedGradientStops} as GradientPaint);
+                debouncedApply({gradientStops: updatedGradientStops} as GradientPaint);
             }
         },
         [gradientStops]
@@ -417,6 +426,7 @@ const GradientPage: FC<any> = ({}) => {
 
                     break;
                 case 'figma:preferencesupdate':
+                    console.log('message.preferences', message.preferences);
                     setPreferences(message.preferences);
                     break;
                 case 'figma:selectstyle':
@@ -539,6 +549,7 @@ const GradientPage: FC<any> = ({}) => {
                     hasExternalStyle={hasExternalStyle}
                     selection={selection}
                     selectionGradient={selectionGradient}
+                    currentPaintStyle={currentPaintStyle}
                     preferences={preferences}
                     onImport={importSelectionGradient}
                     onChangePreferences={onChangePreferences}
@@ -556,6 +567,7 @@ type GradientPageFooterProps = {
     hasExternalStyle: boolean;
     selection;
     selectionGradient;
+    currentPaintStyle: PaintStyle;
     preferences;
     onImport;
     onChangePreferences;
@@ -569,6 +581,7 @@ const GradientPageFooter: FC<GradientPageFooterProps> = ({
     hasExternalStyle,
     selection,
     selectionGradient,
+    currentPaintStyle,
     preferences,
     onImport,
     onChangePreferences,
@@ -577,10 +590,25 @@ const GradientPageFooter: FC<GradientPageFooterProps> = ({
     return (
         isGradient && (
             <Stack direction="row" spacing={2} py={3} px={3} borderTop="1px solid" borderColor="blackAlpha.100">
-                {isSelectionImportable && <ImportButton gradientPaint={selectionGradient} onImport={onImport} />}
-                <Button size="sm" colorScheme={'primary'} w="full" onClick={() => onApply()} isDisabled={!isSelection}>
-                    {!isSelection ? 'No selection' : 'Fill selection'}
-                    {selection && isSelection && isGradient ? (
+                <Fade in={isSelectionImportable} unmountOnExit>
+                    <ImportButton gradientPaint={selectionGradient} onImport={onImport} />
+                </Fade>
+                <Button
+                    size="sm"
+                    colorScheme={'primary'}
+                    w="full"
+                    onClick={() => onApply()}
+                    isDisabled={(!isSelection && !currentPaintStyle) || hasExternalStyle}
+                >
+                    <Text transition="all 0.15s">
+                        {currentPaintStyle && currentPaintStyle.id && !hasExternalStyle
+                            ? 'Update style'
+                            : isSelection
+                            ? 'Update fill'
+                            : 'No selection'}
+                    </Text>
+
+                    <Fade in={selection && isSelection && isGradient} unmountOnExit>
                         <Badge
                             ml={2}
                             size="xs"
@@ -594,9 +622,9 @@ const GradientPageFooter: FC<GradientPageFooterProps> = ({
                         >
                             {selection.length}
                         </Badge>
-                    ) : null}
+                    </Fade>
                 </Button>
-                <PreferencesDrawerButton DEFAULT_PREFERENCES={preferences} onChange={onChangePreferences} />
+                <PreferencesDrawerButton preferences={preferences} onChange={onChangePreferences} />
             </Stack>
         )
     );

@@ -52,14 +52,7 @@ const GradientStylesPicker: FC<Props> = ({
     return !styles ? (
         <GradientStylesSkeleton />
     ) : (
-        <Box
-            w="100%"
-            maxW="100%"
-            flexDir={'column'}
-            bgGradient="linear(to-b, white, gray.100)"
-            transition="all 0.25s"
-            {...rest}
-        >
+        <Box w="100%" maxW="100%" flexDir={'column'} bgColor="white" transition="all 0.25s" {...rest}>
             <RadioGroup
                 overflow="scroll"
                 w="100%"

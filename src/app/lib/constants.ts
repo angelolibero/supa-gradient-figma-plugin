@@ -6,7 +6,7 @@ export const DEFAULT_POOLING_TIMEOUT = 1000 * 2; //N second
 //Window
 export const DEFAULT_WINDOW_SIZE = {
     width: 240,
-    height: 456,
+    height: 464,
 };
 
 //Preferences
