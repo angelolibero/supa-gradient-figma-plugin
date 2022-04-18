@@ -54,9 +54,8 @@ export const DEFAULT_AFFINE_TRANSFORMS = {
 export const GRADIENT_TYPES: GradientPaintType[] = ['GRADIENT_LINEAR', 'GRADIENT_RADIAL', 'GRADIENT_ANGULAR'];
 export const DEFAULT_ANGLE = 180;
 export const DEFAULT_GRADIENT_STOPS = [
-    {position: 0.0, color: {r: 238 / 255, g: 241 / 255, b: 11 / 255, a: 1}},
-    {position: 0.5, color: {r: 215 / 255, g: 128 / 255, b: 37 / 255, a: 1}},
-    {position: 1.0, color: {r: 126 / 255, g: 32 / 255, b: 207 / 255, a: 1}},
+    {position: 0.0, color: {r: +(33 / 255).toFixed(2), g: +(214 / 255).toFixed(2), b: +(204 / 255).toFixed(2), a: 1}},
+    {position: 1.0, color: {r: +(126 / 255).toFixed(2), g: +(32 / 255).toFixed(2), b: +(207 / 255).toFixed(2), a: 1}},
 ];
 export const DEFAULT_GRADIENT_TRANSFORM = DEFAULT_AFFINE_TRANSFORMS[DEFAULT_ANGLE] as Transform;
 export const DEFAULT_GRADIENT_PAINT: GradientPaint = {
@@ -78,8 +77,8 @@ export const CHECKERED_GRADIENT_PROPS = {
 //GradientStops
 const STOP_WIDTH = 18;
 export const HALF_STOP_WIDTH = STOP_WIDTH / 2;
-export const DEFAULT_STOP_REMOVAL_DROP = 50;
-export const DEFAULT_PALETTE_WIDTH = 190;
+export const DEFAULT_STOP_REMOVAL_DROP = 32;
+export const DEFAULT_PALETTE_WIDTH = 186;
 export const DEFAULT_PALETTE_HEIGHT = 4; //Chakra size
 export const DEFAULT_MAX_STOPS = 6;
 export const DEFAULT_MIN_STOPS = 2;

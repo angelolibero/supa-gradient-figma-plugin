@@ -288,7 +288,7 @@ const GradientPage: FC<any> = ({}) => {
 
     useEffect(() => {
         const selectionGradientNode =
-            selection && selection.find((node: RectangleNode) => node && node.fills[0] && node.fills[0].gradientStops);
+            selection && selection.find((node: RectangleNode) => node && node.fills && node.fills[0].gradientStops);
 
         if (selection && selection.length && !currentPaintStyle) {
             //if selection and no currentPaintStyle
@@ -460,7 +460,7 @@ const GradientPage: FC<any> = ({}) => {
                     unmountOnExit
                     style={{width: '100%', height: '100%', position: 'absolute', top: 0, left: 0}}
                 >
-                    <Empty />
+                    <Empty onCreate={onCreateStyle} />
                 </Fade>
                 <Fade in={isGradient && !isLoading} unmountOnExit style={{width: '100%', height: '100%'}}>
                     {styles && (

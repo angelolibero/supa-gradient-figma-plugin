@@ -20,6 +20,7 @@ import {FocusableElement} from '@chakra-ui/utils';
 import {RgbaColorPicker} from 'react-colorful';
 import useDebounce from '../../../lib/hooks/useDebounce';
 import {DEFAULT_DEBOUNCE_TIMEOUT} from '../../../lib/constants';
+import CloseIcon from '../../icons/CloseIcon';
 
 export type ColorPickerDrawerSwatchProps = {
     color: RGBA;
@@ -158,7 +159,13 @@ export const ColorPickerDrawer: FC<ColorPickerDrawerProps> = ({
         >
             <DrawerOverlay />
             <DrawerContent textAlign="left">
-                <DrawerCloseButton boxSize={8} size="sm" rounded="sm" _focus={{boxShadow: 'none'}} />
+                <DrawerCloseButton
+                    boxSize={8}
+                    size="sm"
+                    rounded="sm"
+                    _focus={{boxShadow: 'none'}}
+                    children={<CloseIcon />}
+                />
                 <DrawerHeader px={4} pt={4} pb={0}>
                     <Stack direction="row" flex="1" spacing={2} alignItems="flex-start">
                         <Text>Edit color stop</Text>

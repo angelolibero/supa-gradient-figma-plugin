@@ -1,11 +1,22 @@
 import * as React from 'react';
-import {FC} from 'react';
-import {StackProps, Stack, List, ListIcon, ListItem, Text} from '@chakra-ui/react';
-import {MdCheckCircle} from 'react-icons/md';
+import {FC, useRef, useCallback} from 'react';
+import {StackProps, Stack, Button, Text, useDisclosure} from '@chakra-ui/react';
+import {MdAdd} from 'react-icons/md';
+import {CreateStyleDrawer} from './Drawers/CreateStyleDrawerButton';
+import {DEFAULT_GRADIENT_PAINT} from '../../lib/constants';
 
-type Props = {} & StackProps;
+type Props = {onCreate?: (name: string, paint: GradientPaint) => void} & StackProps;
 
-const Empty: FC<Props> = ({...rest}) => {
+const Empty: FC<Props> = ({onCreate, ...rest}) => {
+    const {isOpen, onOpen, onClose} = useDisclosure();
+    const btnRef = useRef<HTMLButtonElement>();
+
+    const handleOnCreate = useCallback((name: string, paint: GradientPaint) => {
+        if (!name || name.length == 0) return;
+        onCreate(name, paint);
+        onClose();
+    }, []);
+
     return (
         <Stack
             py={4}
@@ -17,28 +28,29 @@ const Empty: FC<Props> = ({...rest}) => {
             boxSize={'100%'}
             {...rest}
         >
-            <Stack>
-                <Text textAlign="center" fontSize="sm" fontWeight="semibold">
-                    Selection has't gradients fills
-                </Text>
-                <Text textAlign="center" fontSize="xs">
-                    Here is what you can do:
-                </Text>
-            </Stack>
-            <List fontSize="xs" w="100%" textAlign="center" alignItems="center" justifyContent="center">
-                <ListItem d="flex">
-                    <ListIcon as={MdCheckCircle} color="primary.500" d="inline-block" />
-                    <Text>Select a layer with linear gradient</Text>
-                </ListItem>
-                <ListItem d="flex">
-                    <ListIcon as={MdCheckCircle} color="primary.500" d="inline-block" />
-                    <Text> Select a existing gradient</Text>
-                </ListItem>
-                <ListItem d="flex">
-                    <ListIcon as={MdCheckCircle} color="primary.500" d="inline-block" />
-                    <Text> Or create a new gradient</Text>
-                </ListItem>
-            </List>
+            <Text textAlign="center" fontSize="sm" fontWeight="semibold">
+                No gradients styles found
+            </Text>
+            <Button
+                leftIcon={<MdAdd />}
+                aria-label="Create style"
+                rounded="full"
+                border="1px dashed"
+                borderColor="gray.200"
+                bgColor="white"
+                size="sm"
+                ref={btnRef}
+                onClick={onOpen as any}
+            >
+                Create gradient
+            </Button>
+            <CreateStyleDrawer
+                gradientPaint={DEFAULT_GRADIENT_PAINT}
+                isOpen={isOpen}
+                onClose={onClose}
+                onCreate={handleOnCreate}
+                btnRef={btnRef}
+            />
         </Stack>
     );
 };

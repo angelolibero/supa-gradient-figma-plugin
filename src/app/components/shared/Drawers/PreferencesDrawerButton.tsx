@@ -23,6 +23,7 @@ import {
 import {Preferences} from '../../../typings';
 import {MdMoreVert} from 'react-icons/md';
 import Logo from '../Logo';
+import CloseIcon from '../../icons/CloseIcon';
 
 type Props = {
     preferences: Preferences;
@@ -103,7 +104,13 @@ export const PreferencesDrawer: FC<PreferencesDrawerProps> = ({
             <DrawerOverlay />
             <DrawerContent textAlign="left">
                 <DrawerHeader p={4}>
-                    <DrawerCloseButton boxSize={8} size="sm" rounded="sm" _focus={{boxShadow: 'none'}} />
+                    <DrawerCloseButton
+                        boxSize={8}
+                        size="sm"
+                        rounded="sm"
+                        _focus={{boxShadow: 'none'}}
+                        children={<CloseIcon />}
+                    />
                     <Stack direction="row" alignItems="center">
                         <Logo />
                         <Stack spacing={0} justifyContent="flex-start">

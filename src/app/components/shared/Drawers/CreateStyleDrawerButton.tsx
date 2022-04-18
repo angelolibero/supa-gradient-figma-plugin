@@ -26,11 +26,12 @@ import GradientSwatch from '../Swatchs/GradientSwatch';
 import GradientTypeTabs from '../GradientTypeTabs';
 import {GRADIENT_TYPES} from '../../../lib/constants';
 import {GradientPaintType} from '../../../typings';
+import CloseIcon from '../../icons/CloseIcon';
 
 type Props = {
     style?: PaintStyle;
     gradientPaint: GradientPaint;
-    onCreate: (name: string, gradientPaint: GradientPaint) => void;
+    onCreate?: (name: string, gradientPaint: GradientPaint) => void;
 } & Omit<ButtonProps, 'onCreate'>;
 
 const CreateStyleDrawerButton: FC<Props> = ({gradientPaint, style, onCreate, ...rest}) => {
@@ -72,7 +73,6 @@ const CreateStyleDrawerButton: FC<Props> = ({gradientPaint, style, onCreate, ...
                 gradientPaint={gradientPaint}
                 style={style}
                 isOpen={isOpen}
-                placement="bottom"
                 onClose={onClose}
                 onCreate={handleOnCreate}
                 btnRef={btnRef}
@@ -134,7 +134,13 @@ export const CreateStyleDrawer: FC<CreateStyleDrawerProps> = ({
             <DrawerOverlay />
             <DrawerContent textAlign="left">
                 <DrawerHeader p={4}>
-                    <DrawerCloseButton boxSize={8} size="sm" rounded="sm" _focus={{boxShadow: 'none'}} />
+                    <DrawerCloseButton
+                        boxSize={8}
+                        size="sm"
+                        rounded="sm"
+                        _focus={{boxShadow: 'none'}}
+                        children={<CloseIcon />}
+                    />
                     <Stack flex="1" spacing={2} alignItems="flex-start">
                         {newPaint && newPaint.gradientTransform && (
                             <GradientSwatch
@@ -158,7 +164,7 @@ export const CreateStyleDrawer: FC<CreateStyleDrawerProps> = ({
                         onSubmit={(event) => {
                             event.stopPropagation();
                             event.preventDefault();
-                            onCreate(name, newPaint);
+                            handleCreate(event);
                         }}
                     >
                         <GradientTypeTabs value={gradientType} onChange={onChangeType} mb={3} />

@@ -49,7 +49,7 @@ const SolidSwatch: FC<Props> = ({style, isActive, size, onSelect, ...rest}) => {
             {style && style.paints && (
                 <Tooltip
                     label={style && style.name}
-                    openDelay={300}
+                    openDelay={500}
                     isDisabled={!style || !(style && style.id)}
                     offset={[0, -1]}
                 >
