@@ -178,7 +178,7 @@ export const CreateStyleDrawer: FC<CreateStyleDrawerProps> = ({
                             variant="filled"
                             mb={4}
                         />
-                        <Stack direction="row" alignItems="flex-start" justifyContent="flex-start">
+                        <Stack direction="column" alignItems="flex-start" justifyContent="flex-start">
                             <Badge colorScheme="green" size="sm" fontSize="xs" px={1}>
                                 Tip
                             </Badge>

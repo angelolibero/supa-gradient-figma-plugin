@@ -602,9 +602,9 @@ const GradientPageFooter: FC<GradientPageFooterProps> = ({
                 >
                     <Text transition="all 0.15s">
                         {currentPaintStyle && currentPaintStyle.id && !hasExternalStyle
-                            ? 'Update style'
+                            ? 'Update' //style
                             : isSelection
-                            ? 'Update fill'
+                            ? 'Update' //fill
                             : 'No selection'}
                     </Text>
 
