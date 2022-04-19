@@ -42,7 +42,6 @@ const GradientStopsListItem: FC<GradientStopsListItemProps> = ({
             ...stop,
             color,
         };
-        console.log('updatedStop', updatedStop);
         onChange && onChange(updatedStop, index);
     };
 

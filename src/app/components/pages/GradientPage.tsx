@@ -426,7 +426,7 @@ const GradientPage: FC<any> = ({}) => {
 
                     break;
                 case 'figma:preferencesupdate':
-                    console.log('message.preferences', message.preferences);
+                    // console.log('message.preferences', message.preferences);
                     setPreferences(message.preferences);
                     break;
                 case 'figma:selectstyle':
