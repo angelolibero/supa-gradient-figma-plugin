@@ -43,6 +43,7 @@ export const decomposeTransform = (transform: Transform) => {
 };
 
 export const degreesFromTransform = (transform: Transform, degreeOffset: number = figmaDegreesOffset): number => {
+    if (!transform) return undefined;
     const decomposed = decomposeTransform(transform);
     const degrees = decomposed.rotation.angle * (180 / Math.PI);
 

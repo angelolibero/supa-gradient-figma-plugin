@@ -160,7 +160,7 @@ const GradientPage: FC<any> = ({}) => {
             setGradientType(gradientPaint.type);
             setGradientAngle(angle == 0 && gradientAngle == 360 ? 360 : angle);
             setSelectionGradient(undefined);
-            debouncedApply();
+            updatePaintStyle && debouncedApply();
         },
         [styles]
     );
@@ -316,7 +316,9 @@ const GradientPage: FC<any> = ({}) => {
             }
         } else {
             //No selection, remove selectionGradient
-            selectionGradient && setSelectionGradient(undefined);
+            if (selectionGradient) {
+                setSelectionGradient(undefined);
+            }
         }
     }, [selection]);
 
@@ -389,6 +391,8 @@ const GradientPage: FC<any> = ({}) => {
             selectPaintStyle(styles.gradients[0]);
         } else if (styles.gradients.length == 0 && currentPaintStyle) {
             setCurrentPaintStyle(undefined);
+        } else if (styles.gradients[0] && !selectionGradient && !currentPaintStyle) {
+            selectPaintStyle(styles.gradients[0], false);
         }
 
         isLoading && setIsLoading(false);
