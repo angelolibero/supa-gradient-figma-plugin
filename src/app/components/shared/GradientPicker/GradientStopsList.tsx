@@ -4,6 +4,7 @@ import {StackProps, Stack} from '@chakra-ui/react';
 import {GradientStops} from '../../../typings';
 import GradientStopsListItem from './GradientStopsListItem';
 import '../../../styles/picker.css';
+import {DEFAULT_MIN_STOPS} from '../../../lib/constants';
 
 type Props = {
     gradientStops?: readonly ColorStop[];
@@ -37,7 +38,7 @@ const GradientStopsList: FC<Props> = ({
         (stop: ColorStop) => {
             let stops = [...gradientStops];
             const index = gradientStops.indexOf(stop);
-            if (index >= 0) {
+            if (index >= 0 && gradientStops.length > DEFAULT_MIN_STOPS) {
                 stops.splice(index, 1);
                 onChange && onChange(stops);
             }
