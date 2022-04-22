@@ -391,7 +391,7 @@ const GradientPage: FC<any> = ({}) => {
             selectPaintStyle(styles.gradients[0]);
         } else if (styles.gradients.length == 0 && currentPaintStyle) {
             setCurrentPaintStyle(undefined);
-        } else if (styles.gradients[0] && !selectionGradient && !currentPaintStyle) {
+        } else if (styles.gradients[0] && !selectionGradient && !currentPaintStyle && !gradientTransform) {
             selectPaintStyle(styles.gradients[0], false);
         }
 

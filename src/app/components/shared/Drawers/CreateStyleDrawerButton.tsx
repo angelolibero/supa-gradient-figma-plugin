@@ -27,6 +27,7 @@ import GradientTypeTabs from '../GradientTypeTabs';
 import {GRADIENT_TYPES} from '../../../lib/constants';
 import {GradientPaintType} from '../../../typings';
 import CloseIcon from '../../icons/CloseIcon';
+import {rotateTransform} from '../../../lib/matrix';
 
 type Props = {
     style?: PaintStyle;
@@ -104,7 +105,7 @@ export const CreateStyleDrawer: FC<CreateStyleDrawerProps> = ({
     const inputRef = useRef<HTMLInputElement>();
 
     const newPaint = useMemo(() => {
-        return {...gradientPaint, type: gradientType};
+        return {gradientTransform: rotateTransform(0), ...gradientPaint, type: gradientType};
     }, [gradientPaint, gradientType]);
 
     const onChangeName = useCallback((event) => setName(event.target.value), [name]);

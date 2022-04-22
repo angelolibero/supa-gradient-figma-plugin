@@ -1,4 +1,5 @@
 import {GradientPaintType, Preferences} from '../typings';
+import {rotateTransform} from './matrix';
 
 //Styles pooling timeout
 export const DEFAULT_POOLING_TIMEOUT = 1000 * 2; //N second
@@ -57,7 +58,7 @@ export const DEFAULT_GRADIENT_STOPS = [
     {position: 0.0, color: {r: +(33 / 255).toFixed(2), g: +(214 / 255).toFixed(2), b: +(204 / 255).toFixed(2), a: 1}},
     {position: 1.0, color: {r: +(126 / 255).toFixed(2), g: +(32 / 255).toFixed(2), b: +(207 / 255).toFixed(2), a: 1}},
 ];
-export const DEFAULT_GRADIENT_TRANSFORM = DEFAULT_AFFINE_TRANSFORMS[DEFAULT_ANGLE] as Transform;
+export const DEFAULT_GRADIENT_TRANSFORM = rotateTransform(DEFAULT_ANGLE);
 export const DEFAULT_GRADIENT_PAINT: GradientPaint = {
     gradientTransform: DEFAULT_GRADIENT_TRANSFORM,
     gradientStops: DEFAULT_GRADIENT_STOPS,
