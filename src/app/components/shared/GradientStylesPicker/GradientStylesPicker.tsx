@@ -54,7 +54,8 @@ const GradientStylesPicker: FC<Props> = ({
     ) : (
         <Box w="100%" maxW="100%" flexDir={'column'} bgColor="white" transition="all 0.25s" {...rest}>
             <RadioGroup
-                overflow="scroll"
+                overflowX="scroll"
+                overflowY="hidden"
                 w="100%"
                 maxW="100%"
                 value={selectedStyle ? selectedStyle.id : undefined}

@@ -450,7 +450,8 @@ const GradientPage: FC<any> = ({}) => {
                 alignItems="center"
                 spacing={0}
                 boxSize="100%"
-                overflow="scroll"
+                overflowY="scroll"
+                overflowX="hidden"
                 pb={currentPaintStyle || gradientTransform ? 0 : 0}
                 boxSizing="content-box"
                 ref={scrollElementRef}
