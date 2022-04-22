@@ -69,19 +69,24 @@ const BaseSlider: FC<Props> = ({
     const handleOnBlur = useCallback(
         (updatedValue = undefined) => {
             setSliderValue(updatedValue || inputValue);
-            onChange && onChange(updatedValue || inputValue);
+            onChange && onChange(inputValue);
         },
         [onChange, inputValue]
     );
 
     const handleOnFocus = useCallback((event) => event.target.select(), []);
 
-    const handleOnKeyDown = useCallback((event) => {
-        //enter key code:
-        if (event.key === 'Enter' || event.keyCode === 13) {
-            handleOnBlur(event.target && event.target.value.length ? event.target.value : undefined);
-        }
-    }, []);
+    const handleOnKeyDown = useCallback(
+        (event) => {
+            //enter key code:
+            if (event.key === 'Enter' || event.keyCode === 13) {
+                event.target &&
+                    parseInt(event.target.value) &&
+                    handleOnBlur(event.target.value.length ? parseInt(event.target.value) : undefined);
+            }
+        },
+        [inputRef]
+    );
 
     useEffect(() => {
         if (value != sliderValue) {

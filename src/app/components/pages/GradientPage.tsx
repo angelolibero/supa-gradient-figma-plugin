@@ -290,6 +290,20 @@ const GradientPage: FC<any> = ({}) => {
         const selectionGradientNode =
             selection && selection.find((node: RectangleNode) => node && node.fills && node.fills[0].gradientStops);
 
+        // selection &&
+        //     selection.map(
+        //         (node: RectangleNode) =>
+        //             node.fills[0].type == 'GRADIENT_LINEAR' &&
+        //             console.log(
+        //                 '{gradientStops: ' +
+        //                     JSON.stringify(node.fills[0].gradientStops) +
+        //                     ',' +
+        //                     'gradientTransform: ' +
+        //                     JSON.stringify(node.fills[0].gradientTransform) +
+        //                     '}'
+        //             )
+        //     );
+
         if (selection && selection.length && !currentPaintStyle) {
             //if selection and no currentPaintStyle
             if (selectionGradientNode && selectionGradientNode.fillStyleId && !gradientTransform) {

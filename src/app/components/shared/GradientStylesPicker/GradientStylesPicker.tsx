@@ -6,6 +6,7 @@ import CreateStyleDrawerButton from '../Drawers/CreateStyleDrawerButton';
 import {bgColorsFromStops, bgGradientFromColors} from '../../../lib/colors';
 import GradientStylesSkeleton from './GradientStylesSkeleton';
 import {degreesFromTransform} from '../../../lib/matrix';
+// import LibraryDrawerButton from '../Drawers/LibraryDrawerButton';
 
 type Props = {
     styles: PaintStyle[];
@@ -62,6 +63,7 @@ const GradientStylesPicker: FC<Props> = ({
                 transition="all 0.25s"
             >
                 <Stack direction="row" spacing={3} w="fit-content" height="auto" alignItems="center" p={3}>
+                    {/* <LibraryDrawerButton /> */}
                     {editingPaint && (
                         <Center pos="relative">
                             <CreateStyleDrawerButton
