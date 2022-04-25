@@ -6,14 +6,15 @@ import CreateStyleDrawerButton from '../Drawers/CreateStyleDrawerButton';
 import {bgColorsFromStops, bgGradientFromColors} from '../../../lib/colors';
 import GradientStylesSkeleton from './GradientStylesSkeleton';
 import {degreesFromTransform} from '../../../lib/matrix';
-// import LibraryDrawerButton from '../Drawers/LibraryDrawerButton';
+import LibraryDrawerButton from '../Drawers/LibraryDrawerButton';
 
 type Props = {
     styles: PaintStyle[];
     selectedStyle?: PaintStyle;
     editingPaint?: GradientPaint;
     isChanged?: boolean;
-    onSelect: (style: PaintStyle) => void;
+    onSelectStyle: (style: PaintStyle) => void;
+    onSelectPaint: (paint: GradientPaint) => void;
     onCreate?: (name: string, gradientPaint?: GradientPaint) => void;
 } & Omit<BoxProps, 'onSelect' | 'children'>;
 
@@ -22,7 +23,8 @@ const GradientStylesPicker: FC<Props> = ({
     selectedStyle,
     editingPaint,
     isChanged,
-    onSelect,
+    onSelectStyle,
+    onSelectPaint,
     onCreate,
     ...rest
 }) => {
@@ -41,13 +43,21 @@ const GradientStylesPicker: FC<Props> = ({
         }
     }, [selectedStyle, currentGradientPaint, editingPaint]);
 
-    //Select PaintGradient from a global PaintStyle
-    const handleOnSelect = useCallback(
+    //Select gradient style from a global Styles
+    const handleOnSelectStyle = useCallback(
         (paintStyle: PaintStyle) => {
             if (selectedStyle && selectedStyle.id == paintStyle.id) return;
-            onSelect(paintStyle);
+            onSelectStyle(paintStyle);
         },
-        [onSelect, selectedStyle, styles]
+        [onSelectStyle, selectedStyle, styles]
+    );
+
+    //Select GradientPaint
+    const handleOnSelectPaint = useCallback(
+        (paint: GradientPaint) => {
+            onSelectPaint(paint);
+        },
+        [onSelectPaint]
     );
 
     return !styles ? (
@@ -62,8 +72,8 @@ const GradientStylesPicker: FC<Props> = ({
                 value={selectedStyle ? selectedStyle.id : undefined}
                 transition="all 0.25s"
             >
-                <Stack direction="row" spacing={3} w="fit-content" height="auto" alignItems="center" p={3}>
-                    {/* <LibraryDrawerButton /> */}
+                <Stack direction="row" spacing={2} w="fit-content" height="auto" alignItems="center" p={3}>
+                    <LibraryDrawerButton onSelect={handleOnSelectPaint} />
                     {editingPaint && (
                         <Center pos="relative">
                             <CreateStyleDrawerButton
@@ -102,7 +112,7 @@ const GradientStylesPicker: FC<Props> = ({
                                 <GradientSwatch
                                     style={style}
                                     key={index}
-                                    onSelect={handleOnSelect}
+                                    onSelect={handleOnSelectStyle}
                                     isActive={selectedStyle && style.id == selectedStyle.id}
                                     //    showReset={isChanged && selectedStyle && paintStyle.id == selectedStyle.id}
                                 />

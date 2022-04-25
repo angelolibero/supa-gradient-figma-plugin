@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {chakra, BoxProps} from '@chakra-ui/react';
 
-const LibraryIcon = (props: BoxProps) => {
+const BookIcon = (props: BoxProps) => {
     return (
         <chakra.div {...props}>
             <svg className="svg" width="18" height="14" viewBox="0 0 18 14" xmlns="http://www.w3.org/2000/svg">
@@ -17,4 +17,4 @@ const LibraryIcon = (props: BoxProps) => {
     );
 };
 
-export default LibraryIcon;
+export default BookIcon;

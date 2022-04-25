@@ -168,6 +168,7 @@ const GradientPage: FC<any> = ({}) => {
     //Select PaintGradient
     const selectGradientPaint = useCallback(
         (paint: GradientPaint) => {
+            if (currentPaintStyle) setCurrentPaintStyle(undefined);
             //Selects a gradient paint to edit without changing selection
             setGradientStops(paint.gradientStops);
             setGradientTransform(paint.gradientTransform);
@@ -175,7 +176,7 @@ const GradientPage: FC<any> = ({}) => {
             setGradientAngle(degreesFromTransform(paint.gradientTransform));
             //  applyGradient();
         },
-        [selection]
+        [selection, currentPaintStyle]
     );
 
     //Import a PaintGradient from current selection
@@ -290,19 +291,19 @@ const GradientPage: FC<any> = ({}) => {
         const selectionGradientNode =
             selection && selection.find((node: RectangleNode) => node && node.fills && node.fills[0].gradientStops);
 
-        // selection &&
-        //     selection.map(
-        //         (node: RectangleNode) =>
-        //             node.fills[0].type == 'GRADIENT_LINEAR' &&
-        //             console.log(
-        //                 '{gradientStops: ' +
-        //                     JSON.stringify(node.fills[0].gradientStops) +
-        //                     ',' +
-        //                     'gradientTransform: ' +
-        //                     JSON.stringify(node.fills[0].gradientTransform) +
-        //                     '}'
-        //             )
-        //     );
+        selection &&
+            selection.map(
+                (node: RectangleNode) =>
+                    node.fills[0].type == 'GRADIENT_LINEAR' &&
+                    console.log(
+                        '{gradientStops: ' +
+                            JSON.stringify(node.fills[0].gradientStops) +
+                            ',' +
+                            'gradientTransform: ' +
+                            JSON.stringify(node.fills[0].gradientTransform) +
+                            '}'
+                    )
+            );
 
         if (selection && selection.length && !currentPaintStyle) {
             //if selection and no currentPaintStyle
@@ -487,7 +488,8 @@ const GradientPage: FC<any> = ({}) => {
                             selectedStyle={currentPaintStyle}
                             isChanged={isChanged}
                             editingPaint={editingPaint}
-                            onSelect={selectPaintStyle}
+                            onSelectStyle={selectPaintStyle}
+                            onSelectPaint={selectGradientPaint}
                             onCreate={onCreateStyle}
                             pos="sticky"
                             top={0}

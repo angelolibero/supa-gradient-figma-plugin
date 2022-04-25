@@ -65,6 +65,7 @@ input:focus {
     background: var(--supa-ui-colors-gray-200);
     border-radius: 100px;
     overflow: hidden;
+    border: 1px solid #fff;
 }
 
 /* Handle on hover */

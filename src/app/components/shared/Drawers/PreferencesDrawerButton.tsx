@@ -76,7 +76,6 @@ const PreferencesDrawerButton: FC<Props> = ({preferences: value, onChange, ...re
             <PreferencesDrawer
                 preferences={preferences}
                 isOpen={isOpen}
-                placement="bottom"
                 onClose={onClose}
                 btnRef={btnRef}
                 onUpdate={handleOnUpdate}

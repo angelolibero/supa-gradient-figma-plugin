@@ -63,7 +63,6 @@ const SolidPaintPickerDrawerButton: FC<Props> = ({selectedPaintStyle, onSelect, 
             <SolidPaintPickerDrawer
                 selectedPaintStyle={selectedPaintStyle}
                 isOpen={isOpen}
-                placement="bottom"
                 onClose={onClose}
                 onSelect={handleOnSelect}
                 btnRef={btnRef}
