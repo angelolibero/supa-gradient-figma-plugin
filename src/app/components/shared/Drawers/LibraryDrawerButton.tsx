@@ -31,7 +31,7 @@ import {GRADIENTS_COLOR_CATEGORIES, LINEAR_GRADIENTS_LIBRARY} from '../../../lib
 type Props = {
     gradientType?: GradientPaintType;
     selectedPaint?: GradientPaint;
-    onSelect?: (paint: GradientPaint) => void;
+    onSelect?: (paint: GradientPaint, name?: string) => void;
 } & Omit<ButtonProps, 'onCreate' | 'onSelect'>;
 
 const LibraryDrawerButton: FC<Props> = ({gradientType = 'GRADIENT_LINEAR', selectedPaint, onSelect, ...rest}) => {
@@ -39,8 +39,8 @@ const LibraryDrawerButton: FC<Props> = ({gradientType = 'GRADIENT_LINEAR', selec
     const btnRef = useRef<HTMLButtonElement>();
 
     const handleOnSelect = useCallback(
-        (paint: GradientPaint) => {
-            onSelect && onSelect(paint);
+        (paint: GradientPaint, name: string) => {
+            onSelect && onSelect(paint, name);
             onClose();
         },
         [onSelect, onClose, selectedPaint]
@@ -61,6 +61,7 @@ const LibraryDrawerButton: FC<Props> = ({gradientType = 'GRADIENT_LINEAR', selec
                         bgColor="gray.100"
                         fill="primary.500"
                         fontSize="md"
+                        border="1px solid #fff"
                         ref={btnRef}
                         onClick={onOpen}
                         {...rest}
@@ -75,7 +76,7 @@ const LibraryDrawerButton: FC<Props> = ({gradientType = 'GRADIENT_LINEAR', selec
 type LibraryDrawerProps = {
     selectedPaint?: GradientPaint;
     btnRef: RefObject<HTMLButtonElement>;
-    onSelect: (paint: GradientPaint) => void;
+    onSelect: (paint: GradientPaint, name?: string) => void;
 } & Omit<DrawerProps, 'children'>;
 
 export const LibraryDrawer: FC<LibraryDrawerProps> = ({selectedPaint, isOpen, btnRef, onClose, onSelect, ...rest}) => {
@@ -83,7 +84,7 @@ export const LibraryDrawer: FC<LibraryDrawerProps> = ({selectedPaint, isOpen, bt
     const gradients = LINEAR_GRADIENTS_LIBRARY;
     const categories = GRADIENTS_COLOR_CATEGORIES;
 
-    const handleSelect = useCallback((paint?: GradientPaint) => onSelect(paint), [onSelect]);
+    const handleSelect = useCallback((name: string, paint: GradientPaint) => onSelect(paint, name), [onSelect]);
 
     const handleSelectCatergory = useCallback((categoryName?: string) => {
         const group = document.getElementById('group-' + categoryName);
@@ -168,7 +169,7 @@ export const LibraryDrawer: FC<LibraryDrawerProps> = ({selectedPaint, isOpen, bt
                                                 <GradientItem
                                                     defaultPaint={gradient}
                                                     key={index}
-                                                    onSelect={handleSelect}
+                                                    onSelect={(paint) => handleSelect(gradient.name, paint)}
                                                 />
                                             );
                                         })}

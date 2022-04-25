@@ -101,8 +101,8 @@ const GradientStylesPicker: FC<Props> = ({
                     )}
                     {editingPaint && editingPaint.gradientTransform && styles.length == 0 && (
                         <Box>
-                            <Text fontSize="xs" textAlign="left">
-                                Create gradient style
+                            <Text fontSize="xs" textAlign="left" px={1}>
+                                0 styles
                             </Text>
                         </Box>
                     )}
@@ -114,7 +114,6 @@ const GradientStylesPicker: FC<Props> = ({
                                     key={index}
                                     onSelect={handleOnSelectStyle}
                                     isActive={selectedStyle && style.id == selectedStyle.id}
-                                    //    showReset={isChanged && selectedStyle && paintStyle.id == selectedStyle.id}
                                 />
                             );
                         })}
