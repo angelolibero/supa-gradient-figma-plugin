@@ -1,12 +1,12 @@
 import * as React from 'react';
 import {FC, useMemo, useCallback} from 'react';
-import {RadioGroup, Center, BoxProps, Stack, Box, Text} from '@chakra-ui/react';
+import {RadioGroup, Center, BoxProps, Stack, Box} from '@chakra-ui/react';
 import GradientSwatch from '../Swatchs/GradientSwatch';
 import CreateStyleDrawerButton from '../Drawers/CreateStyleDrawerButton';
 import {bgColorsFromStops, bgGradientFromColors} from '../../../lib/colors';
 import GradientStylesSkeleton from './GradientStylesSkeleton';
 import {degreesFromTransform} from '../../../lib/matrix';
-import LibraryDrawerButton from '../Drawers/LibraryDrawerButton';
+import CollectionDrawerButton from '../Drawers/CollectionDrawerButton';
 
 type Props = {
     styles: PaintStyle[];
@@ -73,7 +73,7 @@ const GradientStylesPicker: FC<Props> = ({
                 transition="all 0.25s"
             >
                 <Stack direction="row" spacing={2} w="fit-content" height="auto" alignItems="center" p={3}>
-                    <LibraryDrawerButton onSelect={handleOnSelectPaint} />
+                    <CollectionDrawerButton onSelect={handleOnSelectPaint} />
                     {editingPaint && (
                         <Center pos="relative">
                             <CreateStyleDrawerButton
@@ -99,13 +99,13 @@ const GradientStylesPicker: FC<Props> = ({
                             )}
                         </Center>
                     )}
-                    {editingPaint && editingPaint.gradientTransform && styles.length == 0 && (
+                    {/* {editingPaint && editingPaint.gradientTransform && styles.length == 0 && (
                         <Box>
                             <Text fontSize="xs" textAlign="left" px={1}>
                                 0 styles
                             </Text>
                         </Box>
-                    )}
+                    )} */}
                     {styles &&
                         styles.map((style, index) => {
                             return (

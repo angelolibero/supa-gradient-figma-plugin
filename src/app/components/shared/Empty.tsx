@@ -3,7 +3,7 @@ import {FC, useRef, useCallback} from 'react';
 import {StackProps, Stack, Button, Text, useDisclosure} from '@chakra-ui/react';
 import {CreateStyleDrawer} from './Drawers/CreateStyleDrawerButton';
 import {DEFAULT_GRADIENT_PAINT} from '../../lib/constants';
-import {LibraryDrawer} from './Drawers/LibraryDrawerButton';
+import {CollectionDrawer} from './Drawers/CollectionDrawerButton';
 import ListIcon from '../icons/ListIcon';
 import {MdAdd} from 'react-icons/md';
 
@@ -29,7 +29,6 @@ const Empty: FC<Props> = ({onCreate, onSelect, ...rest}) => {
 
     const handleOnSelect = useCallback(
         (paint: GradientPaint, name?: string) => {
-            //   if (!name || name.length == 0) return;
             onSelect(paint, name);
             onCloseLibrary();
         },
@@ -52,7 +51,7 @@ const Empty: FC<Props> = ({onCreate, onSelect, ...rest}) => {
                     No gradients found
                 </Text>
                 <Text textAlign="center" fontSize="xs" color="gray.500">
-                    Create a new gradient or explore 54 supa-gradients from our library.
+                    Create a new gradient or explore our collection of supa-gradients.
                 </Text>
             </Stack>
             <Button
@@ -74,7 +73,7 @@ const Empty: FC<Props> = ({onCreate, onSelect, ...rest}) => {
                 onClick={onOpenLibrary as any}
                 colorScheme="primary"
             >
-                Explore gradients
+                Explore collection
             </Button>
             <CreateStyleDrawer
                 gradientPaint={DEFAULT_GRADIENT_PAINT}
@@ -83,7 +82,12 @@ const Empty: FC<Props> = ({onCreate, onSelect, ...rest}) => {
                 onCreate={handleOnCreate}
                 btnRef={btnRef}
             />
-            <LibraryDrawer isOpen={isLibraryOpen} onClose={onCloseLibrary} onSelect={handleOnSelect} btnRef={btnRef} />
+            <CollectionDrawer
+                isOpen={isLibraryOpen}
+                onClose={onCloseLibrary}
+                onSelect={handleOnSelect}
+                btnRef={btnRef}
+            />
         </Stack>
     );
 };

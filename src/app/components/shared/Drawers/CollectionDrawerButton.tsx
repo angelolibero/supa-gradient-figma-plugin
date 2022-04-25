@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {FC, RefObject, useRef, useCallback} from 'react';
+import {FC, RefObject, useRef, useCallback, useState, useEffect} from 'react';
 import {
     IconButton,
     Tooltip,
@@ -9,7 +9,6 @@ import {
     DrawerContent,
     DrawerProps,
     DrawerHeader,
-    DrawerOverlay,
     DrawerCloseButton,
     useDisclosure,
     ButtonProps,
@@ -17,9 +16,10 @@ import {
     Text,
     Box,
     Badge,
-    Divider,
     Circle,
     Flex,
+    Center,
+    DrawerOverlay,
 } from '@chakra-ui/react';
 import GradientItem from '../GradientItem';
 import {GradientPaintType} from '../../../typings';
@@ -34,13 +34,19 @@ type Props = {
     onSelect?: (paint: GradientPaint, name?: string) => void;
 } & Omit<ButtonProps, 'onCreate' | 'onSelect'>;
 
-const LibraryDrawerButton: FC<Props> = ({gradientType = 'GRADIENT_LINEAR', selectedPaint, onSelect, ...rest}) => {
+const CollectionDrawerButton: FC<Props> = ({gradientType = 'GRADIENT_LINEAR', selectedPaint, onSelect, ...rest}) => {
+    const [latestScrollTop, setLatestScrollTop] = useState<number>(0);
     const {isOpen, onOpen, onClose} = useDisclosure();
     const btnRef = useRef<HTMLButtonElement>();
+    const scrollRef = useRef<HTMLDivElement>();
 
     const handleOnSelect = useCallback(
         (paint: GradientPaint, name: string) => {
             onSelect && onSelect(paint, name);
+            if (scrollRef && scrollRef.current) {
+                setLatestScrollTop(scrollRef.current.scrollTop);
+            }
+
             onClose();
         },
         [onSelect, onClose, selectedPaint]
@@ -48,82 +54,126 @@ const LibraryDrawerButton: FC<Props> = ({gradientType = 'GRADIENT_LINEAR', selec
 
     return (
         <>
-            <Tooltip label="Library" openDelay={300} placement="bottom">
+            <Tooltip label="Collection" openDelay={300} placement="bottom">
                 <Box>
                     <IconButton
-                        icon={<ListIcon color="inherit" />}
-                        aria-label="library"
-                        boxSize={7}
-                        minW={7}
-                        maxW={7}
+                        icon={<ListIcon />}
+                        aria-label="collection"
+                        boxSize={6}
+                        minW={6}
+                        maxW={6}
                         p={0}
                         rounded="full"
-                        bgColor="gray.100"
-                        fill="primary.500"
                         fontSize="md"
-                        border="1px solid #fff"
                         ref={btnRef}
                         onClick={onOpen}
                         {...rest}
                     />
                 </Box>
             </Tooltip>
-            <LibraryDrawer isOpen={isOpen} onClose={onClose} onSelect={handleOnSelect} btnRef={btnRef} />
+            <CollectionDrawer
+                isOpen={isOpen}
+                latestScrollTop={latestScrollTop}
+                onClose={onClose}
+                onSelect={handleOnSelect}
+                btnRef={btnRef}
+                scrollRef={scrollRef}
+            />
         </>
     );
 };
 
-type LibraryDrawerProps = {
+type CollectionDrawerProps = {
     selectedPaint?: GradientPaint;
+    latestScrollTop?: number;
     btnRef: RefObject<HTMLButtonElement>;
+    scrollRef?: RefObject<HTMLDivElement>;
     onSelect: (paint: GradientPaint, name?: string) => void;
-} & Omit<DrawerProps, 'children'>;
+} & Omit<DrawerProps, 'children' | 'onSelect'>;
 
-export const LibraryDrawer: FC<LibraryDrawerProps> = ({selectedPaint, isOpen, btnRef, onClose, onSelect, ...rest}) => {
+export const CollectionDrawer: FC<CollectionDrawerProps> = ({
+    selectedPaint,
+    latestScrollTop,
+    isOpen,
+    btnRef,
+    scrollRef = useRef<HTMLDivElement>(),
+    onClose,
+    onSelect,
+    ...rest
+}) => {
     const inputRef = useRef<HTMLInputElement>();
     const gradients = LINEAR_GRADIENTS_LIBRARY;
     const categories = GRADIENTS_COLOR_CATEGORIES;
+    const scrollOffsetTop = 45;
 
-    const handleSelect = useCallback((name: string, paint: GradientPaint) => onSelect(paint, name), [onSelect]);
+    const handleOnSelect = useCallback((name: string, paint: GradientPaint) => onSelect(paint, name), [onSelect]);
 
-    const handleSelectCatergory = useCallback((categoryName?: string) => {
-        const group = document.getElementById('group-' + categoryName);
-        group.scrollIntoView({behavior: 'smooth'});
-    }, []);
+    const handleOnSelectCategory = useCallback(
+        (index: number) => {
+            const name = categories[index].name;
+            const group = document.getElementById('group-' + name);
+            scrollRef.current.scrollTo({top: group.offsetTop - scrollOffsetTop, behavior: 'smooth'});
+        },
+        [scrollRef]
+    );
+
+    useEffect(() => {
+        if (latestScrollTop >= 0 && isOpen) {
+            setTimeout(() => {
+                scrollRef.current.scrollTo({top: latestScrollTop});
+            }, 0);
+        }
+    }, [isOpen]);
 
     return (
         <Drawer
             isOpen={isOpen}
-            placement="left"
+            placement="right"
             onClose={onClose}
             finalFocusRef={btnRef}
             initialFocusRef={inputRef}
+            isFullHeight
             {...rest}
         >
             <DrawerOverlay />
-            <DrawerContent textAlign="left" h="100vh">
-                <DrawerBody p={0}>
-                    <DrawerHeader py={0} px={0} d="flex" flexDir="column">
-                        <Stack flex="1" spacing={0} px={4} alignItems="flex-start" pt={3}>
-                            <Text d="flex" alignItems="center">
-                                <DrawerCloseButton
-                                    boxSize={5}
-                                    rounded="sm"
-                                    _focus={{boxShadow: 'none'}}
-                                    pos="relative"
-                                    top={0}
-                                    left={0}
-                                    children={<BackIcon />}
-                                    mr={1}
-                                />
-                                Library
-                                <Badge colorScheme="green" size="xs" fontSize="xs" px={1} ml={1}>
-                                    New
-                                </Badge>
-                            </Text>
-                        </Stack>
-                        <Stack direction="row" spacing={3} py={2} px={4} w="100%" overflowX="auto">
-                            {categories.map((category, index) => (
+            <DrawerContent textAlign="left" bgColor="white">
+                <DrawerHeader
+                    py={3}
+                    px={0}
+                    d="flex"
+                    flexDir="column"
+                    bgColor="whiteAlpha.700"
+                    backdropFilter="blur(28px)"
+                    pos="fixed"
+                    top={0}
+                    zIndex="1"
+                    w="100%"
+                >
+                    <Stack flex="1" spacing={0} px={4} alignItems="flex-start">
+                        <Text d="flex" alignItems="center">
+                            <DrawerCloseButton
+                                boxSize={6}
+                                minW={6}
+                                maxW={6}
+                                rounded="sm"
+                                _focus={{boxShadow: 'none'}}
+                                pos="relative"
+                                top={0}
+                                left={0}
+                                children={<BackIcon />}
+                                mr={1}
+                            />
+                            Collection
+                            <Badge colorScheme="green" size="xs" fontSize="xs" px={1} ml={1}>
+                                New
+                            </Badge>
+                        </Text>
+                    </Stack>
+                </DrawerHeader>
+                <DrawerBody pt={scrollOffsetTop} pb={0} px={4} ref={scrollRef}>
+                    <SimpleGrid columns={5} spacing={2} pt={2} w="100%">
+                        {categories.map((category, index) => (
+                            <Center key={index}>
                                 <Box
                                     as="label"
                                     {...CHECKERED_GRADIENT_PROPS}
@@ -131,14 +181,12 @@ export const LibraryDrawer: FC<LibraryDrawerProps> = ({selectedPaint, isOpen, bt
                                     bgPos="0px 0px, 5px 5px"
                                     rounded="full"
                                     pos="relative"
-                                    key={index}
                                     cursor="pointer"
-                                    onClick={() => handleSelectCatergory(category.name)}
+                                    onClick={() => handleOnSelectCategory(index)}
                                 >
                                     <Box
                                         bgColor={category.bgColor}
                                         boxSize={6}
-                                        //      shadow={isActive ? 'outline' : 'sm'}
                                         rounded="full"
                                         outline="none"
                                         border={'2px solid'}
@@ -148,19 +196,17 @@ export const LibraryDrawer: FC<LibraryDrawerProps> = ({selectedPaint, isOpen, bt
                                         _focus={{
                                             boxShadow: 'outline',
                                         }}
-                                        //     onClick={handleSelectStyle}
                                     />
                                 </Box>
-                            ))}
-                        </Stack>
-                    </DrawerHeader>
-                    <Divider />
-                    <Stack spacing={3} py={4} px={4}>
+                            </Center>
+                        ))}
+                    </SimpleGrid>
+                    <Stack spacing={3} py={4}>
                         {gradients.map((gradientGroup) => {
                             return (
                                 <Box key={gradientGroup.name} id={'group-' + gradientGroup.name} py={1}>
                                     <Flex mb={1} textTransform="capitalize" alignItems="center">
-                                        <Circle size={2} bgColor={gradientGroup.bgColor} mr={1} />
+                                        <Circle size={2} minH={2} bgColor={gradientGroup.bgColor} mr={1} />
                                         {gradientGroup.name}
                                     </Flex>
                                     <SimpleGrid columns={3} w="100%" height="auto" alignItems="center" spacing={2}>
@@ -169,7 +215,7 @@ export const LibraryDrawer: FC<LibraryDrawerProps> = ({selectedPaint, isOpen, bt
                                                 <GradientItem
                                                     defaultPaint={gradient}
                                                     key={index}
-                                                    onSelect={(paint) => handleSelect(gradient.name, paint)}
+                                                    onSelect={(paint) => handleOnSelect(gradient.name, paint)}
                                                 />
                                             );
                                         })}
@@ -184,4 +230,4 @@ export const LibraryDrawer: FC<LibraryDrawerProps> = ({selectedPaint, isOpen, bt
     );
 };
 
-export default LibraryDrawerButton;
+export default CollectionDrawerButton;

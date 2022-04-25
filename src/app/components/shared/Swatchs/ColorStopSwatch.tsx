@@ -18,7 +18,9 @@ export type ColorStopSwatchProps = {
 const ColorStopSwatch = forwardRef<ColorStopSwatchProps, 'input'>(
     ({color, id, isActive, showInput, showOpacity, size, onSelect, onChange, ...rest}, ref) => {
         const [opacity, setOpacity] = useState(color && parseInt('' + color.a * 100) + '%');
-        const [hex, setHex] = useState(color && rgbToHex(color.r * 255, color.g * 255, color.b * 255, false));
+        const [hex, setHex] = useState(
+            color && rgbToHex(color.r * 255, color.g * 255, color.b * 255, false).toUpperCase()
+        );
         const hexInputRef = useRef<HTMLInputElement>();
         const opacityInputRef = useRef<HTMLInputElement>();
         const styles = useMultiStyleConfig('ColorStopSwatch', {isActive, showInput, showOpacity});
@@ -28,21 +30,22 @@ const ColorStopSwatch = forwardRef<ColorStopSwatchProps, 'input'>(
         }, [color, onSelect]);
 
         const handleOnChangeHex = useCallback((event) => {
-            setHex(event.target.value.replace(alphanumericRegex, ''));
+            const updatedHex = event.target.value.replace(alphanumericRegex, '') as string;
+            setHex(updatedHex.toUpperCase());
         }, []);
 
         const handleOnBlurHex = useCallback(
             (event) => {
-                let hexColor = event.target.value;
+                let hexColor = event.target.value as string;
                 if (!checkIsHex(hexColor, true)) return;
-                const rgbaObject = hexToRGBAObject('#' + hexColor);
+                const rgbaObject = hexToRGBAObject('#' + hexColor.toUpperCase());
                 const rgbaFormattedObject = {
                     r: +(rgbaObject.r / 255).toFixed(2),
                     g: +(rgbaObject.g / 255).toFixed(2),
                     b: +(rgbaObject.b / 255).toFixed(2),
                     a: parseInt(opacityInputRef.current.value) / 100,
                 };
-                setHex(hexColor);
+                setHex(hexColor.toUpperCase());
                 onChange && onChange(rgbaFormattedObject, id);
             },
             [onChange, opacityInputRef, id]
@@ -82,7 +85,7 @@ const ColorStopSwatch = forwardRef<ColorStopSwatchProps, 'input'>(
         const handleOnFocus = useCallback((event) => event.target.select(), []);
 
         useEffect(() => {
-            const newHex = rgbToHex(color.r * 255, color.g * 255, color.b * 255, false);
+            const newHex = rgbToHex(color.r * 255, color.g * 255, color.b * 255, false).toUpperCase();
             const newOpacity = '' + color.a * 100;
             if (newHex != hex || opacity != newOpacity) {
                 setHex(newHex);

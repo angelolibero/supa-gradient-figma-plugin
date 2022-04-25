@@ -304,12 +304,11 @@ const GradientPage: FC<any> = ({}) => {
         //         (node: RectangleNode) =>
         //             node.fills[0].type == 'GRADIENT_LINEAR' &&
         //             console.log(
-        //                 '{gradientStops: ' +
+        //                 'gradientStops: ' +
         //                     JSON.stringify(node.fills[0].gradientStops) +
         //                     ',' +
         //                     'gradientTransform: ' +
-        //                     JSON.stringify(node.fills[0].gradientTransform) +
-        //                     '}'
+        //                     JSON.stringify(node.fills[0].gradientTransform)
         //             )
         //     );
 
