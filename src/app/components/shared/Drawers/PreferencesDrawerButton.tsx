@@ -136,7 +136,6 @@ export const PreferencesDrawer: FC<PreferencesDrawerProps> = ({
                                 <Switch
                                     isChecked={preferences.liveUpdates}
                                     size="sm"
-                                    colorScheme="green"
                                     id="live-mode"
                                     onChange={() => onUpdate('liveUpdates', !preferences.liveUpdates)}
                                 />
@@ -148,7 +147,6 @@ export const PreferencesDrawer: FC<PreferencesDrawerProps> = ({
                                 <Switch
                                     isChecked={preferences.updateStyles}
                                     size="sm"
-                                    colorScheme="green"
                                     id="update-styles"
                                     onChange={() => onUpdate('updateStyles', !preferences.updateStyles)}
                                 />

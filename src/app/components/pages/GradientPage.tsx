@@ -115,6 +115,7 @@ const GradientPage: FC<any> = ({}) => {
         [currentPaintStyle, gradientStops, gradientTransform, gradientType, selectionGradient, hasExternalStyle]
     );
 
+    //Debounced apply
     const debouncedApply = useDebouncedCallback((updatedGradient?: GradientPaint) => {
         if (preferences.liveUpdates) {
             applyGradient(updatedGradient);
@@ -122,6 +123,7 @@ const GradientPage: FC<any> = ({}) => {
         }
     }, DEFAULT_DEBOUNCE_TIMEOUT);
 
+    //Replace updated paint styles in global styles
     const updatePaintInStyles = useCallback(
         (updatedPaint: GradientPaint) => {
             if (!currentPaintStyle || hasExternalStyle) return;

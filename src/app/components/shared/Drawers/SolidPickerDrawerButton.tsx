@@ -165,7 +165,7 @@ export const SolidPaintPickerDrawer: FC<SolidPaintPickerDrawerProps> = ({
                                 mr={1}
                             />
                             Solid colors
-                            <Badge colorScheme="green" size="xs" fontSize="xs" px={1} ml={1}>
+                            <Badge colorScheme="gray" size="xs" fontSize="xs" px={1} ml={1}>
                                 {styles.solid.length}
                             </Badge>
                         </Text>

@@ -164,7 +164,7 @@ export const CollectionDrawer: FC<CollectionDrawerProps> = ({
                                 mr={1}
                             />
                             Collection
-                            <Badge colorScheme="gray" size="xs" fontSize="xs" px={1} ml={1}>
+                            <Badge colorScheme="green" size="xs" fontSize="xs" px={1} ml={1}>
                                 New
                             </Badge>
                         </Text>
