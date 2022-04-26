@@ -219,12 +219,12 @@ const GradientPage: FC<any> = ({}) => {
         [currentPaintStyle, styles, gradientStops, gradientTransform]
     );
 
-    const onSelectFromLibrary = useCallback(
+    const onSelectFromCollection = useCallback(
         (gradientPaint: GradientPaint) => {
             selectGradientPaint(gradientPaint);
-            if (selection && selection.length) applyGradient(gradientPaint);
+            if (preferences && preferences.liveUpdates && selection && selection.length) applyGradient(gradientPaint);
         },
-        [selectGradientPaint, selection]
+        [selectGradientPaint, selection, preferences]
     );
 
     const onChangeType = useCallback(
@@ -378,7 +378,7 @@ const GradientPage: FC<any> = ({}) => {
                     break;
                 case 'figma:styles:gradientschange':
                     const gradientStyles: PaintStyle[] = message.styles.gradients.reverse();
-                    const solidStyles: PaintStyle[] = message.styles.solid.reverse();
+                    const solidStyles: PaintStyle[] = message.styles.solid;
                     if (
                         message.styles &&
                         !compareObjects(gradientStyles, styles.gradients) &&
@@ -425,7 +425,7 @@ const GradientPage: FC<any> = ({}) => {
                     unmountOnExit
                     style={{width: '100%', height: '100%', position: 'absolute', top: 0, left: 0}}
                 >
-                    <Empty onCreate={onCreateStyle} onSelect={onSelectFromLibrary} />
+                    <Empty onCreate={onCreateStyle} onSelect={onSelectFromCollection} />
                 </Fade>
                 <Fade in={isGradient && !isLoading} unmountOnExit style={{width: '100%', height: '100%'}}>
                     {styles && (
@@ -435,7 +435,7 @@ const GradientPage: FC<any> = ({}) => {
                             isChanged={isChanged}
                             editingPaint={editingPaint}
                             onSelectStyle={selectPaintStyle}
-                            onSelectPaint={onSelectFromLibrary}
+                            onSelectPaint={onSelectFromCollection}
                             onCreate={onCreateStyle}
                             pos="sticky"
                             top={0}

@@ -2,7 +2,7 @@ import * as React from 'react';
 import {FC, RefObject, useRef, useCallback, useState, useEffect} from 'react';
 import {
     IconButton,
-    Tooltip,
+    // Tooltip,
     Stack,
     Drawer,
     DrawerBody,
@@ -54,23 +54,23 @@ const CollectionDrawerButton: FC<Props> = ({gradientType = 'GRADIENT_LINEAR', se
 
     return (
         <>
-            <Tooltip label="Collection" openDelay={300} placement="bottom">
-                <Box>
-                    <IconButton
-                        icon={<ListIcon />}
-                        aria-label="collection"
-                        boxSize={6}
-                        minW={6}
-                        maxW={6}
-                        p={0}
-                        rounded="full"
-                        fontSize="md"
-                        ref={btnRef}
-                        onClick={onOpen}
-                        {...rest}
-                    />
-                </Box>
-            </Tooltip>
+            {/* <Tooltip label="Collection" openDelay={1000} placement="bottom">
+                <Box> */}
+            <IconButton
+                icon={<ListIcon />}
+                aria-label="collection"
+                boxSize={6}
+                minW={6}
+                maxW={6}
+                p={0}
+                rounded="full"
+                fontSize="md"
+                ref={btnRef}
+                onClick={onOpen}
+                {...rest}
+            />
+            {/* </Box>
+            </Tooltip> */}
             <CollectionDrawer
                 isOpen={isOpen}
                 latestScrollTop={latestScrollTop}
@@ -146,8 +146,8 @@ export const CollectionDrawer: FC<CollectionDrawerProps> = ({
                     backdropFilter="blur(28px)"
                     pos="fixed"
                     top={0}
-                    zIndex="1"
-                    w="100%"
+                    zIndex="max"
+                    w="calc( 100% )"
                 >
                     <Stack flex="1" spacing={0} px={4} alignItems="flex-start">
                         <Text d="flex" alignItems="center">
@@ -164,7 +164,7 @@ export const CollectionDrawer: FC<CollectionDrawerProps> = ({
                                 mr={1}
                             />
                             Collection
-                            <Badge colorScheme="green" size="xs" fontSize="xs" px={1} ml={1}>
+                            <Badge colorScheme="gray" size="xs" fontSize="xs" px={1} ml={1}>
                                 New
                             </Badge>
                         </Text>
@@ -183,6 +183,10 @@ export const CollectionDrawer: FC<CollectionDrawerProps> = ({
                                     pos="relative"
                                     cursor="pointer"
                                     onClick={() => handleOnSelectCategory(index)}
+                                    _hover={{
+                                        opacity: 0.6,
+                                    }}
+                                    transition="all 0.25s"
                                 >
                                     <Box
                                         bgColor={category.bgColor}
@@ -216,6 +220,10 @@ export const CollectionDrawer: FC<CollectionDrawerProps> = ({
                                                     defaultPaint={gradient}
                                                     key={index}
                                                     onSelect={(paint) => handleOnSelect(gradient.name, paint)}
+                                                    _hover={{
+                                                        opacity: 0.6,
+                                                    }}
+                                                    transition="all 0.25s"
                                                 />
                                             );
                                         })}
