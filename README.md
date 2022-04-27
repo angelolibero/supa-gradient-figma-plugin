@@ -1,6 +1,6 @@
 # Supa Gradient - Figma plugin
 
-![image](https://wptavern.com/wp-content/uploads/2018/11/Screen-Shot-2018-11-19-at-8.43.27-PM.png)
+![image](/src/app/assets/thumbnail.jpg)
 
 This template contains the react example as shown on [Figma Docs](https://www.figma.com/plugin-docs/intro/), with some structural changes and extra tooling.
 
