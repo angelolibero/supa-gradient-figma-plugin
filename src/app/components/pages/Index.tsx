@@ -31,7 +31,7 @@ import {
     DEFAULT_PREFERENCES,
 } from '../../lib/constants';
 
-const GradientPage: FC<any> = ({}) => {
+const Index: FC = () => {
     const [gradientAngle, setGradientAngle] = useState<number>(DEFAULT_ANGLE);
     const [gradientStops, setGradientStops] = useState<GradientStops>();
     const [gradientTransform, setGradientTransform] = useState<Transform>();
@@ -557,7 +557,7 @@ const GradientPageFooter: FC<GradientPageFooterProps> = ({
 }) => {
     return (
         isGradient && (
-            <Stack direction="row" spacing={2} py={3} px={3} borderTop="1px solid" borderColor="blackAlpha.100">
+            <Stack direction="row" spacing={2} py={2} px={2} borderTop="1px solid" borderColor="blackAlpha.100">
                 <Fade in={isSelectionImportable} unmountOnExit>
                     <ImportButton gradientPaint={selectionGradient} onImport={onImport} />
                 </Fade>
@@ -598,4 +598,4 @@ const GradientPageFooter: FC<GradientPageFooterProps> = ({
     );
 };
 
-export default GradientPage;
+export default Index;

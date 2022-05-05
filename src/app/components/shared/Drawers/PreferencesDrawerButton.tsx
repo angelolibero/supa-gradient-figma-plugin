@@ -21,9 +21,9 @@ import {
     Link,
 } from '@chakra-ui/react';
 import {Preferences} from '../../../typings';
-import {MdMoreVert} from 'react-icons/md';
 import Logo from '../Logo';
 import CloseIcon from '../../icons/CloseIcon';
+import ListIcon from '../../icons/ListIcon';
 
 type Props = {
     preferences: Preferences;
@@ -60,7 +60,7 @@ const PreferencesDrawerButton: FC<Props> = ({preferences: value, onChange, ...re
         <>
             {/* <Tooltip label="Preferences" openDelay={300}> */}
             <IconButton
-                icon={<MdMoreVert />}
+                icon={<ListIcon />}
                 aria-label="Show preferences"
                 ref={btnRef}
                 onClick={onOpen}

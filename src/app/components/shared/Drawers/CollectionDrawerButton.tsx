@@ -2,7 +2,6 @@ import * as React from 'react';
 import {FC, RefObject, useRef, useCallback, useState, useEffect} from 'react';
 import {
     IconButton,
-    // Tooltip,
     Stack,
     Drawer,
     DrawerBody,
@@ -24,9 +23,9 @@ import {
 import GradientItem from '../GradientItem';
 import {GradientPaintType} from '../../../typings';
 import BackIcon from '../../icons/BackIcon';
-import ListIcon from '../../icons/ListIcon';
 import {CHECKERED_GRADIENT_PROPS} from '../../../lib/constants';
 import {GRADIENTS_COLOR_CATEGORIES, LINEAR_GRADIENTS_LIBRARY} from '../../../lib/gradients';
+import TidyUpGridIcon from '../../icons/TidyUpGridIcon';
 
 type Props = {
     gradientType?: GradientPaintType;
@@ -57,7 +56,7 @@ const CollectionDrawerButton: FC<Props> = ({gradientType = 'GRADIENT_LINEAR', se
             {/* <Tooltip label="Collection" openDelay={1000} placement="bottom">
                 <Box> */}
             <IconButton
-                icon={<ListIcon />}
+                icon={<TidyUpGridIcon />}
                 aria-label="collection"
                 boxSize={6}
                 minW={6}
