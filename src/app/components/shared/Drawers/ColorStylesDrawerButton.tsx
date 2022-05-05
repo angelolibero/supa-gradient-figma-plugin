@@ -30,7 +30,7 @@ type Props = {
     onSelect: (style: PaintStyle) => void;
 } & Omit<ButtonProps, 'onCreate' | 'onSelect'>;
 
-const SolidPickerDrawerButton: FC<Props> = ({selectedPaintStyle, onSelect, ...rest}) => {
+const ColorStylesDrawerButton: FC<Props> = ({selectedPaintStyle, onSelect, ...rest}) => {
     const {isOpen, onOpen, onClose} = useDisclosure();
     const btnRef = useRef<HTMLButtonElement>();
 
@@ -62,7 +62,7 @@ const SolidPickerDrawerButton: FC<Props> = ({selectedPaintStyle, onSelect, ...re
                     />
                 </Box>
             </Tooltip>
-            <SolidPaintPickerDrawer
+            <ColorStylesDrawer
                 selectedPaintStyle={selectedPaintStyle}
                 isOpen={isOpen}
                 onClose={onClose}
@@ -73,13 +73,13 @@ const SolidPickerDrawerButton: FC<Props> = ({selectedPaintStyle, onSelect, ...re
     );
 };
 
-type SolidPaintPickerDrawerProps = {
+type ColorStylesDrawerProps = {
     selectedPaintStyle?: PaintStyle;
     btnRef: RefObject<HTMLButtonElement>;
     onSelect: (paint: PaintStyle) => void;
 } & Omit<DrawerProps, 'children'>;
 
-export const SolidPaintPickerDrawer: FC<SolidPaintPickerDrawerProps> = ({
+export const ColorStylesDrawer: FC<ColorStylesDrawerProps> = ({
     selectedPaintStyle,
     isOpen,
     btnRef,
@@ -164,7 +164,7 @@ export const SolidPaintPickerDrawer: FC<SolidPaintPickerDrawerProps> = ({
                                 children={<BackIcon />}
                                 mr={1}
                             />
-                            Solid colors
+                            Color Styles
                             <Badge colorScheme="gray" size="xs" fontSize="xs" px={1} ml={1}>
                                 {styles.solid.length}
                             </Badge>
@@ -180,4 +180,4 @@ export const SolidPaintPickerDrawer: FC<SolidPaintPickerDrawerProps> = ({
     );
 };
 
-export default SolidPickerDrawerButton;
+export default ColorStylesDrawerButton;
