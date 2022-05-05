@@ -2,7 +2,7 @@ import * as React from 'react';
 import {FC, useCallback, useMemo} from 'react';
 import {Stack, IconButton, BoxProps, Center, Box, Flex} from '@chakra-ui/react';
 import ColorPickerDrawerSwatch from '../Drawers/ColorPickerDrawerSwatch';
-import StylesPickerDrawerButton from '../Drawers/SolidPickerDrawerButton';
+import StylesPickerDrawerButton from '../Drawers/ColorStylesDrawerButton';
 import {AiOutlineMinus} from 'react-icons/ai';
 
 export type GradientStopsListItemProps = {
