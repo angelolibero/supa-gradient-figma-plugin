@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {FC, useRef, useMemo} from 'react';
-import {CHECKERED_GRADIENT_PROPS, DEFAULT_PALETTE_WIDTH, HALF_STOP_WIDTH} from '../../../lib/constants';
+import {CHECKBOARD_GRADIENT_PROPS, DEFAULT_PALETTE_WIDTH, HALF_STOP_WIDTH} from '../../../lib/constants';
 import useStopDragging from '../../../lib/hooks/useStopDragging';
 import {chakra, BoxProps, Tooltip} from '@chakra-ui/react';
 import {GradientStop} from '../../../typings';
@@ -50,7 +50,7 @@ const ColorStop: FC<Props> = ({stop, color, limits, onPosChange, onDeleteColor, 
             onClick={() => onEdit(stop)}
             style={{left: position}}
         >
-            <chakra.div {...CHECKERED_GRADIENT_PROPS} bgSize="6px 6px" bgPos="0px 0px, 3px 3px" pos="absolute" />
+            <chakra.div {...CHECKBOARD_GRADIENT_PROPS} bgSize="6px 6px" bgPos="0px 0px, 3px 3px" pos="absolute" />
             <Tooltip label={percentage + '%'} placement="top" offset={[0, 10]}>
                 <chakra.div d="flex">
                     <chakra.span style={{backgroundColor: color}} w="50%" h="100%" />

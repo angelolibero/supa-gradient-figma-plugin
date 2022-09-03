@@ -87,6 +87,13 @@ const GradientStopsListItem: FC<GradientStopsListItemProps> = ({
                         fontSize="sm"
                         aria-label="delete color"
                         bgColor="white"
+                        _dark={{
+                            color: 'white',
+                            bgColor: 'gray.800',
+                            _hover: {
+                                bgColor: 'gray.700',
+                            },
+                        }}
                         boxSize={7}
                         maxW={7}
                         minW={7}

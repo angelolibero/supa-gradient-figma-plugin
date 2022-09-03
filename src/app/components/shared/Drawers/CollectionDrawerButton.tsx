@@ -14,8 +14,6 @@ import {
     SimpleGrid,
     Text,
     Box,
-    Badge,
-    Circle,
     Flex,
     Center,
     DrawerOverlay,
@@ -23,8 +21,8 @@ import {
 import GradientItem from '../GradientItem';
 import {GradientPaintType} from '../../../typings';
 import BackIcon from '../../icons/BackIcon';
-import {CHECKERED_GRADIENT_PROPS} from '../../../lib/constants';
-import {GRADIENTS_COLOR_CATEGORIES, LINEAR_GRADIENTS_LIBRARY} from '../../../lib/gradients';
+import {CHECKBOARD_GRADIENT_PROPS} from '../../../lib/constants';
+import {GRADIENTS_COLOR_CATEGORIES, LINEAR_GRADIENTS_LIBRARY, MATERIAL_GRADIENTS_LIBRARY} from '../../../lib/gradients';
 import TidyUpGridIcon from '../../icons/TidyUpGridIcon';
 
 type Props = {
@@ -64,6 +62,9 @@ const CollectionDrawerButton: FC<Props> = ({gradientType = 'GRADIENT_LINEAR', se
                 p={0}
                 rounded="full"
                 fontSize="md"
+                _dark={{
+                    bgColor: 'gray.600',
+                }}
                 ref={btnRef}
                 onClick={onOpen}
                 {...rest}
@@ -101,7 +102,7 @@ export const CollectionDrawer: FC<CollectionDrawerProps> = ({
     ...rest
 }) => {
     const inputRef = useRef<HTMLInputElement>();
-    const gradients = LINEAR_GRADIENTS_LIBRARY;
+    const gradients = [...MATERIAL_GRADIENTS_LIBRARY, ...LINEAR_GRADIENTS_LIBRARY];
     const categories = GRADIENTS_COLOR_CATEGORIES;
     const scrollOffsetTop = 45;
 
@@ -135,13 +136,16 @@ export const CollectionDrawer: FC<CollectionDrawerProps> = ({
             {...rest}
         >
             <DrawerOverlay />
-            <DrawerContent textAlign="left" bgColor="white">
+            <DrawerContent textAlign="left">
                 <DrawerHeader
                     py={3}
                     px={0}
                     d="flex"
                     flexDir="column"
                     bgColor="whiteAlpha.700"
+                    _dark={{
+                        bgColor: 'transparent',
+                    }}
                     backdropFilter="blur(28px)"
                     pos="fixed"
                     top={0}
@@ -163,9 +167,6 @@ export const CollectionDrawer: FC<CollectionDrawerProps> = ({
                                 mr={1}
                             />
                             Collection
-                            <Badge colorScheme="green" size="xs" fontSize="xs" px={1} ml={1}>
-                                New
-                            </Badge>
                         </Text>
                     </Stack>
                 </DrawerHeader>
@@ -175,7 +176,7 @@ export const CollectionDrawer: FC<CollectionDrawerProps> = ({
                             <Center key={index}>
                                 <Box
                                     as="label"
-                                    {...CHECKERED_GRADIENT_PROPS}
+                                    {...CHECKBOARD_GRADIENT_PROPS}
                                     bgSize="10px 10px"
                                     bgPos="0px 0px, 5px 5px"
                                     rounded="full"
@@ -189,11 +190,15 @@ export const CollectionDrawer: FC<CollectionDrawerProps> = ({
                                 >
                                     <Box
                                         bgColor={category.bgColor}
+                                        bgGradient={category.bgGradient}
                                         boxSize={6}
                                         rounded="full"
                                         outline="none"
                                         border={'2px solid'}
                                         borderColor="white"
+                                        _dark={{
+                                            borderColor: 'gray.900',
+                                        }}
                                         p={0}
                                         cursor="pointer"
                                         _focus={{
@@ -209,7 +214,15 @@ export const CollectionDrawer: FC<CollectionDrawerProps> = ({
                             return (
                                 <Box key={gradientGroup.name} id={'group-' + gradientGroup.name} py={1}>
                                     <Flex mb={1} textTransform="capitalize" alignItems="center">
-                                        <Circle size={2} minH={2} bgColor={gradientGroup.bgColor} mr={1} />
+                                        {gradientGroup.bgColor && (
+                                            <Box
+                                                boxSize={2}
+                                                minH={2}
+                                                bgColor={gradientGroup.bgColor}
+                                                mr={1}
+                                                borderRadius="full"
+                                            />
+                                        )}
                                         {gradientGroup.name}
                                     </Flex>
                                     <SimpleGrid columns={3} w="100%" height="auto" alignItems="center" spacing={2}>

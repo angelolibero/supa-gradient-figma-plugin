@@ -1,6 +1,21 @@
 import * as React from 'react';
 import {FC, useState, useCallback, useEffect, useRef, useMemo} from 'react';
-import {Stack, Badge, Button, Flex, Divider, Box, Alert, AlertIcon, Fade, Text} from '@chakra-ui/react';
+import {
+    Stack,
+    Badge,
+    Button,
+    Flex,
+    Divider,
+    Box,
+    Alert,
+    AlertIcon,
+    Fade,
+    Text,
+    HStack,
+    IconButton,
+    Icon,
+    Tooltip,
+} from '@chakra-ui/react';
 import BaseSlider from '../shared/Sliders/BaseSlider';
 import {GradientPaintType, GradientStops, Preferences} from '../../typings';
 import {filterGradientCompatibleNodes, isExternalStyleId} from '../../lib/figma';
@@ -30,6 +45,8 @@ import {
     DEFAULT_GRADIENT_PAINT,
     DEFAULT_PREFERENCES,
 } from '../../lib/constants';
+
+import {TbArrowsRightLeft} from 'react-icons/tb';
 
 const Index: FC = () => {
     const [gradientAngle, setGradientAngle] = useState<number>(DEFAULT_ANGLE);
@@ -264,6 +281,16 @@ const Index: FC = () => {
         [gradientAngle, gradientTransform, gradientScale]
     );
 
+    const onReverse = useCallback(() => {
+        let updatedGradientStops: GradientStops = gradientStops.map((stop, index) => {
+            const reversedIndex = gradientStops.length - index - 1;
+            return {...stop, color: gradientStops[reversedIndex].color};
+        });
+
+        setGradientStops(updatedGradientStops);
+        debouncedApply({gradientStops: updatedGradientStops} as GradientPaint);
+    }, [gradientStops]);
+
     const onChangeStops = useCallback(
         (_gradientStops: GradientStops) => {
             const updatedGradientStops: GradientStops = _gradientStops;
@@ -444,7 +471,7 @@ const Index: FC = () => {
                             zIndex="1"
                         />
                     )}
-                    <Flex direction="column" w="100%" bgColor="white">
+                    <Flex direction="column" w="100%">
                         <GradientPreview
                             gradientStops={gradientStops}
                             gradientTransform={gradientTransform}
@@ -469,39 +496,60 @@ const Index: FC = () => {
                                 pb={0}
                                 px={4}
                             />
-                            {gradientType == 'GRADIENT_LINEAR' || gradientType == 'GRADIENT_ANGULAR' ? (
-                                <BaseSlider
-                                    step={15}
-                                    value={gradientAngle}
-                                    icon={
-                                        <Box transform={`rotate(${gradientAngle}deg)`}>
-                                            <MdArrowUpward />
-                                        </Box>
-                                    }
-                                    symbol={<Box>°</Box>}
-                                    onChange={onChangeAngle}
-                                />
-                            ) : (
-                                <BaseSlider
-                                    value={+(gradientScale * 100).toFixed(2)}
-                                    icon={
-                                        <Box transform={`scale(${(1 - gradientScale) / 2 + 0.5})`}>
-                                            <MdCircle />
-                                        </Box>
-                                    }
-                                    symbol={
-                                        <Box fontSize="xs" h={'18px'}>
-                                            %
-                                        </Box>
-                                    }
-                                    defaultValue={100}
-                                    min={5}
-                                    max={100}
-                                    step={5}
-                                    markDivisionCount={2}
-                                    onChange={onChangeScale}
-                                />
-                            )}
+                            <HStack w="100%" spacing={0} pr={4}>
+                                {gradientType == 'GRADIENT_LINEAR' || gradientType == 'GRADIENT_ANGULAR' ? (
+                                    <BaseSlider
+                                        step={15}
+                                        value={gradientAngle}
+                                        icon={
+                                            <Box transform={`rotate(${gradientAngle}deg)`}>
+                                                <MdArrowUpward />
+                                            </Box>
+                                        }
+                                        symbol={<Box>°</Box>}
+                                        onChange={onChangeAngle}
+                                    />
+                                ) : (
+                                    <BaseSlider
+                                        value={+(gradientScale * 100).toFixed(2)}
+                                        icon={
+                                            <Box transform={`scale(${(1 - gradientScale) / 2 + 0.5})`}>
+                                                <MdCircle />
+                                            </Box>
+                                        }
+                                        symbol={
+                                            <Box fontSize="xs" h={'18px'}>
+                                                %
+                                            </Box>
+                                        }
+                                        defaultValue={100}
+                                        min={5}
+                                        max={100}
+                                        step={5}
+                                        markDivisionCount={2}
+                                        onChange={onChangeScale}
+                                    />
+                                )}
+                                <Tooltip label="Reverse colors">
+                                    <IconButton
+                                        aria-label="reverse"
+                                        boxSize={7}
+                                        minW={7}
+                                        maxW={7}
+                                        icon={<Icon as={TbArrowsRightLeft} boxSize={3} />}
+                                        onClick={onReverse}
+                                        bgColor="white"
+                                        color="gray.700"
+                                        _dark={{
+                                            color: 'white',
+                                            bgColor: 'gray.800',
+                                            _hover: {
+                                                bgColor: 'gray.700',
+                                            },
+                                        }}
+                                    />
+                                </Tooltip>
+                            </HStack>
                             <Divider />
                         </Stack>
                         <GradientPicker onChange={onChangeStops} gradientStops={gradientStops} />
@@ -557,7 +605,17 @@ const GradientPageFooter: FC<GradientPageFooterProps> = ({
 }) => {
     return (
         isGradient && (
-            <Stack direction="row" spacing={2} py={2} px={2} borderTop="1px solid" borderColor="blackAlpha.100">
+            <Stack
+                direction="row"
+                spacing={2}
+                py={2}
+                px={2}
+                borderTop="1px solid"
+                borderColor="blackAlpha.100"
+                _dark={{
+                    borderColor: 'whiteAlpha.100',
+                }}
+            >
                 <Fade in={isSelectionImportable} unmountOnExit>
                     <ImportButton gradientPaint={selectionGradient} onImport={onImport} />
                 </Fade>

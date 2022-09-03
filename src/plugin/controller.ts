@@ -1,4 +1,10 @@
-import {updateSelection, updatePaintStyles, selectPaintStyleWithId, isExternalStyleId} from '../app/lib/figma';
+import {
+    updateSelection,
+    updatePaintStyles,
+    selectPaintStyleWithId,
+    isExternalStyleId,
+    // filterGradientCompatibleNodes,
+} from '../app/lib/figma';
 import {isNodeGradientCompatible, createGradientStyle} from '../app/lib/utils';
 import {GradientPaintType, GradientStops} from '../app/typings';
 import {
@@ -12,7 +18,7 @@ import {
 
 var poolingInterval;
 
-figma.showUI(__html__);
+figma.showUI(__html__, {themeColors: true} as any);
 figma.ui.resize(240, DEFAULT_WINDOW_SIZE.height); //initial window size
 
 figma.ui.onmessage = (msg) => {
@@ -112,6 +118,11 @@ figma.ui.onmessage = (msg) => {
 figma.on('selectionchange', () => {
     // Current selection has changed
     // console.log('selectionchange', figma.currentPage.selection[0]);
+    // const compatibileLayers = filterGradientCompatibleNodes(figma.currentPage.selection as any[]);
+    // const gradients = compatibileLayers.map((selectedLayer) => {
+    //     return selectedLayer.fills[0];
+    // });
+    // console.log(JSON.stringify({name: 'material', paints: gradients}));
     updateSelection();
 });
 

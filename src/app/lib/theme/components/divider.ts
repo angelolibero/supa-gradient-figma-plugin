@@ -1,9 +1,9 @@
-import type {SystemStyleObject} from '@chakra-ui/theme-tools';
+import {SystemStyleObject, mode} from '@chakra-ui/theme-tools';
 
-const baseStyle: SystemStyleObject = {
+const baseStyle = (props) => ({
     opacity: 0.6,
-    borderColor: 'gray.200',
-};
+    borderColor: mode('gray.200', 'whiteAlpha.200')(props),
+});
 
 const variantSolid: SystemStyleObject = {
     borderStyle: 'solid',

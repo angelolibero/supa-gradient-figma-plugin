@@ -65,14 +65,19 @@ export const DEFAULT_GRADIENT_PAINT: GradientPaint = {
     type: GRADIENT_TYPES[0],
 };
 
-export const CHECKERED_GRADIENT_PROPS = {
+export const LIGHT_CHECKBOARD_GRADIENT_PROPS = {
     backgroundColor: 'gray.200',
-    // bgGradient:
-    //     'linear-gradient(45deg, #eee 25%, transparent 25%, transparent 75%, #eee 75%, #eee 100%),linear-gradient(45deg, #eee 25%, white 25%, white 75%, #eee 75%, #eee 100%)',
-    // backgroundSize: '18px 18px',
-    // backgroundPosition: '0px 0px, 9px 9px',
     bgImage:
         'url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3QgZmlsbD0iI0ZGRkZGRiIgd2lkdGg9IjE2IiBoZWlnaHQ9IjE2Ii8+PHBhdGggZmlsbD0iI0YxRjFGMSIgZD0iTSAwIDggSCAxNiBWIDAgSCA4IFYgMTYgSCAwIi8+PC9zdmc+")',
+};
+
+export const CHECKBOARD_GRADIENT_PROPS = {
+    ...LIGHT_CHECKBOARD_GRADIENT_PROPS,
+    _dark: {
+        backgroundColor: 'gray.800',
+        bgImage:
+            'url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIHZpZXdCb3g9IjAgMCAxNiAxNiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjE2IiBoZWlnaHQ9IjE2IiBmaWxsPSIjMkMyQzJDIi8+CjxwYXRoIGQ9Ik0xNiAwSDBWMTZIMTZWMFoiIGZpbGw9IiMyQzJDMkMiLz4KPHBhdGggZD0iTTAgOEgxNlYwSDhWMTZIMCIgZmlsbD0iIzQwM0YzRiIvPgo8L3N2Zz4K")',
+    },
 };
 
 //GradientStops

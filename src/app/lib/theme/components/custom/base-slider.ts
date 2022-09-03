@@ -1,14 +1,13 @@
-import {PartsStyleFunction} from '@chakra-ui/theme-tools';
+import {PartsStyleFunction, mode} from '@chakra-ui/theme-tools';
 
 const parts = ['container', 'thumb', 'inputWrap', 'input', 'inputIcon'];
 
-const baseStyle: PartsStyleFunction = () => ({
+const baseStyle: PartsStyleFunction = (props) => ({
     container: {
         borderRadius: 'sm',
-        bgColor: 'white',
         py: 3,
         pl: 4,
-        pr: 6,
+        pr: 4,
         alignItems: 'center',
         h: 10,
     },
@@ -16,14 +15,14 @@ const baseStyle: PartsStyleFunction = () => ({
         d: 'flex',
         py: 0,
         border: '1px solid',
-        borderColor: 'white',
+        borderColor: mode('white', 'gray.800')(props),
         px: 1,
         mr: 4,
         minH: 7,
         h: 7,
         //        overflow: 'hidden',
         _hover: {
-            borderColor: 'gray.300',
+            borderColor: mode('gray.200', 'whiteAlpha.200')(props),
             rounded: 'sm',
         },
         _focusWithin: {
@@ -47,6 +46,9 @@ const baseStyle: PartsStyleFunction = () => ({
         _focus: {
             shadow: 'none',
         },
+        _dark: {
+            bgColor: 'gray.800',
+        },
     },
     inputIcon: {
         transition: 'all 0.25s',
@@ -57,8 +59,8 @@ const baseStyle: PartsStyleFunction = () => ({
         minH: 6,
         borderRadius: 'sm',
         border: '1px solid',
-        bgColor: 'gray.200',
-        borderColor: 'white',
+        bgColor: mode('gray.200', 'gray.600')(props),
+        borderColor: mode('white', 'gray.800')(props),
         _active: {boxSize: 4},
         position: 'relative',
         // transition: 'all 0.1s',

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {FC, useCallback, useMemo} from 'react';
 import {Tooltip, Center, RadioProps, Box, useRadio} from '@chakra-ui/react';
-import {CHECKERED_GRADIENT_PROPS} from '../../../lib/constants';
+import {CHECKBOARD_GRADIENT_PROPS} from '../../../lib/constants';
 
 type Props = {
     style?: PaintStyle;
@@ -51,12 +51,12 @@ const SolidSwatch: FC<Props> = ({style, isActive, size, onSelect, ...rest}) => {
                     label={style && style.name}
                     openDelay={500}
                     isDisabled={!style || !(style && style.id)}
-                    offset={[0, -1]}
+                    // offset={[0, -1]}
                 >
                     <Center>
                         <Box
                             as="label"
-                            {...CHECKERED_GRADIENT_PROPS}
+                            {...CHECKBOARD_GRADIENT_PROPS}
                             bgSize="10px 10px"
                             bgPos="0px 0px, 5px 5px"
                             rounded="full"
@@ -65,12 +65,15 @@ const SolidSwatch: FC<Props> = ({style, isActive, size, onSelect, ...rest}) => {
                             <input {...input} onKeyDown={onPressEnter} />
                             <Box
                                 bgColor={bgColor}
-                                boxSize={size == 'lg' ? 10 : 6}
-                                shadow={isActive ? 'outline' : 'sm'}
+                                boxSize={size == 'lg' ? 10 : 5}
+                                shadow={isActive ? 'outline' : '0px 0px 0px 1px rgba(0,0,0,.1)'}
                                 rounded="full"
-                                outline="none"
                                 border={size == 'lg' ? '4px solid' : '2px solid'}
                                 borderColor="white"
+                                _dark={{
+                                    borderColor: 'gray.700',
+                                }}
+                                boxSizing="border-box"
                                 p={0}
                                 cursor="pointer"
                                 _focus={{

@@ -94,6 +94,10 @@ const ScaleSlider: FC<Props> = ({
                     type="number"
                     variant="unstyled"
                     sx={styles.input}
+                    color="gray.700"
+                    _dark={{
+                        color: 'gray.100',
+                    }}
                 />
                 <Box>°</Box>
             </Box>

@@ -35,6 +35,10 @@ const ImportButton: FC<Props> = ({gradientPaint, onImport, ...rest}) => {
                     border="1px dashed"
                     borderColor="gray.200"
                     bgColor="white"
+                    _dark={{
+                        borderColor: 'gray.500',
+                        bgColor: 'gray.800',
+                    }}
                     fontSize="md"
                     onClick={onImport}
                     {...rest}
@@ -49,6 +53,9 @@ const ImportButton: FC<Props> = ({gradientPaint, onImport, ...rest}) => {
                         bgGradient={importBgGradient}
                         border="2px solid"
                         borderColor="white"
+                        _dark={{
+                            bgColor: 'gray.900',
+                        }}
                         shadow="sm"
                     />
                 )}

@@ -5,7 +5,7 @@ import {GradientPaintType, GradientStops} from '../../typings';
 import {useClipboard} from '@chakra-ui/react';
 import {MdCode} from 'react-icons/md';
 import {bgColorsFromStops, bgGradientFromColors} from '../../lib/colors';
-import {CHECKERED_GRADIENT_PROPS, DEFAULT_FIGMA_NOTIFICATION_TIMEOUT} from '../../lib/constants';
+import {CHECKBOARD_GRADIENT_PROPS, DEFAULT_FIGMA_NOTIFICATION_TIMEOUT} from '../../lib/constants';
 
 type Props = {
     name?: string;
@@ -78,7 +78,7 @@ const GradientPreview: FC<Props> = ({
 
     return (
         isGradient && (
-            <Flex {...CHECKERED_GRADIENT_PROPS} w="100%" overflow="hidden" minH="96px" maxH="96px" {...rest}>
+            <Flex {...CHECKBOARD_GRADIENT_PROPS} w="100%" overflow="hidden" minH="96px" maxH="96px" {...rest}>
                 <Flex
                     w="100%"
                     h="inherit"

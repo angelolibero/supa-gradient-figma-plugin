@@ -66,7 +66,6 @@ const PreferencesDrawerButton: FC<Props> = ({preferences: value, onChange, ...re
                 onClick={onOpen}
                 size="sm"
                 fontSize="lg"
-                bgColor="white"
                 _focus={{
                     shadow: 'none',
                 }}

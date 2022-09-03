@@ -7,6 +7,9 @@ const baseStyle: PartsStyleFunction = ({isActive, showInput, showOpacity}) => ({
         py: 0,
         border: (showInput || showOpacity) && '1px solid',
         borderColor: isActive ? 'gray.200' : 'white',
+        _dark: {
+            borderColor: isActive ? 'gray.500' : 'gray.600',
+        },
         pl: 0,
         alignItems: 'center',
         rounded: 'sm',
@@ -14,6 +17,9 @@ const baseStyle: PartsStyleFunction = ({isActive, showInput, showOpacity}) => ({
         h: 7,
         '> *': {
             borderColor: 'white',
+            _dark: {
+                borderColor: isActive ? 'gray.500' : 'gray.600',
+            },
         },
         _hover: {
             borderColor: (showInput || showOpacity) && 'gray.200',
@@ -33,8 +39,10 @@ const baseStyle: PartsStyleFunction = ({isActive, showInput, showOpacity}) => ({
         borderRadius: 'sm',
         flex: '1',
         bgColor: 'white',
+        _dark: {
+            bgColor: 'gray.800',
+        },
         border: 'none',
-        color: 'gray.700',
         rounded: 'none',
         minH: 7,
         maxH: 7,

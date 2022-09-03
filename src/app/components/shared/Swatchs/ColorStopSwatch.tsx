@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {useEffect, useCallback, useRef, useState} from 'react';
 import {RadioProps, Box, forwardRef, Input, Stack, Divider, Flex, Center, useMultiStyleConfig} from '@chakra-ui/react';
-import {CHECKERED_GRADIENT_PROPS} from '../../../lib/constants';
+import {CHECKBOARD_GRADIENT_PROPS} from '../../../lib/constants';
 import {rgbToHex} from '@ctrl/tinycolor';
 import {alphanumericRegex, checkIsHex, hexToRGBAObject, numericRegex} from '../../../lib/colors';
 
@@ -95,7 +95,7 @@ const ColorStopSwatch = forwardRef<ColorStopSwatchProps, 'input'>(
 
         return (
             <Stack direction="row" spacing={'0px'} sx={styles.container} ref={ref}>
-                <Box as="label" {...CHECKERED_GRADIENT_PROPS} pos="relative">
+                <Box as="label" {...CHECKBOARD_GRADIENT_PROPS} pos="relative">
                     <Box
                         bgColor={`#${hex}`}
                         boxSize={7}
@@ -103,6 +103,9 @@ const ColorStopSwatch = forwardRef<ColorStopSwatchProps, 'input'>(
                         outline="none"
                         border="6px solid"
                         borderColor="white"
+                        _dark={{
+                            borderColor: 'gray.800',
+                        }}
                         p={0}
                         cursor="pointer"
                         overflow="hidden"
@@ -127,13 +130,16 @@ const ColorStopSwatch = forwardRef<ColorStopSwatchProps, 'input'>(
                             onKeyDown={handleOnKeyDown}
                             borderRadius="sm"
                             flex="1"
-                            bgColor="white"
                             size="sm"
                             variant="unstyled"
                             border={'none'}
                             color="gray.700"
                             _focus={{
                                 shadow: 'none',
+                            }}
+                            _dark={{
+                                color: 'gray.100',
+                                bgColor: 'gray.800',
                             }}
                             rounded="none"
                             placeholder="Hex color"

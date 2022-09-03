@@ -82,6 +82,10 @@ const variantFilled: PartsStyleFunction<typeof parts> = (props) => {
 const variants = {
     unstyled: {
         field: {
+            color: 'gray.700',
+            _dark: {
+                color: ['gray.100'],
+            },
             shadow: 'none',
             _focus: {
                 shadow: 'outline',

@@ -63,6 +63,11 @@ const CreateStyleDrawerButton: FC<Props> = ({gradientPaint, style, onCreate, ...
                         border="1px dashed"
                         borderColor="gray.200"
                         bgColor="white"
+                        _dark={{
+                            color: 'white',
+                            bgColor: 'gray.800',
+                            borderColor: 'gray.500',
+                        }}
                         fontSize="md"
                         ref={btnRef}
                         onClick={onOpen}

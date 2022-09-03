@@ -7,7 +7,7 @@ export const variantSolid = (props: Record<string, any>) => {
         const bg = mode('gray.100', 'gray.700')(props);
         return {
             bg,
-            color: 'gray.700',
+            color: mode('gray.700', 'white')(props),
             _hover: {
                 bg: [mode('gray.100', 'whiteAlpha.100')(props), '!important'],
                 textDecor: 'none',
@@ -28,12 +28,12 @@ export const variantSolid = (props: Record<string, any>) => {
         };
     }
 
-    const {bg = `${c}.500`, color = 'white', hoverBg = mode(`${c}.600`, `${c}.300`)(props), activeBg = `${c}.700`} = {};
-    const background = mode(bg, `${c}.400`)(props);
+    const {bg = `${c}.500`, color = 'white', hoverBg = mode(`${c}.600`, `${c}.600`)(props), activeBg = `${c}.700`} = {};
+    const background = mode(bg, bg)(props);
 
     return {
         bg: background,
-        color: mode(color, 'gray.800')(props),
+        color: color,
         // shadow: c == 'primary' && 'button',
         shadow: 'none',
         _focus: {

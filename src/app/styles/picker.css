@@ -21,6 +21,11 @@
     transition: transform 0.1s;
 }
 
+.figma-dark .cs {
+    background: url(../assets/color-stop-dark.png) right center;
+    background-size: cover;
+}
+
 .cs:hover {
     transform: scale(1.15);
 }
@@ -70,4 +75,11 @@
 }
 .chakra-portal .react-colorful__alpha-gradient {
     border-radius: 0 0 4px 4px;
+}
+
+.chakra-portal .react-colorful .react-colorful__pointer {
+    border-width: 3px;
+    outline: 1px solid rgba(0, 0, 0, 0.1);
+    z-index: 2;
+    box-sizing: border-box;
 }

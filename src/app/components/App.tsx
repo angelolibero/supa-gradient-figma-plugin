@@ -1,21 +1,18 @@
 import * as React from 'react';
-import {ChakraProvider} from '@chakra-ui/react';
 import IndexPage from './pages/Index';
 import {RecoilRoot} from 'recoil';
-import theme from '../lib/theme';
-import '@fontsource/inter/300.css';
-import '@fontsource/inter/400.css';
-import '@fontsource/inter/500.css';
-import '@fontsource/inter/700.css';
-import '../styles/global.css';
+import FigmaColorModeProvider from './FigmaColorModeProvider';
+import CustomThemeProvider from './CustomThemeProvider';
 
 const App = () => {
     return (
-        <ChakraProvider theme={theme}>
-            <RecoilRoot>
-                <IndexPage />
-            </RecoilRoot>
-        </ChakraProvider>
+        <CustomThemeProvider>
+            <FigmaColorModeProvider>
+                <RecoilRoot>
+                    <IndexPage />
+                </RecoilRoot>
+            </FigmaColorModeProvider>
+        </CustomThemeProvider>
     );
 };
 

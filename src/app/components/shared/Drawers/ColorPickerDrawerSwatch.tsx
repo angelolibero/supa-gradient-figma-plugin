@@ -158,7 +158,7 @@ export const ColorPickerDrawer: FC<ColorPickerDrawerProps> = ({
             {...rest}
         >
             <DrawerOverlay />
-            <DrawerContent textAlign="left">
+            <DrawerContent textAlign="left" _dark={{bgColor: 'gray.800'}}>
                 <DrawerCloseButton
                     boxSize={8}
                     size="sm"
@@ -177,9 +177,25 @@ export const ColorPickerDrawer: FC<ColorPickerDrawerProps> = ({
                         <ColorStopSwatch color={debouncedColor} showInput showOpacity onChange={handleSwatchOnChange} />
                     </Stack>
                 </DrawerBody>
-                <DrawerFooter py={3} px={3} borderTop="1px solid" borderColor="blackAlpha.100">
+                <DrawerFooter
+                    py={3}
+                    px={3}
+                    borderTop="1px solid"
+                    borderColor="blackAlpha.100"
+                    _dark={{
+                        borderColor: 'gray.700',
+                    }}
+                >
                     <Stack direction="row" spacing={2} w="full">
-                        <Button size="sm" colorScheme={'gray'} w="full" onClick={resetColor}>
+                        <Button
+                            size="sm"
+                            colorScheme={'gray'}
+                            _dark={{
+                                bgColor: 'gray.600',
+                            }}
+                            w="full"
+                            onClick={resetColor}
+                        >
                             Cancel
                         </Button>
                         <Button size="sm" colorScheme={'primary'} w="full" onClick={selectColor}>

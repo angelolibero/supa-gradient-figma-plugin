@@ -17,6 +17,7 @@ import {
     Text,
     Box,
     Badge,
+    Center,
 } from '@chakra-ui/react';
 import StylesIcon from '../../icons/StylesIcon';
 import stylesState from '../../../atoms/styles';
@@ -55,6 +56,14 @@ const ColorStylesDrawerButton: FC<Props> = ({selectedPaintStyle, onSelect, ...re
                         p={0}
                         rounded="sm"
                         bgColor="white"
+                        color="gray.700"
+                        _dark={{
+                            color: 'white',
+                            bgColor: 'gray.800',
+                            _hover: {
+                                bgColor: 'gray.700',
+                            },
+                        }}
                         fontSize="md"
                         ref={btnRef}
                         onClick={onOpen}
@@ -98,29 +107,51 @@ export const ColorStylesDrawer: FC<ColorStylesDrawerProps> = ({
         return grouped;
     }, [styles.solid]);
 
-    const groupedList = useCallback(() => {
+    const GroupedList: any = useCallback(() => {
         return Object.keys(groupedStyles).map((groupName) => {
             const isGroup = groupName && groupedStyles[groupName].length > 1;
             return (
                 <Stack
                     key={groupName}
-                    py={4}
                     direction={isGroup ? 'column' : 'row-reverse'}
                     alignItems={!isGroup && 'center'}
                     justifyContent={!isGroup && 'flex-end'}
+                    spacing={0}
                 >
-                    {groupName && <Text>{groupName}</Text>}
-                    <SimpleGrid
-                        columns={isGroup ? 6 : 1}
-                        w={isGroup ? 'full' : 'auto'}
-                        height="auto"
-                        alignItems="center"
-                        spacing={2}
-                    >
-                        {groupedStyles[groupName].map((style, index) => (
-                            <SolidSwatch style={style} key={index} onSelect={handleSelect} />
-                        ))}
-                    </SimpleGrid>
+                    {isGroup && <Text px={4}>{groupName}</Text>}
+
+                    {!isGroup ? (
+                        <Stack
+                            direction="row"
+                            onClick={() => handleSelect(groupedStyles[groupName][0])}
+                            cursor="pointer"
+                            alignItems="center"
+                            w="100%"
+                            _hover={{bgColor: 'gray.100'}}
+                            _dark={{
+                                _hover: {bgColor: 'gray.800'},
+                            }}
+                            px={4}
+                            h={8}
+                        >
+                            <SolidSwatch style={groupedStyles[groupName][0]} />
+                            <Text>{groupName}</Text>
+                        </Stack>
+                    ) : (
+                        <SimpleGrid
+                            columns={isGroup ? 6 : 1}
+                            w={isGroup ? 'full' : 'auto'}
+                            height="auto"
+                            alignItems="center"
+                            spacing={2}
+                            px={4}
+                            py={2}
+                        >
+                            {groupedStyles[groupName].map((style, index) => (
+                                <SolidSwatch style={style} key={index} onSelect={handleSelect} />
+                            ))}
+                        </SimpleGrid>
+                    )}
                 </Stack>
             );
         });
@@ -137,13 +168,16 @@ export const ColorStylesDrawer: FC<ColorStylesDrawerProps> = ({
             {...rest}
         >
             <DrawerOverlay />
-            <DrawerContent textAlign="left" bgColor="white">
+            <DrawerContent textAlign="left">
                 <DrawerHeader
                     py={3}
                     px={0}
                     d="flex"
                     flexDir="column"
                     bgColor="whiteAlpha.700"
+                    _dark={{
+                        bgColor: 'transparent',
+                    }}
                     backdropFilter="blur(28px)"
                     pos="fixed"
                     top={0}
@@ -172,8 +206,18 @@ export const ColorStylesDrawer: FC<ColorStylesDrawerProps> = ({
                     </Stack>
                 </DrawerHeader>
 
-                <DrawerBody px={4} pb={0} pt={scrollOffsetTop}>
-                    {groupedStyles && groupedList()}
+                <DrawerBody px={0} pb={0} pt={scrollOffsetTop}>
+                    {!styles.solid ||
+                        (styles.solid.length == 0 && (
+                            <Center boxSize="100%">
+                                <Text>No solid colors styles found</Text>
+                            </Center>
+                        ))}
+                    {groupedStyles && (
+                        <Stack spacing={3} pt={2} pb={4}>
+                            <GroupedList />
+                        </Stack>
+                    )}
                 </DrawerBody>
             </DrawerContent>
         </Drawer>

@@ -2,7 +2,7 @@ import * as React from 'react';
 import {FC, useMemo, useCallback} from 'react';
 import {Box, BoxProps} from '@chakra-ui/react';
 import {bgColorsFromStops, bgGradientFromColors} from '../../lib/colors';
-import {CHECKERED_GRADIENT_PROPS} from '../../lib/constants';
+import {CHECKBOARD_GRADIENT_PROPS} from '../../lib/constants';
 import {degreesFromTransform} from '../../lib/matrix';
 
 type Props = {
@@ -25,7 +25,7 @@ const GradientItem: FC<Props> = ({defaultPaint, isActive, onSelect, ...rest}) =>
     return (
         <Box
             as="label"
-            {...CHECKERED_GRADIENT_PROPS}
+            {...CHECKBOARD_GRADIENT_PROPS}
             bgSize="10px 10px"
             bgPos="0px 0px, 5px 5px"
             rounded="sm"

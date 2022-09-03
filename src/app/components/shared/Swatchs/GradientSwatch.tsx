@@ -2,7 +2,7 @@ import * as React from 'react';
 import {FC, useMemo, useCallback} from 'react';
 import {Tooltip, Center, RadioProps, Box, useRadio} from '@chakra-ui/react';
 import {bgColorsFromStops, bgGradientFromColors} from '../../../lib/colors';
-import {CHECKERED_GRADIENT_PROPS} from '../../../lib/constants';
+import {CHECKBOARD_GRADIENT_PROPS} from '../../../lib/constants';
 import {degreesFromTransform} from '../../../lib/matrix';
 
 type Props = {
@@ -51,7 +51,7 @@ const GradientSwatch: FC<Props> = ({style, defaultPaint, isActive, size, onSelec
                 <Center>
                     <Box
                         as="label"
-                        {...CHECKERED_GRADIENT_PROPS}
+                        {...CHECKBOARD_GRADIENT_PROPS}
                         bgSize="10px 10px"
                         bgPos="0px 0px, 5px 5px"
                         rounded="full"
@@ -66,6 +66,9 @@ const GradientSwatch: FC<Props> = ({style, defaultPaint, isActive, size, onSelec
                             outline="none"
                             border={size == 'lg' ? '4px solid' : '2px solid'}
                             borderColor="white"
+                            _dark={{
+                                borderColor: 'gray.900',
+                            }}
                             p={0}
                             cursor="pointer"
                             _focus={{

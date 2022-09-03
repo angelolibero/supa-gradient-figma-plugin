@@ -4,8 +4,8 @@ import {StackProps, Stack, Button, Text, useDisclosure} from '@chakra-ui/react';
 import {CreateStyleDrawer} from './Drawers/CreateStyleDrawerButton';
 import {DEFAULT_GRADIENT_PAINT} from '../../lib/constants';
 import {CollectionDrawer} from './Drawers/CollectionDrawerButton';
-import ListIcon from '../icons/ListIcon';
 import {MdAdd} from 'react-icons/md';
+import TidyUpGridIcon from '../icons/TidyUpGridIcon';
 
 type Props = {
     onCreate?: (name: string, paint: GradientPaint) => void;
@@ -43,6 +43,9 @@ const Empty: FC<Props> = ({onCreate, onSelect, ...rest}) => {
             alignItems="center"
             justifyContent="center"
             bgColor={'gray.100'}
+            _dark={{
+                bgColor: 'gray.800',
+            }}
             boxSize={'100%'}
             {...rest}
         >
@@ -59,6 +62,10 @@ const Empty: FC<Props> = ({onCreate, onSelect, ...rest}) => {
                 leftIcon={<MdAdd />}
                 bgColor="white"
                 _hover={{bgColor: 'gray.50'}}
+                _dark={{
+                    bgColor: 'gray.700',
+                    _hover: {bgColor: 'gray.600'},
+                }}
                 size="sm"
                 ref={btnRef}
                 onClick={onOpenCreate as any}
@@ -67,7 +74,7 @@ const Empty: FC<Props> = ({onCreate, onSelect, ...rest}) => {
             </Button>
             <Button
                 w="full"
-                leftIcon={<ListIcon fill="white" />}
+                leftIcon={<TidyUpGridIcon fill="white" />}
                 size="sm"
                 ref={btnRef}
                 onClick={onOpenLibrary as any}

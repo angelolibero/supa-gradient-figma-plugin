@@ -20,6 +20,9 @@ const baseStyle: SystemStyleObject = {
     },
     closeButton: baseStyleCloseButton,
     header: baseStyleHeader,
+    dialog: {
+        _dark: {bgColor: 'gray.800'},
+    },
 };
 
 const defaultProps = {};

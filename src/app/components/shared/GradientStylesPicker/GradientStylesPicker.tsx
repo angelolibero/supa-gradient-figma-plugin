@@ -63,7 +63,15 @@ const GradientStylesPicker: FC<Props> = ({
     return !styles ? (
         <GradientStylesSkeleton />
     ) : (
-        <Box w="100%" maxW="100%" flexDir={'column'} bgColor="white" transition="all 0.25s" {...rest}>
+        <Box
+            w="100%"
+            maxW="100%"
+            flexDir={'column'}
+            transition="all 0.25s"
+            bgColor="white"
+            _dark={{bgColor: 'gray.800'}}
+            {...rest}
+        >
             <RadioGroup
                 overflowX={styles && styles.length > 5 ? 'scroll' : 'hidden'}
                 overflowY="hidden"
@@ -94,6 +102,9 @@ const GradientStylesPicker: FC<Props> = ({
                                     bgGradient={newBgGradient}
                                     border="2px solid"
                                     borderColor="white"
+                                    _dark={{
+                                        borderColor: 'gray.900',
+                                    }}
                                     shadow="sm"
                                 />
                             )}

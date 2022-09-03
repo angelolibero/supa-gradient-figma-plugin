@@ -96,7 +96,7 @@ const BaseSlider: FC<Props> = ({
     }, [value]);
 
     return (
-        <Stack sx={styles.container} direction="row" spacing="0">
+        <Stack sx={styles.container} direction="row" spacing="0" w="100%">
             <Box sx={styles.inputWrap}>
                 {iconComponent && (
                     <Flex alignItems="center" alignSelf="center" mr={1}>
@@ -113,7 +113,14 @@ const BaseSlider: FC<Props> = ({
                     size="sm"
                     type="number"
                     variant="unstyled"
-                    sx={styles.input}
+                    color="gray.700"
+                    sx={{
+                        ...styles.input,
+                        bgColor: 'transparent',
+                        _dark: {
+                            color: {base: 'gray.100'},
+                        },
+                    }}
                     maxLength={3}
                 />
                 {symbolComponent && (

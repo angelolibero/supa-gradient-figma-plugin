@@ -22,7 +22,7 @@ const baseStyle: PartsStyleFunction = (props) => ({
             color: mode('gray.700', 'gray.500')(props),
         },
         _active: {
-            color: mode('gray.700', 'gray.500')(props),
+            color: mode('gray.700', 'gray.100')(props),
             //  bgColor: mode('gray.200', 'gray.700')(props),
         },
     },
